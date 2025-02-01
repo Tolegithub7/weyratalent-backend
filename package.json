@@ -58,5 +58,14 @@
     "typescript": "^5.7.3",
     "uuid": "^11.0.5",
     "vitest": "^3.0.4"
+  },
+  "lint-staged": {
+    "*.{js,ts,cjs,mjs,d.cts,d.mts,json,jsonc}": ["biome check --apply --no-errors-on-unmatched"]
+  },
+  "tsup": {
+    "entry": ["src", "!src/**/__tests__/**", "!src/**/*.test.*"],
+    "splitting": false,
+    "sourcemap": true,
+    "clean": true
   }
 }
