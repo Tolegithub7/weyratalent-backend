@@ -54,15 +54,11 @@ db-migrate-generate:
 		echo "Please provide a migration name: make db-migrate-generate MIGRATION_NAME=YourMigrationName"; \
 		exit 1; \
 	fi
-	npm run typeorm migration:generate -- src/db/migrations/$(MIGRATION_NAME)
+	npx drizzle-kit generate --name $(MIGRATION_NAME)
 
-db-migrate-run:
+db-migrate-push:
 	@echo "Running all pending database migrations..."
-	npm run migration:run
-
-db-migrate-rollback:
-	@echo "Rolling back the last migration..."
-	npm run migration:revert
+	npx drizzle-kit push:pg --config drizzle.config.ts
 
 # DB Import/Export commands
 ERROR_MSG := "Error:"
