@@ -22,7 +22,7 @@ export const env = cleanEnv(process.env, {
   //Database
   DB_PORT: port({ devDefault: testOnly(8599) }),
   DB_HOST: str({ devDefault: testOnly("localhost") }),
-  DB_USER: str({ devDefault: testOnly("mereb") }),
+  DB_USER: str({ devDefault: testOnly("weyra") }),
   DB_PASS: str({ devDefault: testOnly("password") }),
   DB_NAME: str({ devDefault: testOnly("weyratech_test") }),
 });
