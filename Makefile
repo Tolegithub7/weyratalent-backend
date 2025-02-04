@@ -58,7 +58,7 @@ db-migrate-generate:
 
 db-migrate-push:
 	@echo "Running all pending database migrations..."
-	npx drizzle-kit push:pg --config drizzle.config.ts
+	npx drizzle-kit push --config=./drizzle.config.ts
 
 # DB Import/Export commands
 ERROR_MSG := "Error:"

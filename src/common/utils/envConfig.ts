@@ -25,4 +25,5 @@ export const env = cleanEnv(process.env, {
   DB_USER: str({ devDefault: testOnly("weyra") }),
   DB_PASS: str({ devDefault: testOnly("password") }),
   DB_NAME: str({ devDefault: testOnly("weyratech_test") }),
+  DB_URL: str(),
 });
