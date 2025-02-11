@@ -60,6 +60,10 @@ db-migrate-push:
 	@echo "Running all pending database migrations..."
 	npx drizzle-kit push --config=./drizzle.config.ts
 
+db-migrate-drop:
+	@echo "dropping all pending database migrations..."
+	npx drizzle-kit drop
+
 # DB Import/Export commands
 ERROR_MSG := "Error:"
 
