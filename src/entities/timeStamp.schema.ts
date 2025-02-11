@@ -1,9 +1,10 @@
 import { sql } from "drizzle-orm";
-import { timestamp } from "drizzle-orm/mysql-core";
+import { timestamp } from "drizzle-orm/pg-core";
 
-export function timestamps() {
-  return {
-    createdAt: timestamp("created_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
-    updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`).onUpdateNow().notNull(),
-  };
-}
+export const timestamps = {
+  createdAt: timestamp("created_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
+  updatedAt: timestamp("updated_at", { mode: "date" })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull()
+    .$onUpdate(() => sql`CURRENT_TIMESTAMP`),
+};
