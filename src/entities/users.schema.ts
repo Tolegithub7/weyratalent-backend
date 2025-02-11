@@ -1,6 +1,6 @@
 import { UserRole } from "@/types";
 import { sql } from "drizzle-orm";
-import { pgEnum, pgTable, text, uuid, varchar } from "drizzle-orm/pg-core";
+import { check, pgEnum, pgTable, text, uuid, varchar } from "drizzle-orm/pg-core";
 import { timestamps } from "./timeStamp.schema";
 
 console.log(Object.values(UserRole) as [string, ...string[]]);
@@ -18,7 +18,11 @@ export const users = pgTable(
     role: roleEnum("role").notNull(),
     ...timestamps,
   },
-  (table) => ({
-    phoneCheck: sql`LENGTH(${table.phoneNumber}) BETWEEN 10 AND 15 AND ${table.phoneNumber} ~ '^[+]?[0-9]+$'`,
-  }),
+  (table) => [
+    check(
+      "phone_number_length_check",
+      sql`LENGTH(${table.phoneNumber}) BETWEEN 10 AND 15 
+          AND ${table.phoneNumber} ~ '^[+]?[0-9]+$'`,
+    ),
+  ],
 );

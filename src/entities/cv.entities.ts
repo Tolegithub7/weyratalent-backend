@@ -1,8 +1,8 @@
 import { Categories } from "@/types/cv.types";
 import { relations, sql } from "drizzle-orm";
-import { integer, pgEnum, pgTable, text, uuid, varchar } from "drizzle-orm/pg-core";
+import { check, integer, pgEnum, pgTable, text, uuid, varchar } from "drizzle-orm/pg-core";
 import { education } from "./education.schema";
-import { project } from "./project.entities";
+import { project } from "./project.schema";
 import { timestamps } from "./timeStamp.schema";
 import { users } from "./users.schema";
 import { workExperience } from "./workExperience.schema";
@@ -23,11 +23,7 @@ export const cv = pgTable(
     categories: categoriesEnum("categories").notNull(),
     ...timestamps,
   },
-  (table) => {
-    return {
-      hourlyRateCheck: sql`CHECK (${table.hourlyRate} >= 0 AND ${table.hourlyRate} <= 100)`,
-    };
-  },
+  (table) => [check("hourly_rate_check", sql`${table.hourlyRate} >= 0 AND ${table.hourlyRate} <= 100`)],
 );
 
 export const cvRelations = relations(cv, ({ one, many }) => ({

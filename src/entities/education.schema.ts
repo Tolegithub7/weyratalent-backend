@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { doublePrecision, pgEnum, pgTable, text, uuid, varchar } from "drizzle-orm/pg-core";
+import { check, doublePrecision, pgEnum, pgTable, text, uuid, varchar } from "drizzle-orm/pg-core";
 import { cv } from "./cv.entities";
 import { timestamps } from "./timeStamp.schema";
 
@@ -18,9 +18,5 @@ export const education = pgTable(
     gpa: doublePrecision("gpa").default(0.0),
     ...timestamps,
   },
-  (table) => {
-    return {
-      hourlyRateCheck: sql`CHECK (${table.gpa} >= 0 AND ${table.gpa} <= 4)`,
-    };
-  },
+  (table) => [check("gpa_check", sql`${table.gpa} >= 0 AND ${table.gpa} <= 4`)],
 );

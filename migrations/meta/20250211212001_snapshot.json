@@ -1,6 +1,6 @@
 {
-  "id": "1aab8417-b3c8-4b61-b20c-e3de37525f23",
-  "prevId": "80e1acf6-f6b5-4baa-a520-9c7b2c4cf1bf",
+  "id": "f901e400-71d7-4f42-a64d-db99cf0bab28",
+  "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -83,7 +83,12 @@
         }
       },
       "policies": {},
-      "checkConstraints": {},
+      "checkConstraints": {
+        "hourly_rate_check": {
+          "name": "hourly_rate_check",
+          "value": "\"cv\".\"hourly_rate\" >= 0 AND \"cv\".\"hourly_rate\" <= 100"
+        }
+      },
       "isRLSEnabled": false
     },
     "public.education": {
@@ -163,6 +168,215 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "gpa_check": {
+          "name": "gpa_check",
+          "value": "\"education\".\"gpa\" >= 0 AND \"education\".\"gpa\" <= 4"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.employer_profile": {
+      "name": "employer_profile",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "banner_url": {
+          "name": "banner_url",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "company_name": {
+          "name": "company_name",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "about": {
+          "name": "about",
+          "type": "varchar(500)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "location": {
+          "name": "location",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "phone_number": {
+          "name": "phone_number",
+          "type": "varchar(15)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "employer_profile_user_id_users_id_fk": {
+          "name": "employer_profile_user_id_users_id_fk",
+          "tableFrom": "employer_profile",
+          "tableTo": "users",
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "employer_profile_user_id_unique": {
+          "name": "employer_profile_user_id_unique",
+          "nullsNotDistinct": false,
+          "columns": ["user_id"]
+        },
+        "employer_profile_email_unique": {
+          "name": "employer_profile_email_unique",
+          "nullsNotDistinct": false,
+          "columns": ["email"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.organization_info": {
+      "name": "organization_info",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "organization_type": {
+          "name": "organization_type",
+          "type": "organization_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "industry_type": {
+          "name": "industry_type",
+          "type": "industry_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "team_size": {
+          "name": "team_size",
+          "type": "team_size",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "company_vision": {
+          "name": "company_vision",
+          "type": "varchar(500)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "instagram_link": {
+          "name": "instagram_link",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "telegram_link": {
+          "name": "telegram_link",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "facebook_link": {
+          "name": "facebook_link",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "X_link": {
+          "name": "X_link",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "organization_info_user_id_users_id_fk": {
+          "name": "organization_info_user_id_users_id_fk",
+          "tableFrom": "organization_info",
+          "tableTo": "users",
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "organization_info_user_id_unique": {
+          "name": "organization_info_user_id_unique",
+          "nullsNotDistinct": false,
+          "columns": ["user_id"]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -409,7 +623,12 @@
         }
       },
       "policies": {},
-      "checkConstraints": {},
+      "checkConstraints": {
+        "phone_number_length_check": {
+          "name": "phone_number_length_check",
+          "value": "LENGTH(\"users\".\"phone_number\") BETWEEN 10 AND 15 \n          AND \"users\".\"phone_number\" ~ '^[+]?[0-9]+$'"
+        }
+      },
       "isRLSEnabled": false
     },
     "public.work_experience": {
@@ -485,6 +704,141 @@
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
+    },
+    "public.job_posting": {
+      "name": "job_posting",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "job_title": {
+          "name": "job_title",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "job_role": {
+          "name": "job_role",
+          "type": "job_role",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "job_type": {
+          "name": "job_type",
+          "type": "job_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "job_level": {
+          "name": "job_level",
+          "type": "job_level",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "salary_type": {
+          "name": "salary_type",
+          "type": "salary_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "vacancies": {
+          "name": "vacancies",
+          "type": "vacancies",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "responsibilities": {
+          "name": "responsibilities",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "min_salary": {
+          "name": "min_salary",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "max_salary": {
+          "name": "max_salary",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "expiry_date": {
+          "name": "expiry_date",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "varchar(10)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "job_posting_user_id_users_id_fk": {
+          "name": "job_posting_user_id_users_id_fk",
+          "tableFrom": "job_posting",
+          "tableTo": "users",
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "job_posting_user_id_unique": {
+          "name": "job_posting_user_id_unique",
+          "nullsNotDistinct": false,
+          "columns": ["user_id"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
     }
   },
   "enums": {
@@ -506,17 +860,84 @@
     "public.experience": {
       "name": "experience",
       "schema": "public",
-      "values": ["0-2", "2-4", "5-6", "6+", "intern"]
+      "values": ["Entry Level", "Mid Level", "Senior Level"]
     },
     "public.gender": {
       "name": "gender",
       "schema": "public",
       "values": ["male", "female"]
     },
+    "public.industry_type": {
+      "name": "industry_type",
+      "schema": "public",
+      "values": [
+        "Technology",
+        "Healthcare",
+        "Finance",
+        "Education",
+        "Manufacturing",
+        "Retail",
+        "Transportation",
+        "Energy",
+        "Telecommunications",
+        "Construction",
+        "Agriculture",
+        "Entertainment",
+        "Real Estate",
+        "Hospitality",
+        "Government",
+        "other"
+      ]
+    },
+    "public.organization_type": {
+      "name": "organization_type",
+      "schema": "public",
+      "values": ["Private", "Government", "Nonprofit", "Cooperative", "International", "other"]
+    },
     "public.role": {
       "name": "role",
       "schema": "public",
       "values": ["admin", "talent", "recruiter"]
+    },
+    "public.team_size": {
+      "name": "team_size",
+      "schema": "public",
+      "values": ["0-10", "10-50", "50+"]
+    },
+    "public.job_level": {
+      "name": "job_level",
+      "schema": "public",
+      "values": ["Entry Level", "Mid Level", "Senior Level", "Lead", "Director", "Executive"]
+    },
+    "public.job_role": {
+      "name": "job_role",
+      "schema": "public",
+      "values": [
+        "Software Engineer",
+        "Data Scientist",
+        "Product Manager",
+        "Designer",
+        "Marketing Manager",
+        "Sales Representative",
+        "HR Manager",
+        "Accountant",
+        "Other"
+      ]
+    },
+    "public.job_type": {
+      "name": "job_type",
+      "schema": "public",
+      "values": ["Full-Time", "Part-Time", "Contract", "Internship", "Freelance"]
+    },
+    "public.salary_type": {
+      "name": "salary_type",
+      "schema": "public",
+      "values": ["Hourly", "fixed"]
+    },
+    "public.vacancies": {
+      "name": "vacancies",
+      "schema": "public",
+      "values": ["1", "2", "3", "4", "5+"]
     }
   },
   "schemas": {},

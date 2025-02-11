@@ -5,15 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1739279975050,
-      "tag": "20250211131935_init-table-definitions",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1739283790613,
-      "tag": "20250211142310_add-timestamp-for-tables",
+      "when": 1739308801933,
+      "tag": "20250211212001_add-client-and-talent-table",
       "breakpoints": true
     }
   ]
