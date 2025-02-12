@@ -8,3 +8,4 @@ export { organizationInfo, organizationTypeEnum, industryTypeEnum, teamSizeEnum 
 export * from "./jobPosting.schema";
 export { employerProfile } from "./employerProfile.schema";
 export * from "./appliedJobs.schema";
+export { favoriteJobs } from "./favorite.schema";
