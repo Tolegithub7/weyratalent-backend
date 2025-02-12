@@ -1,6 +1,7 @@
 import { ApplicationStatus } from "@/types";
 import { pgEnum, pgTable, uuid } from "drizzle-orm/pg-core";
 import { jobProfile } from "./jobPosting.schema";
+import { timestamps } from "./timeStamp.schema";
 import { users } from "./users.schema";
 
 export const applicationStatusEnum = pgEnum(
@@ -17,4 +18,5 @@ export const appliedJobs = pgTable("applied_jobs", {
     .references(() => jobProfile.id)
     .notNull(),
   applicationStatus: applicationStatusEnum("application_status").default(ApplicationStatus.PENDING).notNull(),
+  ...timestamps,
 });

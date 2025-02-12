@@ -15,6 +15,13 @@
       "when": 1739390214067,
       "tag": "20250212195654_add-application-status-table",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1739390456532,
+      "tag": "20250212200056_add-time-stamp-to-application-table",
+      "breakpoints": true
     }
   ]
 }
