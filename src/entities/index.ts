@@ -7,3 +7,4 @@ export { project } from "./project.schema";
 export { organizationInfo, organizationTypeEnum, industryTypeEnum, teamSizeEnum } from "./organizationInfo.schema";
 export * from "./jobPosting.schema";
 export { employerProfile } from "./employerProfile.schema";
+export * from "./appliedJobs.schema";
