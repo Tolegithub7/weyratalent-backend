@@ -1,4 +1,4 @@
-import { Experience } from "@/types";
+import { Experience, Gender } from "@/types";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { z } from "zod";
 
@@ -8,8 +8,8 @@ export const TalentProfileSchema = z.object({
   userId: z.string().uuid(),
   fullName: z.string(),
   nationality: z.string(),
-  dateOfBirth: z.string(),
-  gender: z.string().trim().min(4, "gender required").max(6),
+  dateOfBirth: z.string().default("02-21-2002"),
+  gender: z.nativeEnum(Gender).default(Gender.MALE),
   experience: z.nativeEnum(Experience).default(Experience.MID_LEVEL),
   socialLink: z.string().optional(),
   about: z.string().optional(),

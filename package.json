@@ -52,6 +52,7 @@
     "@types/node": "^22.13.0",
     "@types/pg": "^8.11.11",
     "@types/swagger-ui-express": "^4.1.7",
+    "@types/uuid": "^10.0.0",
     "axios": "^1.7.9",
     "drizzle-kit": "^0.30.4",
     "husky": "^9.1.7",

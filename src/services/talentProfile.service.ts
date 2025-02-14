@@ -4,6 +4,7 @@ import { talentProfile } from "@/entities";
 import type { CreateTalentProfileType, TalentProfileType, UpdateTalentProfileType } from "@/types/talentProfile.types";
 import { eq } from "drizzle-orm";
 import { StatusCodes } from "http-status-codes";
+import { v4 as uuidv4 } from "uuid";
 
 class TalentProfileService {
   async getTalentProfiles(): Promise<ServiceResponse<TalentProfileType[] | null>> {
@@ -25,14 +26,16 @@ class TalentProfileService {
 
   async createTalentProfile(talentData: CreateTalentProfileType): Promise<ServiceResponse<TalentProfileType | null>> {
     try {
-      const createdTalent = await db.insert(talentProfile).values(talentData).returning();
-      const talentProfiles = await db.select().from(talentProfile);
+      const userId = uuidv4(); //this is set from the user when auth is done
+      const talentDataWithId = { ...talentData, userId: userId };
+      const createdTalent = await db.insert(talentProfile).values(talentDataWithId).returning();
       return ServiceResponse.success<TalentProfileType>(
         "Talent Profile Created Succesfully",
         createdTalent as unknown as TalentProfileType,
         StatusCodes.OK,
       );
     } catch (error) {
+      console.log(error);
       return ServiceResponse.failure<null>("Failed to create talent profile", null, StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
