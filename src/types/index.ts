@@ -3,3 +3,4 @@ export { Categories } from "./cv.types";
 export { OrganizationType, IndustryType, TeamSize } from "./employerProfile.types";
 export { JobLevel, JobRole, JobType, SalaryType, Education, Vacancies } from "./jobPosting.types";
 export { ApplicationStatus } from "./appliedJobs.types";
+export * from "./environment.types";
