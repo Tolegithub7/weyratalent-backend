@@ -22,7 +22,7 @@ export const GetTalentProfileSchema = z.object({
 });
 
 export const CreateTalentProfileSchema = z.object({
-  body: TalentProfileSchema.omit({ id: true }),
+  body: TalentProfileSchema.omit({ id: true, userId: true }),
 });
 
 export const UpdateTalentProfileSchema = TalentProfileSchema.partial();

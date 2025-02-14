@@ -7,4 +7,5 @@ export const PROJECT_ROOT =
     ? process.cwd()
     : require.main?.path?.replace(/\/dist$/, "") || process.cwd(); // Fallback to cwd if require.main is unavailable
 
-export const BACKEND_URL = env.NODE_ENV === Environment.DEVELOPMENT ? `http://${env.HOST}/${env.BASE_API}` : "";
+export const BACKEND_URL =
+  env.NODE_ENV === Environment.DEVELOPMENT ? `http://${env.HOST}:${env.PORT}/${env.BASE_API}` : "";

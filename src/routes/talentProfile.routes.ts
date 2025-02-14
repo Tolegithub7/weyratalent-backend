@@ -1,4 +1,4 @@
-import { BACKEND_URL } from "@/common/utils/generalUtils";
+import { env } from "@/common/utils/envConfig";
 import { validateRequest } from "@/common/utils/httpHandlers";
 import { talentProfileController } from "@/controllers/talentProfile.controller";
 import {
@@ -12,6 +12,7 @@ import { z } from "zod";
 
 export const talentProfileRegistry = new OpenAPIRegistry();
 export const talentProfileRouter: Router = express.Router();
+const BASE_API_PATH = env.BASE_API;
 
 talentProfileRouter.get("/", talentProfileController.getTalentProfiles);
 talentProfileRouter.get("/:id", validateRequest(GetTalentProfileSchema), talentProfileController.getTalentProfile);
@@ -32,7 +33,7 @@ talentProfileRegistry.register("talent_profile", TalentProfileSchema);
 // GET all talent profiles
 talentProfileRegistry.registerPath({
   method: "get",
-  path: `${BACKEND_URL}/talent_profile`,
+  path: `${BASE_API_PATH}/talent_profile`,
   tags: ["Talent Profile"],
   responses: {
     200: {
@@ -45,7 +46,7 @@ talentProfileRegistry.registerPath({
 // GET talent profile by id
 talentProfileRegistry.registerPath({
   method: "get",
-  path: `${BACKEND_URL}/talent_profile/{id}`,
+  path: `${BASE_API_PATH}/talent_profile/{id}`,
   request: { params: GetTalentProfileSchema.shape.params },
   tags: ["Talent Profile"],
   responses: {
@@ -59,7 +60,7 @@ talentProfileRegistry.registerPath({
 // POST talent profile
 talentProfileRegistry.registerPath({
   method: "post",
-  path: `${BACKEND_URL}/talent_profile`,
+  path: `${BASE_API_PATH}/talent_profile`,
   tags: ["Talent Profile"],
   request: {
     body: {
@@ -84,7 +85,7 @@ talentProfileRegistry.registerPath({
 // DELETE talent profile
 talentProfileRegistry.registerPath({
   method: "delete",
-  path: `${BACKEND_URL}/talent_profile/{id}`,
+  path: `${BASE_API_PATH}/talent_profile/{id}`,
   tags: ["Talent Profile"],
   request: { params: GetTalentProfileSchema.shape.params },
   responses: {
@@ -95,7 +96,7 @@ talentProfileRegistry.registerPath({
 // PUT talent profile
 talentProfileRegistry.registerPath({
   method: "put",
-  path: `${BACKEND_URL}/talent_profile/{id}`,
+  path: `${BASE_API_PATH}/talent_profile/{id}`,
   tags: ["Talent Profile"],
   summary: "Update feedback by id",
   request: {
@@ -103,7 +104,7 @@ talentProfileRegistry.registerPath({
       required: true,
       content: {
         "application/json": {
-          schema: CreateTalentProfileSchema.partial(),
+          schema: CreateTalentProfileSchema.shape.body.partial(),
         },
       },
     },
