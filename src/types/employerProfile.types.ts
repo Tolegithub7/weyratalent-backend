@@ -31,3 +31,15 @@ export enum TeamSize {
   TEN_TO_FIFTY = "10-50",
   FIFTY_PLUS = "50+",
 }
+
+
+import type { z } from "zod";
+import type {
+  CreateEmployerProfileSchema,
+  EmployerProfileSchema,
+  UpdateEmployerProfileSchema,
+} from "@/validator/employerProfile.validator"; // Ensure this path is correct
+
+export type EmployerProfileType = z.infer<typeof EmployerProfileSchema>;
+export type CreateEmployerProfileType = z.infer<typeof CreateEmployerProfileSchema.shape.body>;
+export type UpdateEmployerProfileType = z.infer<typeof UpdateEmployerProfileSchema>;
