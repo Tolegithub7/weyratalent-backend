@@ -31,7 +31,7 @@ class TalentProfileService {
       const createdTalent = await db.insert(talentProfile).values(talentDataWithId).returning();
       return ServiceResponse.success<TalentProfileType>(
         "Talent Profile Created Succesfully",
-        createdTalent as unknown as TalentProfileType,
+        createdTalent[0] as unknown as TalentProfileType,
         StatusCodes.OK,
       );
     } catch (error) {

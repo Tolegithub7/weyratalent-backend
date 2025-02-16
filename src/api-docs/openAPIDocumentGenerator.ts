@@ -1,7 +1,7 @@
-import { talentProfileRegistry } from "@/routes/talentProfile.routes";
+import { cvRegistry, talentProfileRegistry } from "@/routes";
 import { OpenAPIRegistry, OpenApiGeneratorV3 } from "@asteasolutions/zod-to-openapi";
 export function generateOpenAPIDocument() {
-  const registry = new OpenAPIRegistry([talentProfileRegistry]);
+  const registry = new OpenAPIRegistry([talentProfileRegistry, cvRegistry]);
   registry.registerComponent("securitySchemes", "bearerAuth", {
     type: "http",
     scheme: "bearer",
