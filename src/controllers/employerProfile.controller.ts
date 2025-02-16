@@ -16,8 +16,7 @@ class EmployerProfileController {
   });
 
   public getEmployerProfiles = catchAsync(async (req: Request, res: Response) => {
-    const { id } = req.params;
-    const serviceResponse = await employerProfileService.getEmployerProfile(id);
+    const serviceResponse = await employerProfileService.getEmployerProfiles();
     return handleServiceResponse(serviceResponse, res);
   });
 

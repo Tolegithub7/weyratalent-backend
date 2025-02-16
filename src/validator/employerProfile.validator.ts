@@ -1,6 +1,6 @@
-import { z } from "zod";
+import { IndustryType, OrganizationType, TeamSize } from "@/types/employerProfile.types";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
-import { OrganizationType, IndustryType, TeamSize } from "@/types/employerProfile.types";
+import { z } from "zod";
 
 extendZodWithOpenApi(z);
 
@@ -20,16 +20,17 @@ export const EmployerProfileSchema = z.object({
   yearEstablished: z.string(),
   website: z.string().url(),
   vision: z.string(),
-  socialLinks: z
-    .object({
-      facebook: z.string().optional(),
-      instagram: z.string().optional(),
-      youtube: z.string().optional(),
-      linkedin: z.string().optional(),
-      twitter: z.string().optional(),
-      others: z.record(z.string()).optional(),
-    })
-    .optional(),
+  socialLinks: z.record(z.string().url().or(z.literal(""))).optional(),
+  // socialLinks: z
+  //   .object({
+  //     facebook: z.string().optional(),
+  //     instagram: z.string().optional(),
+  //     youtube: z.string().optional(),
+  //     linkedin: z.string().optional(),
+  //     twitter: z.string().optional(),
+  //     others: z.record(z.string()).optional(),
+  //   })
+  //   .optional(),
 });
 
 export const GetEmployerProfileSchema = z.object({

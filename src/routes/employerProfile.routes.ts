@@ -3,32 +3,125 @@ import { validateRequest } from "@/common/utils/httpHandlers";
 import { employerProfileController } from "@/controllers/employerProfile.controller";
 import {
   CreateEmployerProfileSchema,
-  GetEmployerProfileSchema,
   EmployerProfileSchema,
+  GetEmployerProfileSchema,
   UpdateEmployerProfileSchema,
 } from "@/validator/employerProfile.validator";
 import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
-import express, { Router } from "express";
+import express, { type Router } from "express";
 import { z } from "zod";
 
 export const employerProfileRegistry = new OpenAPIRegistry();
-const router: Router = express.Router();
+export const employerProfileRouter: Router = express.Router();
 const BASE_API_PATH = env.BASE_API;
 
-router.post("/", validateRequest(CreateEmployerProfileSchema), employerProfileController.createEmployerProfile);
-router.get("/", employerProfileController.getEmployerProfiles);
-router.get("/:id", validateRequest(GetEmployerProfileSchema), employerProfileController.getEmployerProfile);
-router.put("/:id", validateRequest(UpdateEmployerProfileSchema), employerProfileController.updateEmployerProfile);
-router.delete("/:id", validateRequest(GetEmployerProfileSchema), employerProfileController.deleteEmployerProfile);
+// Routes
+employerProfileRouter.get("/", employerProfileController.getEmployerProfiles);
+employerProfileRouter.get(
+  "/:id",
+  validateRequest(GetEmployerProfileSchema),
+  employerProfileController.getEmployerProfile,
+);
+employerProfileRouter.post(
+  "/",
+  validateRequest(CreateEmployerProfileSchema),
+  employerProfileController.createEmployerProfile,
+);
+employerProfileRouter.put(
+  "/:id",
+  validateRequest(UpdateEmployerProfileSchema),
+  employerProfileController.updateEmployerProfile,
+);
+employerProfileRouter.delete(
+  "/:id",
+  validateRequest(GetEmployerProfileSchema),
+  employerProfileController.deleteEmployerProfile,
+);
 
-// Swagger Documentation (mimic talent_profile structure)
+// OpenAPI Documentation
 employerProfileRegistry.register("employer_profile", EmployerProfileSchema);
+
+// GET all employer profiles
+employerProfileRegistry.registerPath({
+  method: "get",
+  path: `${BASE_API_PATH}/employer_profile`,
+  tags: ["Employer Profile"],
+  responses: {
+    200: {
+      description: "Success",
+      content: { "application/json": { schema: z.array(EmployerProfileSchema) } },
+    },
+  },
+});
+
+// GET employer profile by ID
+employerProfileRegistry.registerPath({
+  method: "get",
+  path: `${BASE_API_PATH}/employer_profile/{id}`,
+  request: { params: GetEmployerProfileSchema.shape.params },
+  tags: ["Employer Profile"],
+  responses: {
+    200: {
+      description: "Success",
+      content: { "application/json": { schema: EmployerProfileSchema } },
+    },
+  },
+});
+
+// POST employer profile
 employerProfileRegistry.registerPath({
   method: "post",
   path: `${BASE_API_PATH}/employer_profile`,
   tags: ["Employer Profile"],
-  request: { body: { content: { "application/json": { schema: CreateEmployerProfileSchema } } } },
-  responses: { 201: { description: "Created", content: { "application/json": { schema: EmployerProfileSchema } } } },
+  request: {
+    body: {
+      required: true,
+      content: {
+        "application/json": {
+          schema: CreateEmployerProfileSchema.shape.body,
+        },
+      },
+    },
+  },
+  responses: {
+    201: {
+      description: "Created",
+      content: { "application/json": { schema: EmployerProfileSchema } },
+    },
+  },
 });
 
-export default router;
+// PUT employer profile
+employerProfileRegistry.registerPath({
+  method: "put",
+  path: `${BASE_API_PATH}/employer_profile/{id}`,
+  tags: ["Employer Profile"],
+  request: {
+    body: {
+      required: true,
+      content: {
+        "application/json": {
+          schema: UpdateEmployerProfileSchema,
+        },
+      },
+    },
+    params: GetEmployerProfileSchema.shape.params,
+  },
+  responses: {
+    200: {
+      description: "Success",
+      content: { "application/json": { schema: EmployerProfileSchema } },
+    },
+  },
+});
+
+// DELETE employer profile
+employerProfileRegistry.registerPath({
+  method: "delete",
+  path: `${BASE_API_PATH}/employer_profile/{id}`,
+  tags: ["Employer Profile"],
+  request: { params: GetEmployerProfileSchema.shape.params },
+  responses: {
+    204: { description: "No Content" },
+  },
+});

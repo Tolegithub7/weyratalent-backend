@@ -32,14 +32,38 @@ export enum TeamSize {
   FIFTY_PLUS = "50+",
 }
 
+// import type { z } from "zod";
+// import type {
+//   CreateEmployerProfileSchema,
+//   EmployerProfileSchema,
+//   UpdateEmployerProfileSchema,
+// } from "@/validator/employerProfile.validator"; // Ensure this path is correct
 
-import type { z } from "zod";
-import type {
-  CreateEmployerProfileSchema,
-  EmployerProfileSchema,
-  UpdateEmployerProfileSchema,
-} from "@/validator/employerProfile.validator"; // Ensure this path is correct
+// export type EmployerProfileType = z.infer<typeof EmployerProfileSchema>;
+// export type CreateEmployerProfileType = z.infer<typeof CreateEmployerProfileSchema.shape.body>;
+// export type UpdateEmployerProfileType = z.infer<typeof UpdateEmployerProfileSchema>;
 
-export type EmployerProfileType = z.infer<typeof EmployerProfileSchema>;
-export type CreateEmployerProfileType = z.infer<typeof CreateEmployerProfileSchema.shape.body>;
-export type UpdateEmployerProfileType = z.infer<typeof UpdateEmployerProfileSchema>;
+// Base type for employer profile
+export interface EmployerProfileType {
+  id: string;
+  userId: string;
+  logoUrl?: string;
+  bannerUrl: string;
+  companyName: string;
+  about: string;
+  location: string;
+  phoneNumber: string;
+  email: string;
+  organizationType: OrganizationType;
+  industryType: IndustryType;
+  teamSize: TeamSize;
+  yearEstablished: string;
+  website: string;
+  companyVision: string;
+  socialLinks: Record<string, string>;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export type CreateEmployerProfileType = Omit<EmployerProfileType, "id" | "userId">;
+export type UpdateEmployerProfileType = Partial<EmployerProfileType>;
