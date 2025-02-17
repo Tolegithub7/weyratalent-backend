@@ -1,6 +1,12 @@
+<<<<<<< Updated upstream
 import { IndustryType, OrganizationType, TeamSize } from "@/types/employerProfile.types";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { z } from "zod";
+=======
+import { z } from "zod";
+import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
+import { OrganizationType, IndustryType, TeamSize } from "@/types/employerProfile.types";
+>>>>>>> Stashed changes
 
 extendZodWithOpenApi(z);
 

@@ -1,11 +1,15 @@
 import { ServiceResponse } from "@/common/models/serviceResponse";
 import { db } from "@/db/database.config";
 import { employerProfile } from "@/entities";
+<<<<<<< Updated upstream
 import type {
   CreateEmployerProfileType,
   EmployerProfileType,
   UpdateEmployerProfileType,
 } from "@/types/employerProfile.types";
+=======
+import type { CreateEmployerProfileType, EmployerProfileType, UpdateEmployerProfileType } from "@/types/employerProfile.types";
+>>>>>>> Stashed changes
 import { eq } from "drizzle-orm";
 import { StatusCodes } from "http-status-codes";
 import { v4 as uuidv4 } from "uuid";
@@ -28,9 +32,13 @@ class EmployerProfileService {
     }
   }
 
+<<<<<<< Updated upstream
   async createEmployerProfile(
     employerData: CreateEmployerProfileType,
   ): Promise<ServiceResponse<EmployerProfileType | null>> {
+=======
+  async createEmployerProfile(employerData: CreateEmployerProfileType): Promise<ServiceResponse<EmployerProfileType | null>> {
+>>>>>>> Stashed changes
     try {
       const userId = uuidv4();
       const employerDataWithId = { ...employerData, userId: userId };
@@ -111,4 +119,8 @@ class EmployerProfileService {
   }
 }
 
+<<<<<<< Updated upstream
 export const employerProfileService = new EmployerProfileService();
+=======
+export const employerProfileService = new EmployerProfileService();
+>>>>>>> Stashed changes
