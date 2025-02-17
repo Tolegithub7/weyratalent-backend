@@ -1,0 +1,1 @@
+ALTER TABLE "employer_profile" ADD COLUMN "vision" text NOT NULL;

@@ -26,8 +26,11 @@ export const employerProfile = pgTable("employer_profile", {
   teamSize: teamSizeEnum("team_size").notNull(),
   yearEstablished: varchar("year_established", { length: 4 }).notNull(),
   website: varchar("website", { length: 255 }).notNull(),
-  companyVision: text("company_vision").notNull(),
-  socialLinks: jsonb("social_links").$type<Record<string, string>>().default({}),
+  vision: text("vision").notNull(),
+  instagramLink: varchar("instagram_link", { length: 50 }),
+  telegramLink: varchar("telegram_link", { length: 50 }),
+  facebookLink: varchar("facebook_link", { length: 50 }),
+  xLink: varchar("X_link", { length: 50 }),
 
   ...timestamps,
 });

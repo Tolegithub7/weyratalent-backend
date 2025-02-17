@@ -6,7 +6,6 @@ import { openAPIRouter } from "./api-docs/openAPIRouter";
 import { env } from "./common/utils/envConfig";
 import { BACKEND_URL } from "./common/utils/generalUtils";
 import { talentProfileRouter } from "./routes/talentProfile.routes";
-import { employerProfileRouter } from "@/routes/employerProfile.routes";
 
 const app: Express = express();
 const logger = pino({ name: "server start" });

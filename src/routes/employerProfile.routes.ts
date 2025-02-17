@@ -3,17 +3,10 @@ import { validateRequest } from "@/common/utils/httpHandlers";
 import { employerProfileController } from "@/controllers/employerProfile.controller";
 import {
   CreateEmployerProfileSchema,
-<<<<<<< Updated upstream
   EmployerProfileSchema,
   GetEmployerProfileSchema,
   UpdateEmployerProfileSchema,
-} from "../validator/employerProfile.validator";
-=======
-  GetEmployerProfileSchema,
-  EmployerProfileSchema,
-  UpdateEmployerProfileSchema
 } from "@/validator/employerProfile.validator";
->>>>>>> Stashed changes
 import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
 import express, { type Router } from "express";
 import { z } from "zod";
@@ -24,7 +17,6 @@ const BASE_API_PATH = env.BASE_API;
 
 // Routes
 employerProfileRouter.get("/", employerProfileController.getEmployerProfiles);
-<<<<<<< Updated upstream
 employerProfileRouter.get(
   "/:id",
   validateRequest(GetEmployerProfileSchema),
@@ -45,12 +37,6 @@ employerProfileRouter.delete(
   validateRequest(GetEmployerProfileSchema),
   employerProfileController.deleteEmployerProfile,
 );
-=======
-employerProfileRouter.get("/:id", validateRequest(GetEmployerProfileSchema), employerProfileController.getEmployerProfile);
-employerProfileRouter.post("/", validateRequest(CreateEmployerProfileSchema), employerProfileController.createEmployerProfile);
-employerProfileRouter.put("/:id", validateRequest(UpdateEmployerProfileSchema), employerProfileController.updateEmployerProfile);
-employerProfileRouter.delete("/:id", validateRequest(GetEmployerProfileSchema), employerProfileController.deleteEmployerProfile);
->>>>>>> Stashed changes
 
 // OpenAPI Documentation
 employerProfileRegistry.register("employer_profile", EmployerProfileSchema);
@@ -138,8 +124,4 @@ employerProfileRegistry.registerPath({
   responses: {
     204: { description: "No Content" },
   },
-<<<<<<< Updated upstream
 });
-=======
-});
->>>>>>> Stashed changes

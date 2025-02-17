@@ -32,10 +32,6 @@ export enum TeamSize {
   FIFTY_PLUS = "50+",
 }
 
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
 // import type { z } from "zod";
 // import type {
 //   CreateEmployerProfileSchema,
@@ -47,10 +43,6 @@ export enum TeamSize {
 // export type CreateEmployerProfileType = z.infer<typeof CreateEmployerProfileSchema.shape.body>;
 // export type UpdateEmployerProfileType = z.infer<typeof UpdateEmployerProfileSchema>;
 
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
 // Base type for employer profile
 export interface EmployerProfileType {
   id: string;
@@ -67,15 +59,14 @@ export interface EmployerProfileType {
   teamSize: TeamSize;
   yearEstablished: string;
   website: string;
-  companyVision: string;
-  socialLinks: Record<string, string>;
+  vision: string;
+  instagramLink?: string;
+  telegramLink?: string;
+  facebookLink?: string;
+  xLink?: string;
   createdAt: Date;
   updatedAt: Date;
 }
 
 export type CreateEmployerProfileType = Omit<EmployerProfileType, "id" | "userId">;
-<<<<<<< Updated upstream
 export type UpdateEmployerProfileType = Partial<EmployerProfileType>;
-=======
-export type UpdateEmployerProfileType = Partial<EmployerProfileType>;
->>>>>>> Stashed changes

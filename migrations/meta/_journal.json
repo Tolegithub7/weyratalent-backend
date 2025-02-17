@@ -36,6 +36,27 @@
       "when": 1739815119774,
       "tag": "20250217175839_employerProfile",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1739825902844,
+      "tag": "20250217205822_employer_profile",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1739829708175,
+      "tag": "20250217220148_create_employer_profile",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1739830259056,
+      "tag": "20250217221059_create_employer_profile",
+      "breakpoints": true
     }
   ]
 }
