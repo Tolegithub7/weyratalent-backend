@@ -6,15 +6,15 @@ extendZodWithOpenApi(z);
 export const WorkExperienceSchema = z.object({
   jobTitle: z.string(),
   company: z.string(),
-  start_date: z.date(),
-  end_date: z.date().optional(),
+  start_date: z.string(),
+  end_date: z.string().optional(),
 });
 
 export const EducationSchema = z.object({
   degree: z.string(),
   institution: z.string(),
-  start_date: z.date(),
-  end_date: z.date().optional(),
+  start_date: z.string(),
+  end_date: z.string().optional(),
   gpa: z.number().optional(),
 });
 

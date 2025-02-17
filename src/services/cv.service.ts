@@ -10,7 +10,7 @@ import { v4 as uuidv4 } from "uuid";
 class CVService {
   async create(cvData: CVInputType): Promise<ServiceResponse<CVResponseType | null>> {
     try {
-      const userId = uuidv4();
+      const userId = "550e8400-e29b-41d4-a716-446655440000"; //to be set from the user for the coming authentication
       const { fullName, skillTitle, hourlyRate, categories } = cvData;
       const cvTableData = {
         userId,
@@ -25,14 +25,19 @@ class CVService {
       if (cvData.education && cvData.education.length > 0) {
         await Promise.all(
           cvData.education.map(async (edu) => {
-            const eduTableData = { ...edu, cvId };
+            const eduTableData = {
+              ...edu,
+              cvId,
+              start_date: new Date(edu.start_date),
+              end_date: edu.end_date ? new Date(edu.end_date) : null,
+            };
             const created = await db.insert(education).values(eduTableData).returning();
             const educationData = {
               ...created[0],
-              end_date: edu.end_date ?? undefined, // Convert null to undefined
+              end_date: created[0].end_date ? created[0].end_date.toLocaleDateString() : undefined, // Convert null to undefined
               gpa: edu.gpa ?? undefined,
             };
-            createdEducation.push(educationData);
+            createdEducation.push({ ...educationData, start_date: educationData.start_date.toLocaleDateString() });
           }),
         );
       }
@@ -41,13 +46,18 @@ class CVService {
       if (cvData.workExperience && cvData.workExperience.length > 0) {
         await Promise.all(
           cvData.workExperience.map(async (work) => {
-            const workTableData = { ...work, cvId };
+            const workTableData = {
+              ...work,
+              cvId,
+              start_date: new Date(work.start_date),
+              end_date: work.end_date ? new Date(work.end_date) : null,
+            };
             const created = await db.insert(workExperience).values(workTableData).returning();
             const workData = {
               ...created[0],
-              end_date: work.end_date ?? undefined, // Convert null to undefined
+              end_date: created[0].end_date ? created[0].end_date.toLocaleDateString() : undefined, // Convert null to undefined
             };
-            createdWorkExperience.push(workData);
+            createdWorkExperience.push({ ...workData, start_date: workData.start_date.toLocaleDateString() });
           }),
         );
       }
@@ -96,7 +106,8 @@ class CVService {
           const workData = (await db.select().from(workExperience).where(eq(workExperience.cvId, cvId))).map(
             (work) => ({
               ...work,
-              end_date: work.end_date ?? undefined, // Convert null to undefined
+              end_date: work.end_date ? work.end_date.toLocaleDateString() : undefined, // Convert null to undefined
+              start_date: work.start_date.toLocaleDateString(),
             }),
           );
           const projectData = (await db.select().from(project).where(eq(project.cvId, cvId))).map((proj) => ({
@@ -105,7 +116,8 @@ class CVService {
           }));
           const educationData = (await db.select().from(education).where(eq(education.cvId, cvId))).map((edu) => ({
             ...edu,
-            end_date: edu.end_date ?? undefined, // Convert null to undefined
+            end_date: edu.end_date ? edu.end_date.toLocaleDateString() : undefined, // Convert null to undefined
+            start_date: edu.start_date.toLocaleDateString(),
             gpa: edu.gpa ?? undefined,
           }));
 
@@ -177,14 +189,17 @@ class CVService {
 
   async deleteCv(id: string): Promise<ServiceResponse<null>> {
     try {
-      const cvData = await db.delete(cv).where(eq(cv.id, id)).returning();
-      const deletedCv = cvData ? cvData[0] : null;
-      if (deletedCv) {
-        const cvId = deletedCv.id;
+      const cvData = await db.select().from(cv).where(eq(cv.id, id));
+      const foundCv = cvData ? cvData[0] : null;
+
+      if (foundCv) {
+        const cvId = foundCv.id;
         await db.delete(workExperience).where(eq(workExperience.cvId, cvId)).returning();
         await db.delete(project).where(eq(project.cvId, cvId)).returning();
         await db.delete(education).where(eq(education.cvId, cvId)).returning();
       }
+
+      await db.delete(cv).where(eq(cv.id, id)).returning();
 
       return ServiceResponse.success<null>("CV deleted Succesfully", null, StatusCodes.OK);
     } catch (error) {
