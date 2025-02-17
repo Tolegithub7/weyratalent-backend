@@ -7,7 +7,8 @@ export const project = pgTable("project", {
   cvId: uuid("cv_id")
     .notNull()
     .references(() => cv.id),
+  title: text("title").notNull(),
   description: text("description").notNull(),
-  projectLink: varchar("project_link", { length: 55 }).notNull(),
+  projectLink: varchar("project_link", { length: 55 }),
   ...timestamps,
 });

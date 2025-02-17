@@ -98,7 +98,7 @@ talentProfileRegistry.registerPath({
   method: "put",
   path: `${BASE_API_PATH}/talent_profile/{id}`,
   tags: ["Talent Profile"],
-  summary: "Update feedback by id",
+  summary: "Update talent profile by id",
   request: {
     body: {
       required: true,

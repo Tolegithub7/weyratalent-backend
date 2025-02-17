@@ -13,12 +13,12 @@ export const cv = pgTable(
   "cv",
   {
     id: uuid("id").defaultRandom().primaryKey(),
-    fullName: text("full_name"),
+    fullName: text("full_name").notNull(),
     userId: uuid("user_id")
       .notNull()
       .unique()
       .references(() => users.id),
-    skillTitle: text("skill_title"),
+    skillTitle: text("skill_title").notNull(),
     hourlyRate: integer("hourly_rate").notNull().default(0).$type<number>(),
     categories: categoriesEnum("categories").notNull(),
     ...timestamps,
