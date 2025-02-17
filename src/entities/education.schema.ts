@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { check, doublePrecision, pgEnum, pgTable, text, uuid, varchar } from "drizzle-orm/pg-core";
+import { check, doublePrecision, pgEnum, pgTable, text, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 import { cv } from "./cv.entities";
 import { timestamps } from "./timeStamp.schema";
 
@@ -9,13 +9,12 @@ export const education = pgTable(
     id: uuid("id").defaultRandom().primaryKey(),
     cvId: uuid("cv_id")
       .notNull()
-      .references(() => cv.id)
-      .notNull(),
+      .references(() => cv.id),
     degree: varchar("degree", { length: 255 }).notNull(),
     institution: varchar("institution", { length: 255 }).notNull(),
-    start_date: varchar("start_date", { length: 10 }),
-    end_date: varchar("end_date", { length: 10 }),
-    gpa: doublePrecision("gpa").default(0.0),
+    start_date: timestamp("start_date", { mode: "date" }).notNull(),
+    end_date: timestamp("end_date", { mode: "date" }),
+    gpa: doublePrecision("gpa"),
     ...timestamps,
   },
   (table) => [check("gpa_check", sql`${table.gpa} >= 0 AND ${table.gpa} <= 4`)],
