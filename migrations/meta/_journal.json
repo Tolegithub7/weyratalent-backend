@@ -29,6 +29,13 @@
       "when": 1739391446217,
       "tag": "20250212201726_add-favorite-jobs-table",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1739815119774,
+      "tag": "20250217175839_employerProfile",
+      "breakpoints": true
     }
   ]
 }
