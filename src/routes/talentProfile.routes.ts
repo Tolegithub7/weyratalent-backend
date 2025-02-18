@@ -18,7 +18,7 @@ talentProfileRouter.get("/", talentProfileController.getTalentProfiles);
 talentProfileRouter.get("/:id", validateRequest(GetTalentProfileSchema), talentProfileController.getTalentProfile);
 talentProfileRouter.post("/", validateRequest(CreateTalentProfileSchema), talentProfileController.createTalentProfile);
 talentProfileRouter.put(
-  "/",
+  "/:id",
   validateRequest(CreateTalentProfileSchema.partial()),
   talentProfileController.updateTalentProfile,
 );

@@ -8,3 +8,4 @@ export * from "./cv.types";
 export * from "./education.types";
 export * from "./workExperience.types";
 export * from "./projects.types";
+export * from "./user.types";
