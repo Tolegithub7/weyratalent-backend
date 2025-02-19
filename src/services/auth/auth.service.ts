@@ -3,6 +3,7 @@ import { ServiceResponse } from "@/common/models/serviceResponse";
 import { logger } from "@/server";
 import type { UserResponseType, UserWithTokens } from "@/types";
 import type { UserType } from "@/types";
+import { TokenTypeEnum } from "@/types/token.types.";
 import bcrypt from "bcrypt";
 import { StatusCodes } from "http-status-codes";
 import { tokenService } from "../token.service";
