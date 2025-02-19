@@ -1,6 +1,7 @@
 import { ServiceResponse } from "@/common/models/serviceResponse";
 import { db } from "@/db/database.config";
 import { talentProfile } from "@/entities";
+import { logger } from "@/server";
 import type { CreateTalentProfileType, TalentProfileType, UpdateTalentProfileType } from "@/types/talentProfile.types";
 import { eq } from "drizzle-orm";
 import { StatusCodes } from "http-status-codes";
@@ -26,7 +27,7 @@ class TalentProfileService {
 
   async createTalentProfile(talentData: CreateTalentProfileType): Promise<ServiceResponse<TalentProfileType | null>> {
     try {
-      const userId = uuidv4(); //this is set from the user when auth is done
+      const userId = "ea45accb-de00-4722-be74-45524fa09c8c"; //this is set from the user when auth is done
       const talentDataWithId = { ...talentData, userId: userId };
       const createdTalent = await db.insert(talentProfile).values(talentDataWithId).returning();
       return ServiceResponse.success<TalentProfileType>(
@@ -50,6 +51,7 @@ class TalentProfileService {
         StatusCodes.OK,
       );
     } catch (error) {
+      logger.info(error);
       return ServiceResponse.failure<null>(
         "Failed to retrieve talent profile",
         null,

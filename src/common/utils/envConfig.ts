@@ -26,4 +26,9 @@ export const env = cleanEnv(process.env, {
   DB_PASS: str({ devDefault: testOnly("password") }),
   DB_NAME: str({ devDefault: testOnly("weyratech_test") }),
   DB_URL: str(),
+
+  //JWT
+  JWT_SECRET: str(),
+  JWT_ACCESS_EXPIRATION_MINUTES: num(),
+  JWT_REFRESH_EXPIRATION_DAYS: num(),
 });

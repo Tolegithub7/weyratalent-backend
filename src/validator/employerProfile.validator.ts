@@ -2,6 +2,7 @@ import { z } from "zod";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { OrganizationType, IndustryType, TeamSize } from "@/types/employerProfile.types";
 
+
 extendZodWithOpenApi(z);
 
 export const EmployerProfileSchema = z.object({

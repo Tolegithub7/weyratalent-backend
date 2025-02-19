@@ -124,4 +124,8 @@ employerProfileRegistry.registerPath({
   responses: {
     204: { description: "No Content" },
   },
+<<<<<<< HEAD
 });
+=======
+});
+>>>>>>> upstream/main

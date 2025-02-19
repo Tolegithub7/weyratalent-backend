@@ -9,8 +9,7 @@ export const education = pgTable(
     id: uuid("id").defaultRandom().primaryKey(),
     cvId: uuid("cv_id")
       .notNull()
-      .references(() => cv.id)
-      .notNull(),
+      .references(() => cv.id),
     degree: varchar("degree", { length: 255 }).notNull(),
     institution: varchar("institution", { length: 255 }).notNull(),
     start_date: timestamp("start_date", { mode: "date" }).notNull(),
