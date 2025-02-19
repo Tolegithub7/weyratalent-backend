@@ -31,3 +31,12 @@ export const CreateUserInputSchema = UserSchema.omit({
 });
 
 export const UpdateUserSchema = UserSchema.partial();
+
+export const UserResponseSchema = UserSchema.omit({
+  password: true,
+});
+
+export const ReqUserSchema = UserSchema.pick({
+  id: true,
+  email: true,
+}).or(UserSchema.pick({ id: true }));

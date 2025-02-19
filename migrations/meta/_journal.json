@@ -43,6 +43,20 @@
       "when": 1739825968149,
       "tag": "20250217205928_change-types-for-start-and-end-dates",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1739948412587,
+      "tag": "20250219070012_add-token-table",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1739948540421,
+      "tag": "20250219070220_add-refreshtoken-table",
+      "breakpoints": true
     }
   ]
 }

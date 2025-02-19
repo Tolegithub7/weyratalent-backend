@@ -8,7 +8,7 @@ import { pino } from "pino";
 import { openAPIRouter } from "./api-docs/openAPIRouter";
 import { env } from "./common/utils/envConfig";
 import { BACKEND_URL } from "./common/utils/generalUtils";
-import { cvRouter, userRouter } from "./routes";
+import { authRouter, cvRouter, userRouter } from "./routes";
 import { talentProfileRouter } from "./routes/talentProfile.routes";
 
 const app: Express = express();
@@ -21,6 +21,7 @@ app.use(express.json());
 app.use(`${env.BASE_API}/talent_profile`, talentProfileRouter);
 app.use(`${env.BASE_API}/cv`, cvRouter);
 app.use(`${env.BASE_API}/user`, userRouter);
+app.use(`${env.BASE_API}/auth`, authRouter);
 app.use(openAPIRouter);
 
 export { app, logger };

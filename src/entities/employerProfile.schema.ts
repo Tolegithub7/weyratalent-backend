@@ -1,16 +1,22 @@
-import { pgTable, uuid, varchar, text, pgEnum, jsonb } from "drizzle-orm/pg-core";
+import { jsonb, pgEnum, pgTable, text, uuid, varchar } from "drizzle-orm/pg-core";
+import { IndustryType, OrganizationType, TeamSize } from "../types/employerProfile.types";
 import { timestamps } from "./timeStamp.schema";
 import { users } from "./users.schema";
-import { OrganizationType, IndustryType, TeamSize } from "../types/employerProfile.types";
 
-export const organizationTypeEnum = pgEnum("organization_type", Object.values(OrganizationType) as [string, ...string[]]);
+export const organizationTypeEnum = pgEnum(
+  "organization_type",
+  Object.values(OrganizationType) as [string, ...string[]],
+);
 export const industryTypeEnum = pgEnum("industry_type", Object.values(IndustryType) as [string, ...string[]]);
 export const teamSizeEnum = pgEnum("team_size", Object.values(TeamSize) as [string, ...string[]]);
 
 export const employerProfile = pgTable("employer_profile", {
   id: uuid("id").defaultRandom().primaryKey(),
-  userId: uuid("user_id").references(() => users.id).notNull().unique(),
-  
+  userId: uuid("user_id")
+    .references(() => users.id)
+    .notNull()
+    .unique(),
+
   // Company Info
   logoUrl: varchar("logo_url", { length: 255 }),
   bannerUrl: varchar("banner_url", { length: 255 }).notNull(),
@@ -19,7 +25,7 @@ export const employerProfile = pgTable("employer_profile", {
   location: varchar("location", { length: 100 }).notNull(),
   phoneNumber: varchar("phone_number", { length: 20 }).notNull(),
   email: varchar("email", { length: 255 }).notNull().unique(),
-  
+
   // Founding Info
   organizationType: organizationTypeEnum("organization_type").notNull(),
   industryType: industryTypeEnum("industry_type").notNull(),
