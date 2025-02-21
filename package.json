@@ -51,12 +51,8 @@
     "@electric-sql/pglite": "^0.2.16",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
-<<<<<<< HEAD
-    "@types/node": "^22.13.4",
-=======
     "@types/jsonwebtoken": "^9.0.8",
     "@types/node": "^22.13.0",
->>>>>>> upstream/main
     "@types/pg": "^8.11.11",
     "@types/swagger-ui-express": "^4.1.7",
     "@types/uuid": "^10.0.0",

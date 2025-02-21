@@ -48,3 +48,34 @@ export enum Vacancies {
   Four = "4",
   FivePlus = "5+",
 }
+
+export enum Experience {
+  EntryLevel = "Entry Level",
+  MidLevel = "Mid Level",
+  SeniorLevel = "Senior Level",
+}
+
+export enum StatusType {
+  ACTIVE = "active",
+  EXPIRED = "expired",
+}
+
+export interface CreateJobPostingDTO {
+  id: string;
+  userId: string;
+  jobTitle: string;
+  jobRole?: string;
+  minSalary?: number;
+  maxSalary?: number;
+  salaryType?: SalaryType;
+  education?: Education;
+  jobType?: JobType;
+  experience?: Experience;
+  vacancies?: number;
+  expiryDate: Date;
+  jobLevel?: JobLevel;
+  description?: string;
+  responsibilities?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
