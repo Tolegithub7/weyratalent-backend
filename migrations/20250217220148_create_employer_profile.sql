@@ -1,1 +1,0 @@
-ALTER TABLE employer_profile ADD COLUMN vision TEXT NOT NULL;

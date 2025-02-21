@@ -1,6 +1,6 @@
 {
-  "id": "59aa19fa-bb11-4ac0-a214-6e70cfb51abc",
-  "prevId": "ae1657fc-c77d-4eea-bddf-af05360edf4a",
+  "id": "e85ddcfd-3336-4ce8-93c9-245a6437cb6c",
+  "prevId": "3000feb2-da48-4cd8-ade0-3163f7c15e88",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -984,9 +984,11 @@
         },
         "status": {
           "name": "status",
-          "type": "varchar(10)",
+          "type": "status",
+          "typeSchema": "public",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true,
+          "default": "'active'"
         },
         "created_at": {
           "name": "created_at",
@@ -1110,6 +1112,87 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.token": {
+      "name": "token",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "token": {
+          "name": "token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "token_type": {
+          "name": "token_type",
+          "type": "token_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "expires": {
+          "name": "expires",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "token_user_id_users_id_fk": {
+          "name": "token_user_id_users_id_fk",
+          "tableFrom": "token",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "token_user_id_unique": {
+          "name": "token_user_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "user_id"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -1246,6 +1329,14 @@
         "fixed"
       ]
     },
+    "public.status": {
+      "name": "status",
+      "schema": "public",
+      "values": [
+        "active",
+        "expired"
+      ]
+    },
     "public.vacancies": {
       "name": "vacancies",
       "schema": "public",
@@ -1266,6 +1357,14 @@
         "interviewing",
         "rejected",
         "withdrawn"
+      ]
+    },
+    "public.token_type": {
+      "name": "token_type",
+      "schema": "public",
+      "values": [
+        "access",
+        "refresh"
       ]
     }
   },
