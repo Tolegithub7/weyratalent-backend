@@ -17,30 +17,23 @@ class JobPostingService {
         StatusCodes.OK,
       );
     } catch (error) {
-      return ServiceResponse.failure<null>(
-        "Failed to retrieve job postings",
-        null,
-        StatusCodes.INTERNAL_SERVER_ERROR,
-      );
+      return ServiceResponse.failure<null>("Failed to retrieve job postings", null, StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
-  
+
   async createJobPosting(
     jobData: CreateJobPostingType,
+    userId: string,
   ): Promise<ServiceResponse<JobPostingType | null>> {
     try {
-      const userId = "550e8400-e29b-41d4-a716-446655440000"; 
-      const jobDataWithId = { 
+      const jobDataWithId = {
         ...jobData,
-        userId: "550e8400-e29b-41d4-a716-446655440000",
+        userId: userId,
         expiryDate: new Date(jobData.expiryDate),
         createdAt: new Date(),
-        updatedAt: new Date(), 
+        updatedAt: new Date(),
       };
-      const createdJob = await db
-        .insert(jobProfile)
-        .values(jobDataWithId)
-        .returning();
+      const createdJob = await db.insert(jobProfile).values(jobDataWithId).returning();
       return ServiceResponse.success<JobPostingType>(
         "Job Posting Created Successfully",
         createdJob[0] as unknown as JobPostingType,
@@ -81,18 +74,15 @@ class JobPostingService {
     }
   }
 
-  async updateJobPosting(
-    id: string,
-    data: UpdateJobPostingType,
-  ): Promise<ServiceResponse<JobPostingType | null>> {
+  async updateJobPosting(id: string, data: UpdateJobPostingType): Promise<ServiceResponse<JobPostingType | null>> {
     try {
       const jobData = await db
         .update(jobProfile)
         // .set({ ...data, updatedAt: new Date() })
-        .set({ 
-          ...data, 
-          expiryDate: data.expiryDate ? new Date(data.expiryDate) : undefined, 
-          updatedAt: new Date() 
+        .set({
+          ...data,
+          expiryDate: data.expiryDate ? new Date(data.expiryDate) : undefined,
+          updatedAt: new Date(),
         })
         .where(eq(jobProfile.id, id))
         .returning();

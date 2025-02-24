@@ -25,9 +25,11 @@ class TalentProfileService {
     }
   }
 
-  async createTalentProfile(talentData: CreateTalentProfileType): Promise<ServiceResponse<TalentProfileType | null>> {
+  async createTalentProfile(
+    talentData: CreateTalentProfileType,
+    userId: string,
+  ): Promise<ServiceResponse<TalentProfileType | null>> {
     try {
-      const userId = "ea45accb-de00-4722-be74-45524fa09c8c"; //this is set from the user when auth is done
       const talentDataWithId = { ...talentData, userId: userId };
       const createdTalent = await db.insert(talentProfile).values(talentDataWithId).returning();
       return ServiceResponse.success<TalentProfileType>(

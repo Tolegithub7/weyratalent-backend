@@ -30,12 +30,12 @@ class EmployerProfileService {
 
   async createEmployerProfile(
     employerData: CreateEmployerProfileType,
+    userId: string,
   ): Promise<ServiceResponse<EmployerProfileType | null>> {
     try {
-      const userId = uuidv4(); // Replace with actual user ID from auth
       const employerDataWithId = {
         ...employerData,
-        userId: uuidv4(), 
+        userId: userId,
         // instagramLink: employerData.instagramLink || null,
         // telegramLink: employerData.telegramLink || null,
         // facebookLink: employerData.facebookLink || null,
@@ -44,10 +44,7 @@ class EmployerProfileService {
         updatedAt: new Date(), // Ensure updatedAt is a Date object
       };
 
-      const createdEmployer = await db
-        .insert(employerProfile)
-        .values(employerDataWithId)
-        .returning();
+      const createdEmployer = await db.insert(employerProfile).values(employerDataWithId).returning();
 
       return ServiceResponse.success<EmployerProfileType>(
         "Employer Profile Created Successfully",
@@ -66,10 +63,7 @@ class EmployerProfileService {
 
   async getEmployerProfile(id: string): Promise<ServiceResponse<EmployerProfileType | null>> {
     try {
-      const employerData = await db
-        .select()
-        .from(employerProfile)
-        .where(eq(employerProfile.id, id));
+      const employerData = await db.select().from(employerProfile).where(eq(employerProfile.id, id));
 
       const foundEmployer = employerData ? employerData[0] : null;
       return ServiceResponse.success<EmployerProfileType>(
@@ -88,10 +82,7 @@ class EmployerProfileService {
 
   async deleteEmployerProfile(id: string): Promise<ServiceResponse<EmployerProfileType | null>> {
     try {
-      const employerData = await db
-        .delete(employerProfile)
-        .where(eq(employerProfile.id, id))
-        .returning();
+      const employerData = await db.delete(employerProfile).where(eq(employerProfile.id, id)).returning();
 
       const deletedEmployer = employerData ? employerData[0] : null;
       return ServiceResponse.success<EmployerProfileType>(
@@ -145,4 +136,3 @@ class EmployerProfileService {
 }
 
 export const employerProfileService = new EmployerProfileService();
-

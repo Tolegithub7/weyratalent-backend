@@ -23,7 +23,6 @@ cvRegistry.registerPath({
   path: `${BASE_API_PATH}/cv`,
   tags: ["CV"],
   summary: "Create a new CV with profile information",
-  security: [], //atleast for now okay?
   request: {
     body: {
       required: true,

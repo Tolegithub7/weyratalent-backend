@@ -1,17 +1,38 @@
 import { employerProfileRouter } from "@/routes/employerProfile.routes";
 
+import { jobPostingRouter } from "@/routes/jobPosting.routes";
 import cors from "cors";
 import express, { type Express } from "express";
+import { unless } from "express-unless";
+import { StatusCodes } from "http-status-codes";
 import { pino } from "pino";
 import { openAPIRouter } from "./api-docs/openAPIRouter";
+import { authenticateMiddleware } from "./common/middleware/authenticationMiddleware";
+import customErrorHandler from "./common/middleware/customErrorHandler";
+import { ApiError } from "./common/models/serviceResponse";
 import { env } from "./common/utils/envConfig";
 import { BACKEND_URL } from "./common/utils/generalUtils";
 import { authRouter, cvRouter, userRouter } from "./routes";
 import { talentProfileRouter } from "./routes/talentProfile.routes";
-import { jobPostingRouter } from "@/routes/jobPosting.routes";
 
 const app: Express = express();
 const logger = pino({ name: "server start" });
+const auth = authenticateMiddleware as any;
+auth.unless = unless;
+const skipAuthPath = [
+  "/swagger.json",
+  "/swagger-ui.css",
+  "/swagger-ui-bundle.js",
+  "/swagger-ui-standalone-preset.js",
+  "/swagger-ui-init.js",
+  "/favicon-32x32.png",
+  "/favicon.ico",
+  "/",
+  `${env.BASE_API}/auth/login`,
+  `${env.BASE_API}/auth/refresh-token`,
+];
+
+app.use(auth.unless({ path: skipAuthPath }));
 
 // Middleware
 app.use(cors());
@@ -25,5 +46,11 @@ app.use(`${env.BASE_API}/user`, userRouter);
 app.use(`${env.BASE_API}/auth`, authRouter);
 app.use(`${env.BASE_API}/job_posting`, jobPostingRouter);
 app.use(openAPIRouter);
+
+app.use((req, res, next) => {
+  next(new ApiError(StatusCodes.NOT_FOUND, "Not Found"));
+});
+
+app.use(customErrorHandler());
 
 export { app, logger };

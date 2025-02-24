@@ -1,0 +1,1 @@
+ALTER TABLE "job_posting" DROP COLUMN "status";

@@ -8,9 +8,8 @@ import { StatusCodes } from "http-status-codes";
 import { v4 as uuidv4 } from "uuid";
 
 class CVService {
-  async create(cvData: CVInputType): Promise<ServiceResponse<CVResponseType | null>> {
+  async create(cvData: CVInputType, userId: string): Promise<ServiceResponse<CVResponseType | null>> {
     try {
-      const userId = "550e8400-e29b-41d4-a716-446655440000"; //to be set from the user for the coming authentication
       const { fullName, skillTitle, hourlyRate, categories } = cvData;
       const cvTableData = {
         userId,

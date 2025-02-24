@@ -10,7 +10,6 @@ export const token = pgTable("token", {
   token: text("token").notNull(),
   userId: uuid("user_id")
     .notNull()
-    .unique()
     .references(() => users.id),
   type: tokenTypeEnum("token_type").notNull(),
   expires: timestamp("expires", { mode: "date" }).notNull(),
