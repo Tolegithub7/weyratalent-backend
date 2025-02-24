@@ -5,57 +5,36 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1739308801933,
-      "tag": "20250211212001_add-client-and-talent-table",
+      "when": 1740096346908,
+      "tag": "20250221000546_fix_expiry_date_column",
       "breakpoints": true
     },
     {
       "idx": 1,
       "version": "7",
-      "when": 1739390214067,
-      "tag": "20250212195654_add-application-status-table",
+      "when": 1740133708061,
+      "tag": "20250221102828_add_asnew",
       "breakpoints": true
     },
     {
       "idx": 2,
       "version": "7",
-      "when": 1739390456532,
-      "tag": "20250212200056_add-time-stamp-to-application-table",
+      "when": 1740135727378,
+      "tag": "20250221110207_edited_jobPostingStatus",
       "breakpoints": true
     },
     {
       "idx": 3,
       "version": "7",
-      "when": 1739391446217,
-      "tag": "20250212201726_add-favorite-jobs-table",
+      "when": 1740136521813,
+      "tag": "20250221111521_deleted_jobPostingStatus",
       "breakpoints": true
     },
     {
       "idx": 4,
       "version": "7",
-      "when": 1739825907348,
-      "tag": "20250217205827_delete-date-types",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1739825968149,
-      "tag": "20250217205928_change-types-for-start-and-end-dates",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "7",
-      "when": 1739948412587,
-      "tag": "20250219070012_add-token-table",
-      "breakpoints": true
-    },
-    {
-      "idx": 7,
-      "version": "7",
-      "when": 1739948540421,
-      "tag": "20250219070220_add-refreshtoken-table",
+      "when": 1740136557993,
+      "tag": "20250221111557_edited_jobPostingStatus",
       "breakpoints": true
     }
   ]

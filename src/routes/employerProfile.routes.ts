@@ -125,3 +125,4 @@ employerProfileRegistry.registerPath({
     204: { description: "No Content" },
   },
 });
+

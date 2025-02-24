@@ -31,19 +31,6 @@ export enum TeamSize {
   TEN_TO_FIFTY = "10-50",
   FIFTY_PLUS = "50+",
 }
-
-// import type { z } from "zod";
-// import type {
-//   CreateEmployerProfileSchema,
-//   EmployerProfileSchema,
-//   UpdateEmployerProfileSchema,
-// } from "@/validator/employerProfile.validator"; // Ensure this path is correct
-
-// export type EmployerProfileType = z.infer<typeof EmployerProfileSchema>;
-// export type CreateEmployerProfileType = z.infer<typeof CreateEmployerProfileSchema.shape.body>;
-// export type UpdateEmployerProfileType = z.infer<typeof UpdateEmployerProfileSchema>;
-
-// Base type for employer profile
 export interface EmployerProfileType {
   id: string;
   userId: string;
@@ -59,8 +46,11 @@ export interface EmployerProfileType {
   teamSize: TeamSize;
   yearEstablished: string;
   website: string;
-  companyVision: string;
-  socialLinks: Record<string, string>;
+  vision: string;
+  instagramLink?: string;
+  telegramLink?: string;
+  facebookLink?: string;
+  xLink?: string;
   createdAt: Date;
   updatedAt: Date;
 }

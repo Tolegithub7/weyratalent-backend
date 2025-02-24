@@ -1,4 +1,4 @@
-import { JobLevel, JobRole, JobType, SalaryType, Vacancies } from "@/types";
+import { JobLevel, JobRole, JobType, SalaryType, Vacancies, StatusType } from "@/types";
 import { sql } from "drizzle-orm";
 import { doublePrecision, pgEnum, pgTable, text, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 import { timestamps } from "./timeStamp.schema";
@@ -9,6 +9,7 @@ export const jobRoleEnum = pgEnum("job_role", Object.values(JobRole) as [string,
 export const jobTypeEnum = pgEnum("job_type", Object.values(JobType) as [string, ...string[]]);
 export const salaryEnum = pgEnum("salary_type", Object.values(SalaryType) as [string, ...string[]]);
 export const vacancyEnum = pgEnum("vacancies", Object.values(Vacancies) as [string, ...string[]]);
+export const statusTypeEnum = pgEnum("status", Object.values(StatusType) as [string,...string[]]);
 
 export const jobProfile = pgTable("job_posting", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -27,8 +28,9 @@ export const jobProfile = pgTable("job_posting", {
   minSalary: doublePrecision("min_salary").default(0.0),
   maxSalary: doublePrecision("max_salary").notNull().default(0.0),
   expiryDate: timestamp("expiry_date").notNull(),
-  status: varchar("status", { length: 10 }).$default(
-    () => sql`CASE WHEN CURRENT_TIMESTAMP < expiry_date THEN 'active' ELSE 'expired' END`,
-  ),
+  status: statusTypeEnum("status").notNull().default(StatusType.ACTIVE),
+  // status: varchar("status", { length: 10 }).$default(
+  //   () => sql`CASE WHEN CURRENT_TIMESTAMP < expiry_date THEN 'active' ELSE 'expired' END`,
+  // ),
   ...timestamps,
 });
