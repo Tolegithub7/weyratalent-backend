@@ -1,9 +1,5 @@
 import { employerProfileRouter } from "@/routes/employerProfile.routes";
 
-<<<<<<< HEAD
-=======
-import { jobPostingRouter } from "@/routes/jobPosting.routes";
->>>>>>> 6b054bbda4018421fe0645b987f779ac2dfd3c3b
 import cors from "cors";
 import express, { type Express } from "express";
 import { unless } from "express-unless";
