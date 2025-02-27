@@ -1,10 +1,11 @@
-import { UserRole } from "@/types";
+import { UserRole, Country } from "@/types";
 import { sql } from "drizzle-orm";
 import { check, pgEnum, pgTable, text, uuid, varchar, boolean } from "drizzle-orm/pg-core";
 import { timestamps } from "./timeStamp.schema";
 
 console.log(Object.values(UserRole) as [string, ...string[]]);
 export const roleEnum = pgEnum("role", Object.values(UserRole) as [string, ...string[]]);
+export const countryEnum = pgEnum("country", Object.values(Country) as [string, ...string[]]);
 
 export const users = pgTable(
   "users",
@@ -13,7 +14,7 @@ export const users = pgTable(
     fullName: text("full_name"),
     userName: varchar("user_name", { length: 50 }).unique(),
     email: varchar("email", { length: 50 }).notNull().unique(),
-    country: varchar("country", { length: 50 }).notNull(),
+    country: countryEnum("country").notNull(),
     password: text("password").notNull(),
     companyName: varchar("company_name", { length: 100 }),
     address: text("address"),

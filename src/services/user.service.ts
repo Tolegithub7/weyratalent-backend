@@ -2,7 +2,7 @@ import { ApiError, ServiceResponse } from "@/common/models/serviceResponse";
 import { db } from "@/db/database.config";
 import { users } from "@/entities";
 import { logger } from "@/server";
-import type { UpdateUserType, UserInputType, UserRole, UserType } from "@/types";
+import type { UpdateUserType, UserInputType, UserRole, UserType, Country } from "@/types";
 import bcrypt from "bcrypt";
 import { eq } from "drizzle-orm";
 import { StatusCodes } from "http-status-codes";
@@ -20,12 +20,15 @@ export class UserService {
         throw new Error("User with the specified email not found");
       }
 
-      const returnedUser = {
-        ...foundUser,
-        role: foundUser.role as UserRole,
-      };
+      // const returnedUser = {
+      //   ...foundUser,
+      //   role: foundUser.role as UserRole,
+      // };
+      // return returnedUser;
+      
+      // The returned object will match UserType automatically
+      return foundUser as UserType;
 
-      return returnedUser;
     } catch (error) {
       throw new Error("Error retrieving user by email");
     }
@@ -33,12 +36,14 @@ export class UserService {
 
   async createUser(userData: UserInputType): Promise<ServiceResponse<UserType | null>> {
     try {
+      const hashedPassword = await this.hashPassword(userData.password);
       const createdUser = await db
         .insert(users)
-        .values({ ...userData, password: await this.hashPassword(userData.password) })
+        .values({ ...userData, password: hashedPassword })
         .returning();
       const newUser = {
         ...createdUser[0],
+        country: createdUser[0].country as Country,
         role: createdUser[0].role as UserRole,
       };
 
@@ -72,7 +77,7 @@ export class UserService {
     try {
       const foundUsers = await db.select().from(users);
       return ServiceResponse.success<UserType[]>(
-        "Talent Profiles Retrieved Succesfully",
+        "Users Retrieved Successfully",
         foundUsers as unknown as UserType[],
         StatusCodes.OK,
       );
@@ -86,7 +91,7 @@ export class UserService {
       const userData = await db.delete(users).where(eq(users.id, id)).returning();
       const deletedUser = userData ? userData[0] : null;
       return ServiceResponse.success<UserType>(
-        "user deleted Succesfully",
+        "User deleted successfully",
         deletedUser as unknown as UserType,
         StatusCodes.OK,
       );
@@ -103,10 +108,10 @@ export class UserService {
         .where(eq(users.id, id))
         .returning();
 
-      const updatedTalent = userData ? userData[0] : null;
+      const updatedUser = userData ? userData[0] : null;
       return ServiceResponse.success<UserType>(
-        "User updated Succesfully",
-        updatedTalent as unknown as UserType,
+        "User updated successfully",
+        updatedUser as unknown as UserType,
         StatusCodes.OK,
       );
     } catch (error) {
