@@ -12,34 +12,34 @@ export const authRegistry = new OpenAPIRegistry();
 const BASE_API_PATH = env.BASE_API;
 
 authRouter.post("/login", validateRequest(LoginInputSchema), authController.login);
-// authRouter.post("/refresh-token", validateRequest(LoginInputSchema), authController.refreshToken);
+authRouter.post("/refresh-token", validateRequest(RefreshTokenSchema), authController.refreshToken);
 
 // AUTH API DOCS
-// authRegistry.registerPath({
-//   method: "post",
-//   path: `${BASE_API_PATH}/auth/refresh-token`,
-//   tags: ["Auth"],
-//   security: [],
-//   request: {
-//     body: {
-//       required: true,
-//       content: {
-//         "application/json": {
-//           schema: RefreshTokenSchema.shape.body,
-//           example: {
-//             refreshToken: "refreshToken",
-//           },
-//         },
-//       },
-//     },
-//   },
-//   responses: {
-//     201: {
-//       description: "Created",
-//       content: { "application/json": { schema: z.object({}) } },
-//     },
-//   },
-// });
+authRegistry.registerPath({
+  method: "post",
+  path: `${BASE_API_PATH}/auth/refresh-token`,
+  tags: ["Auth"],
+  security: [],
+  request: {
+    body: {
+      required: true,
+      content: {
+        "application/json": {
+          schema: RefreshTokenSchema.shape.body,
+          example: {
+            refreshToken: "refreshToken",
+          },
+        },
+      },
+    },
+  },
+  responses: {
+    201: {
+      description: "Created",
+      content: { "application/json": { schema: z.object({}) } },
+    },
+  },
+});
 
 // AUTH API DOCS
 authRegistry.registerPath({
@@ -54,7 +54,7 @@ authRegistry.registerPath({
         "application/json": {
           schema: LoginInputSchema.shape.body,
           example: {
-            email: "mereb-test@gmail.com",
+            email: "weyra-test@gmail.com",
             password: "password",
           },
         },

@@ -35,6 +35,12 @@ class AuthController {
       res,
     );
   });
+
+  public refreshToken = catchAsync(async (req: Request, res: Response) => {
+    const { refreshToken } = req.body;
+    const tokens = await this.tokenService.refreshToken(refreshToken, req);
+    return handleServiceResponse(ServiceResponse.success("Token refreshed successfully", tokens), res);
+  });
 }
 
 export const authController = new AuthController();

@@ -1,13 +1,19 @@
+import { ApiError } from "@/common/models/serviceResponse";
 import { catchAsync } from "@/common/utils/catchAsync.util";
 import { handleServiceResponse } from "@/common/utils/httpHandlers";
 import { pick } from "@/common/utils/pick.utils";
 import { cvService } from "@/services/cv.service";
+import { StatusCodes } from "http-status-codes";
 
 import type { Request, Response } from "express";
 
 class CVController {
   public create = catchAsync(async (req: Request, res: Response) => {
-    const serviceResponse = await cvService.create(req.body);
+    if (!req.user) {
+      throw new ApiError(StatusCodes.NOT_FOUND, "User not found");
+    }
+    const userId = req.user.id;
+    const serviceResponse = await cvService.create(req.body, userId);
     return handleServiceResponse(serviceResponse, res);
   });
 

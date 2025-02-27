@@ -17,6 +17,7 @@ class JobPostingService {
         StatusCodes.OK,
       );
     } catch (error) {
+<<<<<<< HEAD
       return ServiceResponse.failure<null>(
         "Failed to retrieve job postings",
         null,
@@ -41,6 +42,25 @@ class JobPostingService {
         .insert(jobProfile)
         .values(jobDataWithId)
         .returning();
+=======
+      return ServiceResponse.failure<null>("Failed to retrieve job postings", null, StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  async createJobPosting(
+    jobData: CreateJobPostingType,
+    userId: string,
+  ): Promise<ServiceResponse<JobPostingType | null>> {
+    try {
+      const jobDataWithId = {
+        ...jobData,
+        userId: userId,
+        expiryDate: new Date(jobData.expiryDate),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      const createdJob = await db.insert(jobProfile).values(jobDataWithId).returning();
+>>>>>>> 6b054bbda4018421fe0645b987f779ac2dfd3c3b
       return ServiceResponse.success<JobPostingType>(
         "Job Posting Created Successfully",
         createdJob[0] as unknown as JobPostingType,
@@ -81,18 +101,29 @@ class JobPostingService {
     }
   }
 
+<<<<<<< HEAD
   async updateJobPosting(
     id: string,
     data: UpdateJobPostingType,
   ): Promise<ServiceResponse<JobPostingType | null>> {
+=======
+  async updateJobPosting(id: string, data: UpdateJobPostingType): Promise<ServiceResponse<JobPostingType | null>> {
+>>>>>>> 6b054bbda4018421fe0645b987f779ac2dfd3c3b
     try {
       const jobData = await db
         .update(jobProfile)
         // .set({ ...data, updatedAt: new Date() })
+<<<<<<< HEAD
         .set({ 
           ...data, 
           expiryDate: data.expiryDate ? new Date(data.expiryDate) : undefined, 
           updatedAt: new Date() 
+=======
+        .set({
+          ...data,
+          expiryDate: data.expiryDate ? new Date(data.expiryDate) : undefined,
+          updatedAt: new Date(),
+>>>>>>> 6b054bbda4018421fe0645b987f779ac2dfd3c3b
         })
         .where(eq(jobProfile.id, id))
         .returning();
@@ -108,4 +139,8 @@ class JobPostingService {
   }
 }
 
+<<<<<<< HEAD
 export const jobPostingService = new JobPostingService();
+=======
+export const jobPostingService = new JobPostingService();
+>>>>>>> 6b054bbda4018421fe0645b987f779ac2dfd3c3b

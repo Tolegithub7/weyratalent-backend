@@ -1,3 +1,4 @@
+import { ApiError } from "@/common/models/serviceResponse";
 import { env } from "@/common/utils/envConfig";
 import { db } from "@/db/database.config";
 import { token } from "@/entities/token.schema";
@@ -11,8 +12,13 @@ import {
   type TokenType,
   TokenTypeEnum,
 } from "@/types/token.types.";
+import { and, eq } from "drizzle-orm";
+import type { Request } from "express";
+import { StatusCodes } from "http-status-codes";
 import Jwt, { JsonWebTokenError, type JwtPayload } from "jsonwebtoken";
 import moment from "moment";
+import { tokenDataService } from "./token/token.dao";
+import { userService } from "./user.service";
 
 export class TokenService {
   async saveToken(tokenData: NewTokenType): Promise<TokenType> {
@@ -72,6 +78,68 @@ export class TokenService {
         expires: refreshPayload.exp,
       },
     };
+  }
+
+  /* refresh token */
+  async refreshToken(refreshToken: string, req?: Request): Promise<AccessAndRefreshTokens> {
+    const token = await this.verifyToken(refreshToken, TokenTypeEnum.REFRESH, req);
+    if (token instanceof Error) {
+      throw new ApiError(StatusCodes.UNAUTHORIZED, "Invalid Token");
+    }
+    const user = await userService.getUserById(token.userId);
+    if (!user) {
+      throw new ApiError(StatusCodes.NOT_FOUND, "User not found");
+    }
+    await this.deleteTokens(refreshToken, TokenTypeEnum.REFRESH, user.responseObject?.id as string);
+    return this.generateAccessAndRefreshToken(user.responseObject as UserType);
+  }
+
+  async deleteTokens(tokenData: string, type: TokenTypeEnum, userId: string) {
+    const tokens = await db
+      .delete(token)
+      .where(and(eq(token.token, tokenData), eq(token.type, type), eq(token.userId, userId)));
+  }
+
+  async verifyToken(token: string, type: TokenTypeEnum, req?: Request): Promise<TokenType | Error> {
+    try {
+      const payload = Jwt.verify(token, env.JWT_SECRET) as JwtPayload;
+      if (typeof payload.sub !== "string") {
+        return new ApiError(StatusCodes.BAD_REQUEST, "Invalid Token");
+      }
+      const endTime = new Date(payload.endTime);
+      const currentTime = new Date();
+      // Todo Remove this line of code in the future :)
+      if (!endTime || currentTime > endTime) {
+        return new ApiError(StatusCodes.UNAUTHORIZED, "Token has expired");
+      }
+
+      const tokens = await tokenDataService.queryToken(token, type);
+      if (!tokens.length) {
+        return new ApiError(StatusCodes.NOT_FOUND, "Token not found");
+      }
+
+      if (req !== undefined) {
+        const user = await userService.getUserById(payload.sub);
+        if (!user || !user.responseObject) {
+          return new ApiError(StatusCodes.UNAUTHORIZED, "Please authenticate");
+        }
+
+        req.user = {
+          id: user.responseObject.id,
+          email: user.responseObject.email,
+        };
+
+        req.token = payload;
+        req.role = user.responseObject?.role;
+      }
+
+      return tokens[0];
+    } catch (error) {
+      if (error instanceof JsonWebTokenError)
+        return new ApiError(StatusCodes.UNAUTHORIZED, "Token verification failed");
+      if (error instanceof ApiError) return error;
+      return new ApiError(StatusCodes.INTERNAL_SERVER_ERROR, "Error while trying to verify token.");
+    }
   }
 }
 
