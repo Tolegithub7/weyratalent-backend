@@ -27,7 +27,7 @@ export const authenticateMiddleware = async (req: Request, res: Response, next: 
       email: user.responseObject.email,
     };
     req.token = decoded as PayloadType;
-    req.role = user.responseObject?.role;
+    req.role = user.responseObject.role;
     next();
   } catch (error) {
     if (error instanceof ApiError) {

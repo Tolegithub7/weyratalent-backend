@@ -1,3 +1,4 @@
+import { uploadImages } from "@/common/middleware/uploadMiddleware";
 import { env } from "@/common/utils/envConfig";
 import { validateRequest } from "@/common/utils/httpHandlers";
 import { employerProfileController } from "@/controllers/employerProfile.controller";
@@ -24,11 +25,19 @@ employerProfileRouter.get(
 );
 employerProfileRouter.post(
   "/",
+  uploadImages.fields([
+    { name: "banner", maxCount: 1 },
+    { name: "logo", maxCount: 1 },
+  ]),
   validateRequest(CreateEmployerProfileSchema),
   employerProfileController.createEmployerProfile,
 );
 employerProfileRouter.put(
   "/:id",
+  uploadImages.fields([
+    { name: "banner", maxCount: 1 },
+    { name: "logo", maxCount: 1 },
+  ]),
   validateRequest(UpdateEmployerProfileSchema),
   employerProfileController.updateEmployerProfile,
 );
@@ -77,8 +86,13 @@ employerProfileRegistry.registerPath({
     body: {
       required: true,
       content: {
-        "application/json": {
+        "multipart/form-data": {
           schema: CreateEmployerProfileSchema.shape.body,
+          encoding: {
+            file: {
+              contentType: "*/*",
+            },
+          },
         },
       },
     },
@@ -100,8 +114,13 @@ employerProfileRegistry.registerPath({
     body: {
       required: true,
       content: {
-        "application/json": {
+        "multipart/form-data": {
           schema: UpdateEmployerProfileSchema,
+          encoding: {
+            file: {
+              contentType: "*/*",
+            },
+          },
         },
       },
     },
@@ -125,4 +144,3 @@ employerProfileRegistry.registerPath({
     204: { description: "No Content" },
   },
 });
-
