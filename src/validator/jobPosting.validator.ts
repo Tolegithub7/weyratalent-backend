@@ -1,4 +1,4 @@
-import { JobLevel, JobRole, JobType, SalaryType, Vacancies, Experience, Education, StatusType } from "@/types";
+import { Education, Experience, JobLevel, JobRole, JobType, SalaryType, StatusType, Vacancies } from "@/types";
 import { z } from "zod";
 
 export const JobPostingSchema = z.object({

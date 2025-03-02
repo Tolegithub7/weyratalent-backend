@@ -30,12 +30,16 @@ class EmployerProfileService {
 
   async createEmployerProfile(
     employerData: CreateEmployerProfileType,
+    logoUrl: string,
+    bannerUrl: string,
     userId: string,
   ): Promise<ServiceResponse<EmployerProfileType | null>> {
     try {
       const employerDataWithId = {
         ...employerData,
         userId: userId,
+        bannerUrl: bannerUrl,
+        logoUrl: logoUrl,
         // instagramLink: employerData.instagramLink || null,
         // telegramLink: employerData.telegramLink || null,
         // facebookLink: employerData.facebookLink || null,

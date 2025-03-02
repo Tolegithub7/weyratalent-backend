@@ -1,4 +1,4 @@
-import { JobLevel, JobRole, JobType, SalaryType, Vacancies, StatusType } from "@/types";
+import { JobLevel, JobRole, JobType, SalaryType, StatusType, Vacancies } from "@/types";
 import { sql } from "drizzle-orm";
 import { doublePrecision, pgEnum, pgTable, text, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 import { timestamps } from "./timeStamp.schema";
@@ -9,7 +9,7 @@ export const jobRoleEnum = pgEnum("job_role", Object.values(JobRole) as [string,
 export const jobTypeEnum = pgEnum("job_type", Object.values(JobType) as [string, ...string[]]);
 export const salaryEnum = pgEnum("salary_type", Object.values(SalaryType) as [string, ...string[]]);
 export const vacancyEnum = pgEnum("vacancies", Object.values(Vacancies) as [string, ...string[]]);
-export const statusTypeEnum = pgEnum("status", Object.values(StatusType) as [string,...string[]]);
+export const statusTypeEnum = pgEnum("status", Object.values(StatusType) as [string, ...string[]]);
 
 export const jobProfile = pgTable("job_posting", {
   id: uuid("id").defaultRandom().primaryKey(),

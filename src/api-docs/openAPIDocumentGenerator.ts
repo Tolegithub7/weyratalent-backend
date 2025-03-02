@@ -1,7 +1,7 @@
 import { authRegistry, cvRegistry } from "@/routes";
 import { employerProfileRegistry } from "@/routes/employerProfile.routes";
-import { talentProfileRegistry } from "@/routes/talentProfile.routes";
 import { jobPostingRegistry } from "@/routes/jobPosting.routes";
+import { talentProfileRegistry } from "@/routes/talentProfile.routes";
 import { userRegistry } from "@/routes/user.routes";
 import { OpenAPIRegistry, OpenApiGeneratorV3 } from "@asteasolutions/zod-to-openapi";
 export function generateOpenAPIDocument() {
