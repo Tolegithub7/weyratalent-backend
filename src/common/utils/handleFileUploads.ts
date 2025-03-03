@@ -5,10 +5,15 @@ import { v4 as uuidv4 } from "uuid";
 import { env } from "./envConfig";
 import { minioClient } from "./minio.config";
 
-export const handleImageUpload = async (fileName: string, filePath: string, bucketName: BucketNameEnum) => {
+export const handleImageUpload = async (
+  fileName: string,
+  userId: string,
+  filePath: string,
+  bucketName: BucketNameEnum,
+) => {
   console.log("-----------------WE ARE HERE-------------", fileName, filePath);
   const bucket = bucketName;
-  const destinationObject = `${uuidv4()}-${fileName}`;
+  const destinationObject = userId;
 
   const exists = await minioClient.bucketExists(bucket);
   if (exists) {
@@ -34,13 +39,24 @@ export const handleImageUpload = async (fileName: string, filePath: string, buck
   console.log("Bucket policy set to public read access.");
 
   const fileExtension = path.extname(fileName).toLowerCase();
-  const mimeType = fileExtension === ".png" ? "image/png" : "image/jpg"; // Add more types if needed
+  // Mapping of file extensions to MIME types
+  const mimeTypes: { [key: string]: string } = {
+    ".png": "image/png",
+    ".jpg": "image/jpeg",
+    ".jpeg": "image/jpeg",
+    ".gif": "image/gif",
+    ".bmp": "image/bmp",
+    ".webp": "image/webp",
+    ".svg": "image/svg+xml",
+  };
+
+  const mimeType = mimeTypes[fileExtension.toLowerCase()] || "application/octet-stream";
 
   const metaData = {
-    "Content-Type": mimeType, // Set the correct MIME type for the image
-    "X-Amz-Meta-Testing": 1234, // Custom metadata
-    "X-Amz-Meta-Description": `${bucket} image`, // Custom metadata
-    example: 5678, // Additional metadata (not recommended for production)
+    "Content-Type": mimeType,
+    "X-Amz-Meta-Testing": 1234,
+    "X-Amz-Meta-Description": `${bucket} image`,
+    example: 5678,
   };
 
   console.log("----------------I AM HERE ----- ----- --", fileName, filePath, metaData);

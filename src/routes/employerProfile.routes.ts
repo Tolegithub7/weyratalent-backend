@@ -18,6 +18,7 @@ const BASE_API_PATH = env.BASE_API;
 
 // Routes
 employerProfileRouter.get("/", employerProfileController.getEmployerProfiles);
+employerProfileRouter.get("/me", employerProfileController.getRegisteredEmployerProfile);
 employerProfileRouter.get(
   "/:id",
   validateRequest(GetEmployerProfileSchema),
@@ -30,7 +31,7 @@ employerProfileRouter.post(
     { name: "logo", maxCount: 1 },
   ]),
   validateRequest(CreateEmployerProfileSchema),
-  employerProfileController.createEmployerProfile,
+  employerProfileController.createOrUpdateEmployerProfile,
 );
 employerProfileRouter.put(
   "/:id",
@@ -39,7 +40,7 @@ employerProfileRouter.put(
     { name: "logo", maxCount: 1 },
   ]),
   validateRequest(UpdateEmployerProfileSchema),
-  employerProfileController.updateEmployerProfile,
+  employerProfileController.createOrUpdateEmployerProfile,
 );
 employerProfileRouter.delete(
   "/:id",
@@ -59,6 +60,19 @@ employerProfileRegistry.registerPath({
     200: {
       description: "Success",
       content: { "application/json": { schema: z.array(EmployerProfileSchema) } },
+    },
+  },
+});
+
+// GET employer profile for registered employer
+employerProfileRegistry.registerPath({
+  method: "get",
+  path: `${BASE_API_PATH}/employer_profile/me`,
+  tags: ["Employer Profile"],
+  responses: {
+    200: {
+      description: "Success",
+      content: { "application/json": { schema: EmployerProfileSchema } },
     },
   },
 });

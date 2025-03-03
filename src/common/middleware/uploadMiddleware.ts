@@ -10,32 +10,32 @@ const storage = multer.diskStorage({
   destination: (_req, _file, cb) => {
     const banner_dir = "./uploads/banner";
     const logo_dir = "./uploads/logo";
+    const profile_dir = "./uploads/profile";
 
-    if (!fs.existsSync("./uploads")) {
-      fs.mkdirSync("./uploads");
-    }
+    [banner_dir, logo_dir, profile_dir].forEach((dir) => {
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+      }
+    });
 
-    if (!fs.existsSync(banner_dir)) {
-      fs.mkdirSync(banner_dir);
-    }
-
-    if (!fs.existsSync(logo_dir)) {
-      fs.mkdirSync(logo_dir);
+    if (!_file) {
+      return cb(null, "./uploads");
     }
 
     if (_file.fieldname === "banner") {
       cb(null, banner_dir);
-    } else {
+    } else if (_file.fieldname === "profile") {
+      cb(null, profile_dir);
+    } else if (_file.fieldname === "logo") {
       cb(null, logo_dir);
     }
   },
   filename: (_req, file, cb) => {
     const fileExtension = path.extname(file.originalname);
-    const fileName = `${uuidv4()}${fileExtension}`; // Generate a unique filename using UUID
+    const fileName = `${uuidv4()}${fileExtension}`;
     cb(null, fileName);
   },
 });
-
 const limits = {
   fileSize: 5 * 1024 * 1024,
 };

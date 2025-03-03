@@ -28,10 +28,10 @@ class EmployerProfileService {
     }
   }
 
-  async createEmployerProfile(
+  async createOrUpdateEmployerProfile(
     employerData: CreateEmployerProfileType,
-    logoUrl: string,
     bannerUrl: string,
+    logoUrl: string,
     userId: string,
   ): Promise<ServiceResponse<EmployerProfileType | null>> {
     try {
@@ -48,13 +48,26 @@ class EmployerProfileService {
         updatedAt: new Date(), // Ensure updatedAt is a Date object
       };
 
-      const createdEmployer = await db.insert(employerProfile).values(employerDataWithId).returning();
+      // Check if a employer profile with the given userId already exists
+      const existingEmployer = await db.query.employerProfile.findFirst({
+        where: (employerProfile, { eq }) => eq(employerProfile.userId, userId),
+      });
 
-      return ServiceResponse.success<EmployerProfileType>(
-        "Employer Profile Created Successfully",
-        createdEmployer[0] as unknown as EmployerProfileType,
-        StatusCodes.CREATED,
-      );
+      if (existingEmployer) {
+        const updatedEmployer = await this.updateEmployerProfile(userId, bannerUrl, logoUrl, employerDataWithId);
+        return ServiceResponse.success<EmployerProfileType>(
+          "Employer Profile Updated Successfully",
+          updatedEmployer as unknown as EmployerProfileType,
+          StatusCodes.OK,
+        );
+      } else {
+        const createdEmployer = await db.insert(employerProfile).values(employerDataWithId).returning();
+        return ServiceResponse.success<EmployerProfileType>(
+          "Employer Profile Created Successfully",
+          createdEmployer[0] as unknown as EmployerProfileType,
+          StatusCodes.CREATED,
+        );
+      }
     } catch (error) {
       console.error("Error in createEmployerProfile:", error);
       return ServiceResponse.failure<null>(
@@ -68,6 +81,25 @@ class EmployerProfileService {
   async getEmployerProfile(id: string): Promise<ServiceResponse<EmployerProfileType | null>> {
     try {
       const employerData = await db.select().from(employerProfile).where(eq(employerProfile.id, id));
+
+      const foundEmployer = employerData ? employerData[0] : null;
+      return ServiceResponse.success<EmployerProfileType>(
+        "Employer Profile Retrieved Successfully",
+        foundEmployer as unknown as EmployerProfileType,
+        StatusCodes.OK,
+      );
+    } catch (error) {
+      return ServiceResponse.failure<null>(
+        "Failed to retrieve employer profile",
+        null,
+        StatusCodes.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async getRegisteredEmployerProfile(userId: string): Promise<ServiceResponse<EmployerProfileType | null>> {
+    try {
+      const employerData = await db.select().from(employerProfile).where(eq(employerProfile.userId, userId));
 
       const foundEmployer = employerData ? employerData[0] : null;
       return ServiceResponse.success<EmployerProfileType>(
@@ -104,12 +136,16 @@ class EmployerProfileService {
   }
 
   async updateEmployerProfile(
-    id: string,
+    userId: string,
+    bannerUrl: string,
+    logoUrl: string,
     data: UpdateEmployerProfileType,
   ): Promise<ServiceResponse<EmployerProfileType | null>> {
     try {
       const updatedData = {
         ...data,
+        bannerUrl: bannerUrl,
+        logoUrl: logoUrl,
         updatedAt: new Date(), // Ensure updatedAt is a Date object
         instagramLink: data.instagramLink || null,
         telegramLink: data.telegramLink || null,
@@ -120,7 +156,7 @@ class EmployerProfileService {
       const employerData = await db
         .update(employerProfile)
         .set(updatedData)
-        .where(eq(employerProfile.id, id))
+        .where(eq(employerProfile.userId, userId))
         .returning();
 
       const updatedEmployer = employerData ? employerData[0] : null;
