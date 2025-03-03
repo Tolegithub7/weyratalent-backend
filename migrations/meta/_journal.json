@@ -5,43 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1740096346908,
-      "tag": "20250221000546_fix_expiry_date_column",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1740133708061,
-      "tag": "20250221102828_add_asnew",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1740135727378,
-      "tag": "20250221110207_edited_jobPostingStatus",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1740136521813,
-      "tag": "20250221111521_deleted_jobPostingStatus",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1740136557993,
-      "tag": "20250221111557_edited_jobPostingStatus",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1740679107413,
-      "tag": "20250227175827_update_users_schema",
+      "when": 1741044236273,
+      "tag": "20250303232356_recreate-talent-profile",
       "breakpoints": true
     }
   ]

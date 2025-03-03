@@ -1,10 +1,12 @@
-import { Experience, Gender } from "@/types/user.types";
+import { Experience, Gender, Country, Nationality } from "@/types/user.types";
 import { date, pgEnum, pgTable, text, uuid, varchar } from "drizzle-orm/pg-core";
 import { timestamps } from "./timeStamp.schema";
 import { users } from "./users.schema";
 
 export const experienceEnum = pgEnum("experience", Object.values(Experience) as [string, ...string[]]);
 export const genderEnum = pgEnum("gender", Object.values(Gender) as [string, ...string[]]);
+export const countryEnum = pgEnum("country", Object.values(Country) as [string, ...string[]]);
+export const nationalityEnum = pgEnum("nationality", Object.values(Nationality) as [string, ...string[]]);
 
 export const talentProfile = pgTable("talent_profile", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -14,11 +16,13 @@ export const talentProfile = pgTable("talent_profile", {
     .notNull()
     .unique()
     .references(() => users.id),
-  nationality: text("nationality").notNull(),
+  country: countryEnum("country").notNull(),
+  personalWebsite: varchar("personal_website", { length: 255 }),
+  about: text("about"),
+  nationality: nationalityEnum("nationality").notNull(),
   dateOfBirth: date("dob").notNull(),
   gender: genderEnum("gender").notNull(),
   experience: experienceEnum("experience").notNull(),
-  socialLink: varchar("social_link", { length: 30 }),
-  about: text("about"),
+  socialLink: varchar("social_link", { length: 255 }),
   ...timestamps,
 });

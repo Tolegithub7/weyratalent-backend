@@ -1,1 +1,0 @@
-ALTER TABLE "token" DROP CONSTRAINT "token_user_id_unique";

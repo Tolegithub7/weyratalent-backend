@@ -1,5 +1,5 @@
 export { users, roleEnum } from "./users.schema";
-export { talentProfile, experienceEnum, genderEnum } from "./talentProfile.shema";
+export { talentProfile, experienceEnum, genderEnum, countryEnum, nationalityEnum } from "./talentProfile.schema";
 export { cv, cvRelations, categoriesEnum } from "./cv.entities";
 export { workExperience } from "./workExperience.schema";
 export { education } from "./education.schema";
