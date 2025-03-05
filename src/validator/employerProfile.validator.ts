@@ -1,7 +1,6 @@
-import { z } from "zod";
+import { IndustryType, OrganizationType, TeamSize } from "@/types/employerProfile.types";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
-import { OrganizationType, IndustryType, TeamSize } from "@/types/employerProfile.types";
-
+import { z } from "zod";
 
 extendZodWithOpenApi(z);
 

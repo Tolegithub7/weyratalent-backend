@@ -22,7 +22,7 @@ class JobPostingService {
   }
   async createJobPosting(
     jobData: CreateJobPostingType,
-    userId: string
+    userId: string,
   ): Promise<ServiceResponse<JobPostingType | null>> {
     try {
       const jobDataWithId = {
@@ -72,7 +72,6 @@ class JobPostingService {
       return ServiceResponse.failure<null>("Failed to delete job posting", null, StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
-
 
   async updateJobPosting(id: string, data: UpdateJobPostingType): Promise<ServiceResponse<JobPostingType | null>> {
     try {

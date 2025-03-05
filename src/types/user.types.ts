@@ -135,7 +135,6 @@ export enum Nationality {
   ZIMBABWE = "Zimbabwean",
 }
 
-
 export type UserType = z.infer<typeof UserSchema>;
 export type UserInputType = z.infer<typeof CreateUserInputSchema>;
 export type UpdateUserType = z.infer<typeof UpdateUserSchema>;

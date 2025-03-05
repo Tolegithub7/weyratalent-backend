@@ -1,5 +1,6 @@
 import { employerProfileRouter } from "@/routes/employerProfile.routes";
 
+import { jobPostingRouter } from "@/routes/jobPosting.routes";
 import cors from "cors";
 import express, { type Express } from "express";
 import { unless } from "express-unless";
@@ -13,7 +14,6 @@ import { env } from "./common/utils/envConfig";
 import { BACKEND_URL } from "./common/utils/generalUtils";
 import { authRouter, cvRouter, userRouter } from "./routes";
 import { talentProfileRouter } from "./routes/talentProfile.routes";
-import { jobPostingRouter } from "@/routes/jobPosting.routes";
 
 const app: Express = express();
 const logger = pino({ name: "server start" });

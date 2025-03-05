@@ -1,8 +1,8 @@
-import { Experience, Gender, Country, Nationality } from "@/types/user.types";
+import { Country, Experience, Gender, Nationality } from "@/types/user.types";
+import { relations, sql } from "drizzle-orm";
 import { date, pgEnum, pgTable, text, uuid, varchar } from "drizzle-orm/pg-core";
 import { timestamps } from "./timeStamp.schema";
 import { users } from "./users.schema";
-import { relations, sql } from "drizzle-orm";
 
 export const experienceEnum = pgEnum("experience", Object.values(Experience) as [string, ...string[]]);
 export const genderEnum = pgEnum("gender", Object.values(Gender) as [string, ...string[]]);
@@ -27,7 +27,6 @@ export const talentProfile = pgTable("talent_profile", {
   socialLink: varchar("social_link", { length: 255 }),
   ...timestamps,
 });
-
 
 export const talentProfileRelations = relations(talentProfile, ({ one }) => ({
   user: one(users, {

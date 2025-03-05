@@ -2,7 +2,7 @@ import { ApiError, ServiceResponse } from "@/common/models/serviceResponse";
 import { db } from "@/db/database.config";
 import { users } from "@/entities";
 import { logger } from "@/server";
-import type { UpdateUserType, UserInputType, UserRole, UserType, Country } from "@/types";
+import type { Country, UpdateUserType, UserInputType, UserRole, UserType } from "@/types";
 import bcrypt from "bcrypt";
 import { eq } from "drizzle-orm";
 import { StatusCodes } from "http-status-codes";
@@ -25,10 +25,9 @@ export class UserService {
       //   role: foundUser.role as UserRole,
       // };
       // return returnedUser;
-      
+
       // The returned object will match UserType automatically
       return foundUser as UserType;
-
     } catch (error) {
       throw new Error("Error retrieving user by email");
     }

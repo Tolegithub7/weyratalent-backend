@@ -1,6 +1,6 @@
-import { UserRole, Country } from "@/types";
+import { Country, UserRole } from "@/types";
 import { sql } from "drizzle-orm";
-import { check, pgEnum, pgTable, text, uuid, varchar, boolean } from "drizzle-orm/pg-core";
+import { boolean, check, pgEnum, pgTable, text, uuid, varchar } from "drizzle-orm/pg-core";
 import { timestamps } from "./timeStamp.schema";
 
 console.log(Object.values(UserRole) as [string, ...string[]]);
@@ -32,4 +32,3 @@ export const users = pgTable(
     ),
   ],
 );
-

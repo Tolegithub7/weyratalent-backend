@@ -1,4 +1,4 @@
-import { UserRole, Country } from "@/types";
+import { Country, UserRole } from "@/types";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { z } from "zod";
 
