@@ -21,24 +21,26 @@ class TalentProfileController {
     if (req.files) {
       const files = req.files as { [fieldname: string]: Express.Multer.File[] };
 
-      const profileFilePath = path.join(files.profile[0].destination, files.profile[0].filename);
-      console.log(profileFilePath);
+      if (files?.profile?.[0]) {
+        const profileFilePath = path.join(files.profile[0].destination, files.profile[0].filename);
+        console.log(profileFilePath);
 
-      try {
-        profileUrl = await handleImageUpload(
-          files.profile[0].filename,
-          userId,
-          profileFilePath,
-          BucketNameEnum.PROFILE,
-        );
-      } catch (error) {
-        if (fs.existsSync(profileFilePath)) {
-          fs.unlinkSync(profileFilePath);
+        try {
+          profileUrl = await handleImageUpload(
+            files.profile[0].filename,
+            userId,
+            profileFilePath,
+            BucketNameEnum.PROFILE,
+          );
+        } catch (error) {
+          if (fs.existsSync(profileFilePath)) {
+            fs.unlinkSync(profileFilePath);
+          }
+          throw new ApiError(
+            StatusCodes.INTERNAL_SERVER_ERROR,
+            `Failed to upload profile image: ${(error as Error).message}`,
+          );
         }
-        throw new ApiError(
-          StatusCodes.INTERNAL_SERVER_ERROR,
-          `Failed to upload profile image: ${(error as Error).message}`,
-        );
       }
     }
 

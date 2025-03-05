@@ -83,8 +83,8 @@ talentProfileRegistry.registerPath({
   request: { params: GetTalentProfileSchema.shape.params },
   tags: ["Talent Profile"],
   responses: {
-    201: {
-      description: "Created",
+    200: {
+      description: "Success",
       content: {
         "application/json": { schema: TalentProfileSchema },
       },

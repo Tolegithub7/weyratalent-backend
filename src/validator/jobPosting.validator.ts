@@ -1,27 +1,66 @@
 import { Education, Experience, JobLevel, JobRole, JobType, SalaryType, StatusType, Vacancies } from "@/types";
+import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { z } from "zod";
 
+extendZodWithOpenApi(z);
 export const JobPostingSchema = z.object({
   id: z.string().uuid(),
   userId: z.string().uuid(),
-  jobTitle: z.string().min(1, "Job title is required"),
-  jobRole: z.nativeEnum(JobRole),
-  jobType: z.nativeEnum(JobType),
-  jobLevel: z.nativeEnum(JobLevel),
-  salaryType: z.nativeEnum(SalaryType),
-  vacancies: z.nativeEnum(Vacancies),
-  description: z.string().min(1, "Description is required"),
-  responsibilities: z.string().min(1, "Responsibilities are required"),
-  minSalary: z.number().min(0, "Minimum salary must be a positive number"),
-  maxSalary: z.number().min(0, "Maximum salary must be a positive number"),
-  expiryDate: z.string().datetime({ offset: true }),
+  jobTitle: z.string().min(1, "Job title is required").openapi({
+    description: "Job Title",
+    default: "Frontend Developer",
+  }),
+  jobRole: z.nativeEnum(JobRole).openapi({
+    description: "Job Role",
+    default: JobRole.SOFTWARE_ENGINEER,
+  }),
+  jobType: z.nativeEnum(JobType).openapi({
+    description: "Job Type",
+    default: JobType.FULL_TIME,
+  }),
+  jobLevel: z.nativeEnum(JobLevel).openapi({
+    description: "Job Level",
+    default: JobLevel.ENTRY_LEVEL,
+  }),
+  salaryType: z.nativeEnum(SalaryType).openapi({
+    description: "Salary Type",
+    default: SalaryType.HOURLY,
+  }),
+  vacancies: z.nativeEnum(Vacancies).openapi({
+    description: "Vacancies",
+    default: Vacancies.Four,
+  }),
+  description: z.string().min(1, "Description is required").openapi({
+    description: "Job Description",
+  }),
+  responsibilities: z.string().min(1, "Responsibilities are required").openapi({
+    description: "Responsibilities and To Dos",
+  }),
+  minSalary: z.number().min(0, "Minimum salary must be a positive number").openapi({
+    description: "Minimum Salary",
+  }),
+  maxSalary: z.number().min(0, "Maximum salary must be a positive number").openapi({
+    description: "Maximum Salary",
+  }),
+  expiryDate: z.string().datetime({ offset: true }).openapi({
+    description: "Job application closing date",
+  }),
   // expiryDate: z.preprocess(
   //   (arg) => (typeof arg === "string" ? new Date(arg) : arg),
   //   z.date()
   // ), // convert input string to date
-  experience: z.nativeEnum(Experience),
-  education: z.nativeEnum(Education),
-  status: z.nativeEnum(StatusType).optional(),
+  experience: z.nativeEnum(Experience).openapi({
+    description: "Experience level needed",
+    default: Experience.MID_LEVEL,
+  }),
+  education: z.nativeEnum(Education).openapi({
+    description: "Education level",
+    default: Education.BachelorDegree,
+  }),
+  status: z.nativeEnum(StatusType).optional().openapi({
+    description: "Currrent Status of the Opening",
+    default: StatusType.ACTIVE,
+  }),
   // createdAt: z.date().optional(),
   // updatedAt: z.date().optional(),
 });

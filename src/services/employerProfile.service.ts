@@ -48,7 +48,6 @@ class EmployerProfileService {
         updatedAt: new Date(), // Ensure updatedAt is a Date object
       };
 
-      // Check if a employer profile with the given userId already exists
       const existingEmployer = await db.query.employerProfile.findFirst({
         where: (employerProfile, { eq }) => eq(employerProfile.userId, userId),
       });
