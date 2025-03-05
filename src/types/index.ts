@@ -9,3 +9,4 @@ export * from "./education.types";
 export * from "./workExperience.types";
 export * from "./projects.types";
 export * from "./user.types";
+export * from "./talentProfile.types";
