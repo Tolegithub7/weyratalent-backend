@@ -9,7 +9,15 @@ import customErrorHandler from "./common/middleware/customErrorHandler";
 import { ApiError } from "./common/models/serviceResponse";
 import { env } from "./common/utils/envConfig";
 import { BACKEND_URL } from "./common/utils/generalUtils";
-import { appliedJobsRouter, authRouter, cvRouter, employerProfileRouter, jobPostingRouter, userRouter } from "./routes";
+import {
+  appliedJobsRouter,
+  authRouter,
+  cvRouter,
+  employerProfileRouter,
+  favoriteJobsRouter,
+  jobPostingRouter,
+  userRouter,
+} from "./routes";
 import { talentProfileRouter } from "./routes/talentProfile.routes";
 
 const app: Express = express();
@@ -44,6 +52,7 @@ app.use(`${env.BASE_API}/user`, userRouter);
 app.use(`${env.BASE_API}/auth`, authRouter);
 app.use(`${env.BASE_API}/job_posting`, jobPostingRouter);
 app.use(`${env.BASE_API}/applied_jobs`, appliedJobsRouter);
+app.use(`${env.BASE_API}/favorite_jobs`, favoriteJobsRouter);
 app.use(openAPIRouter);
 
 app.use((req, res, next) => {
