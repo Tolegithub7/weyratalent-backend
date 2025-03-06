@@ -3,6 +3,7 @@ import {
   authRegistry,
   cvRegistry,
   employerProfileRegistry,
+  favoriteJobsRegistery,
   jobPostingRegistry,
   talentProfileRegistry,
   userRegistry,
@@ -17,6 +18,7 @@ export function generateOpenAPIDocument() {
     userRegistry,
     authRegistry,
     appliedJobsRegistry,
+    favoriteJobsRegistery,
   ]);
 
   registry.registerComponent("securitySchemes", "bearerAuth", {
