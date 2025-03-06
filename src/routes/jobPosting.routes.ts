@@ -91,7 +91,7 @@ jobPostingRegistry.registerPath({
     body: {
       required: true,
       content: {
-        "application/json": {
+        "multipart/form-data": {
           schema: CreateJobPostingSchema.shape.body.partial(),
         },
       },

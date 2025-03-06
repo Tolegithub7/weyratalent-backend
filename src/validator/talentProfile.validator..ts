@@ -6,17 +6,44 @@ extendZodWithOpenApi(z);
 export const TalentProfileSchema = z.object({
   id: z.string().uuid(),
   userId: z.string().uuid(),
-  profileUrl: z.string().url().optional(),
+  profile: z.custom<Express.Multer.File>().openapi({
+    type: "string",
+    format: "binary",
+  }),
   fullName: z.string().min(1, "Full name is required"),
-  country: z.nativeEnum(Country),
+  profileUrl: z.string().url(),
+  nationality: z.nativeEnum(Nationality).openapi({
+    description: "Nationality",
+  }),
+  country: z.nativeEnum(Country).openapi({
+    description: "Country"
+  }),
   personalWebsite: z.string().optional(),
-  nationality: z.nativeEnum(Nationality),
-  dateOfBirth: z.string().default("02-21-2002"),
-  // dateOfBirth: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Invalid date format (YYYY-MM-DD)"),
-  gender: z.nativeEnum(Gender).default(Gender.MALE),
-  experience: z.nativeEnum(Experience).default(Experience.MID_LEVEL),
-  socialLink: z.string().optional(),
-  about: z.string().optional(),
+  dateOfBirth: z.string().openapi({
+    description: "Date of Birth",
+    default: "02-21-2002",
+  }),
+  gender: z.nativeEnum(Gender).openapi({
+    description: "Gender",
+    default: Gender.MALE,
+  }),
+  experience: z.nativeEnum(Experience).openapi({
+    description: "Experience",
+    default: Experience.MID_LEVEL,
+  }),
+  socialLink: z
+    .string()
+    .openapi({
+      description: "Social Link",
+    })
+    .optional(),
+  about: z
+    .string()
+    .openapi({
+      description: "Bio information",
+      default: "tell us about yourself",
+    })
+    .optional(),
 });
 
 export const GetTalentProfileSchema = z.object({
@@ -26,9 +53,11 @@ export const GetTalentProfileSchema = z.object({
 });
 
 export const CreateTalentProfileSchema = z.object({
-  body: TalentProfileSchema.omit({ id: true, userId: true }),
+  body: TalentProfileSchema.omit({ id: true, userId: true, profileUrl: true }),
 });
 
-export const UpdateTalentProfileSchema = z.object({
-  body: TalentProfileSchema.omit({ id: true, userId: true }).partial(),
-});
+export const UpdateTalentProfileSchema = TalentProfileSchema.omit({
+  id: true,
+  userId: true,
+  profileUrl: true,
+}).partial();

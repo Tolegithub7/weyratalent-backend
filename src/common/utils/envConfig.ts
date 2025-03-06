@@ -31,4 +31,10 @@ export const env = cleanEnv(process.env, {
   JWT_SECRET: str(),
   JWT_ACCESS_EXPIRATION_MINUTES: num(),
   JWT_REFRESH_EXPIRATION_DAYS: num(),
+
+  //MINIO
+  MINIO_ENDPOINT: str({ devDefault: testOnly("localhost") }),
+  MINIO_PORT: port({ devDefault: testOnly(9000) }),
+  MINIO_ACCESS_KEY: str(),
+  MINIO_SECRET_KEY: str(),
 });

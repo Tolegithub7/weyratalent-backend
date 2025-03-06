@@ -1,3 +1,4 @@
+import { uploadImages } from "@/common/middleware/uploadMiddleware";
 import { env } from "@/common/utils/envConfig";
 import { validateRequest } from "@/common/utils/httpHandlers";
 import { talentProfileController } from "@/controllers/talentProfile.controller";
@@ -5,6 +6,7 @@ import {
   CreateTalentProfileSchema,
   GetTalentProfileSchema,
   TalentProfileSchema,
+  UpdateTalentProfileSchema,
 } from "@/validator/talentProfile.validator.";
 import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
 import express, { type Router } from "express";
@@ -15,12 +17,30 @@ export const talentProfileRouter: Router = express.Router();
 const BASE_API_PATH = env.BASE_API;
 
 talentProfileRouter.get("/", talentProfileController.getTalentProfiles);
+talentProfileRouter.get("/me", talentProfileController.getRegisteredTalentProfile);
 talentProfileRouter.get("/:id", validateRequest(GetTalentProfileSchema), talentProfileController.getTalentProfile);
-talentProfileRouter.post("/", validateRequest(CreateTalentProfileSchema), talentProfileController.createTalentProfile);
+talentProfileRouter.post(
+  "/",
+  uploadImages.fields([
+    {
+      name: "profile",
+      maxCount: 1,
+    },
+  ]),
+  validateRequest(CreateTalentProfileSchema),
+  talentProfileController.createOrUpdateTalentProfile,
+);
+
 talentProfileRouter.put(
   "/:id",
+  uploadImages.fields([
+    {
+      name: "profile",
+      maxCount: 1,
+    },
+  ]),
   validateRequest(CreateTalentProfileSchema.partial()),
-  talentProfileController.updateTalentProfile,
+  talentProfileController.createOrUpdateTalentProfile,
 );
 talentProfileRouter.delete(
   "/:id",
@@ -43,6 +63,19 @@ talentProfileRegistry.registerPath({
   },
 });
 
+// GET talent profile for registered talent
+talentProfileRegistry.registerPath({
+  method: "get",
+  path: `${BASE_API_PATH}/talent_profile/me`,
+  tags: ["Talent Profile"],
+  responses: {
+    200: {
+      description: "Success",
+      content: { "application/json": { schema: TalentProfileSchema } },
+    },
+  },
+});
+
 // GET talent profile by id
 talentProfileRegistry.registerPath({
   method: "get",
@@ -52,7 +85,9 @@ talentProfileRegistry.registerPath({
   responses: {
     200: {
       description: "Success",
-      content: { "applications/json": { schema: GetTalentProfileSchema.shape.params } },
+      content: {
+        "application/json": { schema: TalentProfileSchema },
+      },
     },
   },
 });
@@ -66,8 +101,13 @@ talentProfileRegistry.registerPath({
     body: {
       required: true,
       content: {
-        "application/json": {
+        "multipart/form-data": {
           schema: CreateTalentProfileSchema.shape.body,
+          encoding: {
+            file: {
+              contentType: "*/*",
+            },
+          },
         },
       },
     },
@@ -103,8 +143,13 @@ talentProfileRegistry.registerPath({
     body: {
       required: true,
       content: {
-        "application/json": {
-          schema: CreateTalentProfileSchema.shape.body.partial(),
+        "multipart/form-data": {
+          schema: UpdateTalentProfileSchema,
+          encoding: {
+            file: {
+              contentType: "*/*",
+            },
+          },
         },
       },
     },

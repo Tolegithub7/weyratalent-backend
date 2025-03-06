@@ -1,3 +1,4 @@
+import { uploadImages } from "@/common/middleware/uploadMiddleware";
 import { env } from "@/common/utils/envConfig";
 import { validateRequest } from "@/common/utils/httpHandlers";
 import { employerProfileController } from "@/controllers/employerProfile.controller";
@@ -17,6 +18,7 @@ const BASE_API_PATH = env.BASE_API;
 
 // Routes
 employerProfileRouter.get("/", employerProfileController.getEmployerProfiles);
+employerProfileRouter.get("/me", employerProfileController.getRegisteredEmployerProfile);
 employerProfileRouter.get(
   "/:id",
   validateRequest(GetEmployerProfileSchema),
@@ -24,13 +26,21 @@ employerProfileRouter.get(
 );
 employerProfileRouter.post(
   "/",
+  uploadImages.fields([
+    { name: "banner", maxCount: 1 },
+    { name: "logo", maxCount: 1 },
+  ]),
   validateRequest(CreateEmployerProfileSchema),
-  employerProfileController.createEmployerProfile,
+  employerProfileController.createOrUpdateEmployerProfile,
 );
 employerProfileRouter.put(
   "/:id",
+  uploadImages.fields([
+    { name: "banner", maxCount: 1 },
+    { name: "logo", maxCount: 1 },
+  ]),
   validateRequest(UpdateEmployerProfileSchema),
-  employerProfileController.updateEmployerProfile,
+  employerProfileController.createOrUpdateEmployerProfile,
 );
 employerProfileRouter.delete(
   "/:id",
@@ -50,6 +60,19 @@ employerProfileRegistry.registerPath({
     200: {
       description: "Success",
       content: { "application/json": { schema: z.array(EmployerProfileSchema) } },
+    },
+  },
+});
+
+// GET employer profile for registered employer
+employerProfileRegistry.registerPath({
+  method: "get",
+  path: `${BASE_API_PATH}/employer_profile/me`,
+  tags: ["Employer Profile"],
+  responses: {
+    200: {
+      description: "Success",
+      content: { "application/json": { schema: EmployerProfileSchema } },
     },
   },
 });
@@ -77,8 +100,13 @@ employerProfileRegistry.registerPath({
     body: {
       required: true,
       content: {
-        "application/json": {
+        "multipart/form-data": {
           schema: CreateEmployerProfileSchema.shape.body,
+          encoding: {
+            file: {
+              contentType: "*/*",
+            },
+          },
         },
       },
     },
@@ -100,8 +128,13 @@ employerProfileRegistry.registerPath({
     body: {
       required: true,
       content: {
-        "application/json": {
+        "multipart/form-data": {
           schema: UpdateEmployerProfileSchema,
+          encoding: {
+            file: {
+              contentType: "*/*",
+            },
+          },
         },
       },
     },

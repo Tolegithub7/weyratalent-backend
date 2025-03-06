@@ -14,5 +14,21 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
       - ./scripts/docker-init-scripts:/docker-entrypoint-initdb.d
+  minio:
+    container_name: weyratech-minio
+    image: minio/minio:latest
+    ports:
+      - ${MINIO_PORT}:9000
+      - ${MINIO_CONSOLE_PORT}:9001
+    env_file:
+      - .env
+    environment:
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+
 volumes:
   db_data:
+  minio_data:

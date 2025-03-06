@@ -1,9 +1,10 @@
 import { env } from "./common/utils/envConfig";
+import { minioClient } from "./common/utils/minio.config";
 import { db, pool } from "./db/database.config";
 import { app, logger } from "./server";
 async function startServer() {
   const { NODE_ENV, HOST, PORT } = env;
-  const testConnection = async () => {
+  const testDBConnection = async () => {
     try {
       await pool.connect();
       logger.info("✅ Database connected successfully");
@@ -12,12 +13,22 @@ async function startServer() {
     }
   };
 
+  const testMinioConnection = async () => {
+    try {
+      await minioClient.listBuckets();
+      logger.info("Minio Server Connected successfully!");
+    } catch (error) {
+      console.error("Minio Server Connection failed:", error);
+    }
+  };
+
   try {
     const server = app.listen(PORT, () => {
       logger.info(`Server ${NODE_ENV} running on port http://${HOST}:${PORT}`);
     });
 
-    testConnection();
+    testDBConnection();
+    testMinioConnection();
     const onCloseSignal = () => {
       logger.info("sigint received, shutting down");
       server.close(() => {

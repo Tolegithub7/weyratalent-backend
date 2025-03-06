@@ -43,6 +43,13 @@
       "when": 1740679107413,
       "tag": "20250227175827_update_users_schema",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1741174484014,
+      "tag": "20250305113444_add-cover-letter",
+      "breakpoints": true
     }
   ]
 }

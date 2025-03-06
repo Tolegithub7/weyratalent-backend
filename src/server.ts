@@ -1,6 +1,3 @@
-import { employerProfileRouter } from "@/routes/employerProfile.routes";
-
-import { jobPostingRouter } from "@/routes/jobPosting.routes";
 import cors from "cors";
 import express, { type Express } from "express";
 import { unless } from "express-unless";
@@ -12,7 +9,15 @@ import customErrorHandler from "./common/middleware/customErrorHandler";
 import { ApiError } from "./common/models/serviceResponse";
 import { env } from "./common/utils/envConfig";
 import { BACKEND_URL } from "./common/utils/generalUtils";
-import { authRouter, cvRouter, userRouter } from "./routes";
+import {
+  appliedJobsRouter,
+  authRouter,
+  cvRouter,
+  employerProfileRouter,
+  favoriteJobsRouter,
+  jobPostingRouter,
+  userRouter,
+} from "./routes";
 import { talentProfileRouter } from "./routes/talentProfile.routes";
 
 const app: Express = express();
@@ -37,6 +42,7 @@ app.use(auth.unless({ path: skipAuthPath }));
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use(`${env.BASE_API}/employer_profile`, employerProfileRouter);
@@ -45,6 +51,8 @@ app.use(`${env.BASE_API}/cv`, cvRouter);
 app.use(`${env.BASE_API}/user`, userRouter);
 app.use(`${env.BASE_API}/auth`, authRouter);
 app.use(`${env.BASE_API}/job_posting`, jobPostingRouter);
+app.use(`${env.BASE_API}/applied_jobs`, appliedJobsRouter);
+app.use(`${env.BASE_API}/favorite_jobs`, favoriteJobsRouter);
 app.use(openAPIRouter);
 
 app.use((req, res, next) => {
