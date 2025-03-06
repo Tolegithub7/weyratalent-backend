@@ -6,13 +6,40 @@ extendZodWithOpenApi(z);
 export const TalentProfileSchema = z.object({
   id: z.string().uuid(),
   userId: z.string().uuid(),
+  profile: z.custom<Express.Multer.File>().openapi({
+    type: "string",
+    format: "binary",
+  }),
   fullName: z.string(),
-  nationality: z.string(),
-  dateOfBirth: z.string().default("02-21-2002"),
-  gender: z.nativeEnum(Gender).default(Gender.MALE),
-  experience: z.nativeEnum(Experience).default(Experience.MID_LEVEL),
-  socialLink: z.string().optional(),
-  about: z.string().optional(),
+  profileUrl: z.string().url(),
+  nationality: z.string().openapi({
+    description: "Nationality",
+  }),
+  dateOfBirth: z.string().openapi({
+    description: "Date of Birth",
+    default: "02-21-2002",
+  }),
+  gender: z.nativeEnum(Gender).openapi({
+    description: "Gender",
+    default: Gender.MALE,
+  }),
+  experience: z.nativeEnum(Experience).openapi({
+    description: "Experience",
+    default: Experience.MID_LEVEL,
+  }),
+  socialLink: z
+    .string()
+    .openapi({
+      description: "Social Link",
+    })
+    .optional(),
+  about: z
+    .string()
+    .openapi({
+      description: "Bio information",
+      default: "tell us about yourself",
+    })
+    .optional(),
 });
 
 export const GetTalentProfileSchema = z.object({
@@ -22,7 +49,11 @@ export const GetTalentProfileSchema = z.object({
 });
 
 export const CreateTalentProfileSchema = z.object({
-  body: TalentProfileSchema.omit({ id: true, userId: true }),
+  body: TalentProfileSchema.omit({ id: true, userId: true, profileUrl: true }),
 });
 
-export const UpdateTalentProfileSchema = TalentProfileSchema.partial();
+export const UpdateTalentProfileSchema = TalentProfileSchema.omit({
+  id: true,
+  userId: true,
+  profileUrl: true,
+}).partial();

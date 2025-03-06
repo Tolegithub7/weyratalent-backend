@@ -1,3 +1,5 @@
+import type { AppliedJobsSchema, NewJobApplicationSchema } from "@/validator/appliedJobs.validator";
+import type { z } from "zod";
 export enum ApplicationStatus {
   PENDING = "pending",
   HIRED = "hired",
@@ -5,3 +7,6 @@ export enum ApplicationStatus {
   REJECTED = "rejected",
   WITHDRAWN = "withdrawn",
 }
+
+export type AppliedJobsType = z.infer<typeof AppliedJobsSchema>;
+export type NewApplicationType = z.infer<typeof NewJobApplicationSchema>;

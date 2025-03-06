@@ -57,6 +57,13 @@
       "when": 1740389253686,
       "tag": "20250224092733_user-id-shant-be-unique-for-token-table",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1741174484014,
+      "tag": "20250305113444_add-cover-letter",
+      "breakpoints": true
     }
   ]
 }

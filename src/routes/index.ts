@@ -3,3 +3,5 @@ export * from "./talentProfile.routes";
 export * from "./user.routes";
 export * from "./employerProfile.routes";
 export * from "./auth.router";
+export * from "./appliedJobs.routes";
+export * from "./jobPosting.routes";

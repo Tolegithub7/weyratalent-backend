@@ -1,8 +1,12 @@
-import { authRegistry, cvRegistry } from "@/routes";
-import { employerProfileRegistry } from "@/routes/employerProfile.routes";
-import { talentProfileRegistry } from "@/routes/talentProfile.routes";
-import { jobPostingRegistry } from "@/routes/jobPosting.routes";
-import { userRegistry } from "@/routes/user.routes";
+import {
+  appliedJobsRegistry,
+  authRegistry,
+  cvRegistry,
+  employerProfileRegistry,
+  jobPostingRegistry,
+  talentProfileRegistry,
+  userRegistry,
+} from "@/routes";
 import { OpenAPIRegistry, OpenApiGeneratorV3 } from "@asteasolutions/zod-to-openapi";
 export function generateOpenAPIDocument() {
   const registry = new OpenAPIRegistry([
@@ -12,6 +16,7 @@ export function generateOpenAPIDocument() {
     cvRegistry,
     userRegistry,
     authRegistry,
+    appliedJobsRegistry,
   ]);
 
   registry.registerComponent("securitySchemes", "bearerAuth", {

@@ -1,0 +1,1 @@
+ALTER TABLE "applied_jobs" ADD COLUMN "cover_letter" text NOT NULL;

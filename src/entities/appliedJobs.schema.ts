@@ -1,5 +1,5 @@
 import { ApplicationStatus } from "@/types";
-import { pgEnum, pgTable, uuid } from "drizzle-orm/pg-core";
+import { pgEnum, pgTable, text, uuid } from "drizzle-orm/pg-core";
 import { jobProfile } from "./jobPosting.schema";
 import { timestamps } from "./timeStamp.schema";
 import { users } from "./users.schema";
@@ -14,6 +14,7 @@ export const appliedJobs = pgTable("applied_jobs", {
   userId: uuid("user_id")
     .references(() => users.id)
     .notNull(),
+  coverLetter: text("cover_letter").notNull(),
   jobProfileId: uuid("job_profile_id")
     .references(() => jobProfile.id)
     .notNull(),
