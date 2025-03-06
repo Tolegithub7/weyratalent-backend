@@ -40,22 +40,8 @@
     {
       "idx": 5,
       "version": "7",
-      "when": 1740382380994,
-      "tag": "20250224073300_delete-status-from-jobposting",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "7",
-      "when": 1740382423059,
-      "tag": "20250224073343_add-status-to-jobposting",
-      "breakpoints": true
-    },
-    {
-      "idx": 7,
-      "version": "7",
-      "when": 1740389253686,
-      "tag": "20250224092733_user-id-shant-be-unique-for-token-table",
+      "when": 1740679107413,
+      "tag": "20250227175827_update_users_schema",
       "breakpoints": true
     },
     {

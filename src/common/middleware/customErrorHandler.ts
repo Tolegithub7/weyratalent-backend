@@ -11,7 +11,6 @@ export const errorConverter = (err: any, req: Request, res: Response, next: Next
     const message: string = err.messages || getReasonPhrase(statusCode);
     error = new ApiError(statusCode, message, false, err.stack);
   }
-
   next(error);
 };
 

@@ -1,20 +1,26 @@
-import { UserRole } from "@/types";
+import { Country, UserRole } from "@/types";
 import { sql } from "drizzle-orm";
-import { check, pgEnum, pgTable, text, uuid, varchar } from "drizzle-orm/pg-core";
+import { boolean, check, pgEnum, pgTable, text, uuid, varchar } from "drizzle-orm/pg-core";
 import { timestamps } from "./timeStamp.schema";
 
 console.log(Object.values(UserRole) as [string, ...string[]]);
 export const roleEnum = pgEnum("role", Object.values(UserRole) as [string, ...string[]]);
+export const countryEnum = pgEnum("country", Object.values(Country) as [string, ...string[]]);
 
 export const users = pgTable(
   "users",
   {
     id: uuid("id").defaultRandom().primaryKey(),
-    firstName: text("first_name").notNull(),
-    lastName: text("last_name").notNull(),
+    fullName: text("full_name"),
+    userName: varchar("user_name", { length: 50 }).unique(),
     email: varchar("email", { length: 50 }).notNull().unique(),
-    phoneNumber: varchar("phone_number", { length: 15 }).notNull(),
+    country: countryEnum("country").notNull(),
     password: text("password").notNull(),
+    companyName: varchar("company_name", { length: 100 }),
+    address: text("address"),
+    phoneNumber: varchar("phone_number", { length: 15 }),
+    verifiedLicense: text("verified_license"),
+    agreeTermsService: boolean("agree_terms_service").default(false).notNull(),
     role: roleEnum("role").notNull(),
     ...timestamps,
   },

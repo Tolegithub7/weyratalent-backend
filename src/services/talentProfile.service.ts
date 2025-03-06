@@ -16,6 +16,7 @@ class TalentProfileService {
         StatusCodes.OK,
       );
     } catch (error) {
+      logger.error(`Error fetching talent profiles: ${error}`);
       return ServiceResponse.failure<null>(
         "Failed to retrieve talent profiles",
         null,
@@ -64,15 +65,19 @@ class TalentProfileService {
 
   async getTalentProfile(id: string): Promise<ServiceResponse<TalentProfileType | null>> {
     try {
-      const talentData = await db.select().from(talentProfile).where(eq(talentProfile.id, id));
-      const foundTalent = talentData ? talentData[0] : null;
+      const [talentData] = await db.select().from(talentProfile).where(eq(talentProfile.id, id));
+
+      if (!talentData) {
+        return ServiceResponse.failure<null>("Talent profile not found", null, StatusCodes.NOT_FOUND);
+      }
+
       return ServiceResponse.success<TalentProfileType>(
-        "Talent Profile Retrieved Succesfully",
-        foundTalent as unknown as TalentProfileType,
+        "Talent Profile Retrieved Successfully",
+        talentData as TalentProfileType,
         StatusCodes.OK,
       );
     } catch (error) {
-      logger.info(error);
+      logger.error(`Error fetching talent profile: ${error}`);
       return ServiceResponse.failure<null>(
         "Failed to retrieve talent profile",
         null,
@@ -110,6 +115,7 @@ class TalentProfileService {
         StatusCodes.OK,
       );
     } catch (error) {
+      logger.error(`Error deleting talent profile: ${error}`);
       return ServiceResponse.failure<null>("Failed to delete talent profile", null, StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
@@ -126,12 +132,16 @@ class TalentProfileService {
         .where(eq(talentProfile.userId, userId))
         .returning();
       const updatedTalent = talentData ? talentData[0] : null;
+      if (!updatedTalent) {
+        return ServiceResponse.failure<null>("Talent profile not found", null, StatusCodes.NOT_FOUND);
+      }
       return ServiceResponse.success<TalentProfileType>(
         "Talent Profile updated Succesfully",
         updatedTalent as unknown as TalentProfileType,
         StatusCodes.OK,
       );
     } catch (error) {
+      logger.error(`Error updating talent profile: ${error}`);
       return ServiceResponse.failure<null>("Failed to update talent profile", null, StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }

@@ -10,7 +10,6 @@ class JobPostingController {
     if (!req.user) {
       throw new ApiError(StatusCodes.NOT_FOUND, "User not found");
     }
-
     const userId = req.user.id;
     const serviceResponse = await jobPostingService.createJobPosting(req.body, userId);
     return handleServiceResponse(serviceResponse, res);

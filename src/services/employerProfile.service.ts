@@ -35,6 +35,7 @@ class EmployerProfileService {
     userId: string,
   ): Promise<ServiceResponse<EmployerProfileType | null>> {
     try {
+      const userId = uuidv4(); // Replace with actual user ID from auth
       const employerDataWithId = {
         ...employerData,
         userId: userId,

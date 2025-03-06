@@ -1,4 +1,4 @@
-import { UserRole } from "@/types";
+import { Country, UserRole } from "@/types";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { z } from "zod";
 
@@ -6,11 +6,19 @@ extendZodWithOpenApi(z);
 
 export const UserSchema = z.object({
   id: z.string().uuid(),
-  firstName: z.string().trim().min(1, "First name required").max(255),
-  lastName: z.string().trim().min(1, "Last name required").max(255),
-  email: z.string().email("invalid email format"),
-  phoneNumber: z.string().min(10, "Phone number is too short").max(15, "phone number is too long"),
+  fullName: z.string().trim().min(1, "Full name is required").max(255).nullable(), // Allow null
+  userName: z.string().trim().min(1, "Username is required").max(50).nullable(), // Allow null
+  email: z.string().email("Invalid email format"),
+  country: z.nativeEnum(Country, {
+    required_error: "Country is required",
+    invalid_type_error: "Invalid country",
+  }),
   password: z.string().min(8, "Password must be at least 8 characters"),
+  companyName: z.string().max(100).nullable().optional(), // Allow null
+  address: z.string().nullable().optional(), // Allow null
+  phoneNumber: z.string().min(10, "Phone number is too short").max(15, "Phone number is too long").nullable(), // Allow null
+  verifiedLicense: z.string().nullable().optional(), // Allow null
+  agreeTermsService: z.boolean().default(false),
   role: z.nativeEnum(UserRole).optional().default(UserRole.TALENT),
 });
 
