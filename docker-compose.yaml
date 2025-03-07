@@ -1,4 +1,32 @@
 services:
+  nginx:
+      container_name: weyra-talent-nginx
+      image: nginx:1.25.3-perl
+      ports:
+        - 3000:3000
+      volumes:
+        - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+        - ./nginx/certs:/etc/nginx/certs:ro
+      depends_on:
+        - api
+  api:
+    container_name: weyra-talent-api
+    depends_on:
+      - db
+      - minio
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    command: ["npm", "run", "dev"]
+    ports:
+      - 8000:3000
+      - 9229:9229
+    env_file:
+      - .env.docker
   db:
     container_name: weyratech-db
     image: postgres:16.2

@@ -6,4 +6,5 @@ logs
 
 *.local
 .env
+.env.docker
 
