@@ -35,15 +35,15 @@ const skipAuthPath = [
   "/",
   `${env.BASE_API}/auth/login`,
   `${env.BASE_API}/auth/refresh-token`,
+  `${env.BASE_API}/user`,
 ];
-
-app.use(auth.unless({ path: skipAuthPath }));
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use(auth.unless({ path: skipAuthPath }));
 // Routes
 app.use(`${env.BASE_API}/employer_profile`, employerProfileRouter);
 app.use(`${env.BASE_API}/talent_profile`, talentProfileRouter);

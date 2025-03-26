@@ -35,18 +35,11 @@ class EmployerProfileService {
     userId: string,
   ): Promise<ServiceResponse<EmployerProfileType | null>> {
     try {
-      const userId = uuidv4(); // Replace with actual user ID from auth
       const employerDataWithId = {
         ...employerData,
         userId: userId,
         bannerUrl: bannerUrl,
         logoUrl: logoUrl,
-        // instagramLink: employerData.instagramLink || null,
-        // telegramLink: employerData.telegramLink || null,
-        // facebookLink: employerData.facebookLink || null,
-        // xLink: employerData.xLink || null,
-        createdAt: new Date(), // Ensure createdAt is a Date object
-        updatedAt: new Date(), // Ensure updatedAt is a Date object
       };
 
       const existingEmployer = await db.query.employerProfile.findFirst({

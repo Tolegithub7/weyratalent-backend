@@ -37,6 +37,7 @@ userRegistry.registerPath({
   method: "post",
   path: `${BASE_API_PATH}/user`,
   tags: ["User"],
+  security: [],
   request: {
     body: {
       required: true,
@@ -64,6 +65,7 @@ userRegistry.registerPath({
   method: "get",
   path: `${BASE_API_PATH}/user/{id}`,
   tags: ["User"],
+  security: [{ bearerAuth: [] }],
   request: { params: GetUserSchema.shape.params },
   responses: {
     200: {
