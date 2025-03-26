@@ -16,6 +16,7 @@ import {
   employerProfileRouter,
   favoriteJobsRouter,
   jobPostingRouter,
+  logoutRouter,
   userRouter,
 } from "./routes";
 import { talentProfileRouter } from "./routes/talentProfile.routes";
@@ -53,6 +54,7 @@ app.use(`${env.BASE_API}/auth`, authRouter);
 app.use(`${env.BASE_API}/job_posting`, jobPostingRouter);
 app.use(`${env.BASE_API}/applied_jobs`, appliedJobsRouter);
 app.use(`${env.BASE_API}/favorite_jobs`, favoriteJobsRouter);
+app.use(`${env.BASE_API}/logout`, logoutRouter);
 app.use(openAPIRouter);
 
 app.use((req, res, next) => {

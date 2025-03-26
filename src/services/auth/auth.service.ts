@@ -30,6 +30,28 @@ export class AuthService {
       throw new ApiError(StatusCodes.UNAUTHORIZED, "Invalid email or password");
     }
   }
+
+  public async logout(refreshToken: string): Promise<ServiceResponse<null>> {
+    try {
+      const token = await tokenService.getToken({
+        token: refreshToken,
+        type: TokenTypeEnum.REFRESH,
+      });
+      await tokenService.deleteToken({
+        token: token.token,
+        type: TokenTypeEnum.REFRESH,
+      });
+      return ServiceResponse.success<null>("User logged out", null, StatusCodes.NO_CONTENT);
+    } catch (ex) {
+      const errorMessage = `Error logging out user with refresh token with ${refreshToken}: ${(ex as Error).message}`;
+      logger.error(errorMessage);
+      return ServiceResponse.failure<null>(
+        "An error occurred while logging out.",
+        null,
+        StatusCodes.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
 }
 
 export const authService = new AuthService();

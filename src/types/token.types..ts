@@ -12,7 +12,8 @@ export interface PayloadType extends JwtPayload {
 }
 
 export type TokenType = z.infer<typeof TokenSchema>;
-export type NewTokenType = Omit<TokenType, "">;
+export type NewTokenType = Omit<TokenType, "id">;
+export type TokenQueryType = Partial<TokenType>;
 
 export interface TokenPayloadType {
   token: string;

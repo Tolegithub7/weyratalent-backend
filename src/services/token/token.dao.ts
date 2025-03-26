@@ -13,6 +13,12 @@ export class TokenDataService {
 
     return tokens as TokenType[];
   }
+
+  async deleteToken(id: string): Promise<boolean> {
+    const result = await db.delete(token).where(eq(token.id, id)).returning();
+
+    return result.length !== 0;
+  }
 }
 
 export const tokenDataService = new TokenDataService();
