@@ -1,0 +1,1 @@
+ALTER TABLE "job_posting" DROP CONSTRAINT "job_posting_user_id_unique";

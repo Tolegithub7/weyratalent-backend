@@ -15,7 +15,6 @@ export const jobProfile = pgTable("job_posting", {
   id: uuid("id").defaultRandom().primaryKey(),
   userId: uuid("user_id")
     .notNull()
-    .unique()
     .references(() => users.id),
   jobTitle: varchar("job_title", { length: 50 }),
   jobRole: jobRoleEnum("job_role").notNull(),

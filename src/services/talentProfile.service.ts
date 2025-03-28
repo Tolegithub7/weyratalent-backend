@@ -3,26 +3,69 @@ import { db } from "@/db/database.config";
 import { talentProfile } from "@/entities";
 import { logger } from "@/server";
 import type { CreateTalentProfileType, TalentProfileType, UpdateTalentProfileType } from "@/types/talentProfile.types";
-import { eq } from "drizzle-orm";
+import { eq, and, SQLWrapper, sql } from "drizzle-orm";
 import { StatusCodes } from "http-status-codes";
 
+interface PaginatedResponse<T> {
+  data: T[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}
 class TalentProfileService {
-  async getTalentProfiles(): Promise<ServiceResponse<TalentProfileType[] | null>> {
+
+  async getTalentProfiles(
+    pagination?: {
+      page?: number;
+      limit?: number;
+    }
+  ): Promise<ServiceResponse<PaginatedResponse<TalentProfileType> | null>> {
     try {
+      const page = Math.max(1, Number(pagination?.page) || 1);
+      const limit = Math.min(100, Math.max(1, Number(pagination?.limit) || 10));
+      const offset = (page - 1) * limit;
+      
+      const whereConditions: Array<SQLWrapper | undefined> = [];
+      const query = db
+        .select()
+        .from(talentProfile)
+        .where(whereConditions.length ? and(...whereConditions) : undefined)
+        .limit(limit)
+        .offset(offset);
+
+      const countQuery = db
+        .select({ count: sql<number>`count(*)` })
+        .from(talentProfile)
+        .where(whereConditions.length ? and(...whereConditions) : undefined);
+  
+      const [profiles, totalResult] = await Promise.all([query, countQuery]);
+      const total = Number(totalResult[0]?.count) || 0;
+
       const talentProfiles = await db.select().from(talentProfile);
-      return ServiceResponse.success<TalentProfileType[]>(
-        "Talent Profiles Retrieved Succesfully",
-        talentProfiles as unknown as TalentProfileType[],
-        StatusCodes.OK,
+      return ServiceResponse.success(
+        "Talent Profiles Retrieved Successfully",
+        {
+          data: profiles as unknown as TalentProfileType[],
+          pagination: {
+            total,
+            page,
+            limit,
+            totalPages: Math.ceil(total / limit),
+          },
+        },
+        StatusCodes.OK
       );
     } catch (error) {
       logger.error(`Error fetching talent profiles: ${error}`);
-      return ServiceResponse.failure<null>(
+      return ServiceResponse.failure(
         "Failed to retrieve talent profiles",
         null,
-        StatusCodes.INTERNAL_SERVER_ERROR,
+        StatusCodes.INTERNAL_SERVER_ERROR
       );
-    }
+    }  
   }
 
   async createOrUpdateTalentProfile(

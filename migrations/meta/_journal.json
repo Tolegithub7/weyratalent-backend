@@ -50,6 +50,27 @@
       "when": 1741174484014,
       "tag": "20250305113444_add-cover-letter",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1742113982402,
+      "tag": "20250316083302_AnotherInitialMigration",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1742255617977,
+      "tag": "20250317235337_certificate-column-added-to-cv",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1743116917333,
+      "tag": "20250327230837_remove_user_id_unique_constraint",
+      "breakpoints": true
     }
   ]
 }

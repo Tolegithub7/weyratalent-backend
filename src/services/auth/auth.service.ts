@@ -10,15 +10,21 @@ import { tokenService } from "../token.service";
 import { userService } from "../user.service";
 
 export class AuthService {
-  checkIfPasswordMatch(unencryptedPassword: string, encryptedPassword: string) {
-    return bcrypt.compareSync(unencryptedPassword, encryptedPassword);
+  async checkIfPasswordMatch(unencryptedPassword: string, encryptedPassword: string) {
+    return await bcrypt.compare(unencryptedPassword, encryptedPassword);
   }
 
   public async loginWithEmailAndPassword(email: string, password: string): Promise<UserType> {
+    console.log("email: ", email, "and Password: ", password);
+    const hashedPassword = bcrypt.hashSync("password", 10);
+    console.log(hashedPassword);
     try {
       const user = await userService.getByEmail(email);
+      console.log("User from DB: ", user); // Log the user object
 
-      const isValid = await this.checkIfPasswordMatch(password, user.password);
+      const isValid = await this.checkIfPasswordMatch(password, user.password); // Await here
+      console.log("Password match: ", isValid); // Log password match result
+
       if (!isValid) {
         throw new ApiError(StatusCodes.UNAUTHORIZED, "Invalid email or password");
       }

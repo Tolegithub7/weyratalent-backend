@@ -6,17 +6,20 @@ extendZodWithOpenApi(z);
 export const TalentProfileSchema = z.object({
   id: z.string().uuid(),
   userId: z.string().uuid(),
-  profile: z.custom<Express.Multer.File>().openapi({
-    type: "string",
-    format: "binary",
-  }),
+  profile: z
+    .custom<Express.Multer.File>()
+    .openapi({
+      type: "string",
+      format: "binary",
+    })
+    .optional(),
   fullName: z.string().min(1, "Full name is required"),
   profileUrl: z.string().url(),
   nationality: z.nativeEnum(Nationality).openapi({
     description: "Nationality",
   }),
   country: z.nativeEnum(Country).openapi({
-    description: "Country"
+    description: "Country",
   }),
   personalWebsite: z.string().optional(),
   dateOfBirth: z.string().openapi({
