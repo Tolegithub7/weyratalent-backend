@@ -1,6 +1,6 @@
 {
-  "id": "f7937116-6a0c-4434-991f-e606c838439f",
-  "prevId": "61fd3ccf-4797-44ba-97f6-12dcd2b8eb1c",
+  "id": "8ec9a016-9efb-4007-acfa-8b59f20f55b3",
+  "prevId": "8bf46830-e71f-40c5-bcec-0e82992a3f5c",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -47,6 +47,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "certificate_url": {
+          "name": "certificate_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -68,8 +74,12 @@
           "name": "cv_user_id_users_id_fk",
           "tableFrom": "cv",
           "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -79,7 +89,16 @@
         "cv_user_id_unique": {
           "name": "cv_user_id_unique",
           "nullsNotDistinct": false,
-          "columns": ["user_id"]
+          "columns": [
+            "user_id"
+          ]
+        },
+        "cv_certificate_url_unique": {
+          "name": "cv_certificate_url_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "certificate_url"
+          ]
         }
       },
       "policies": {},
@@ -159,8 +178,12 @@
           "name": "education_cv_id_cv_id_fk",
           "tableFrom": "education",
           "tableTo": "cv",
-          "columnsFrom": ["cv_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "cv_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -319,8 +342,12 @@
           "name": "employer_profile_user_id_users_id_fk",
           "tableFrom": "employer_profile",
           "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -330,12 +357,16 @@
         "employer_profile_user_id_unique": {
           "name": "employer_profile_user_id_unique",
           "nullsNotDistinct": false,
-          "columns": ["user_id"]
+          "columns": [
+            "user_id"
+          ]
         },
         "employer_profile_email_unique": {
           "name": "employer_profile_email_unique",
           "nullsNotDistinct": false,
-          "columns": ["email"]
+          "columns": [
+            "email"
+          ]
         }
       },
       "policies": {},
@@ -386,8 +417,12 @@
           "name": "favorite_jobs_user_id_users_id_fk",
           "tableFrom": "favorite_jobs",
           "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -395,8 +430,12 @@
           "name": "favorite_jobs_job_profile_id_job_posting_id_fk",
           "tableFrom": "favorite_jobs",
           "tableTo": "job_posting",
-          "columnsFrom": ["job_profile_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "job_profile_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -496,8 +535,12 @@
           "name": "organization_info_user_id_users_id_fk",
           "tableFrom": "organization_info",
           "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -507,7 +550,9 @@
         "organization_info_user_id_unique": {
           "name": "organization_info_user_id_unique",
           "nullsNotDistinct": false,
-          "columns": ["user_id"]
+          "columns": [
+            "user_id"
+          ]
         }
       },
       "policies": {},
@@ -570,8 +615,12 @@
           "name": "project_cv_id_cv_id_fk",
           "tableFrom": "project",
           "tableTo": "cv",
-          "columnsFrom": ["cv_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "cv_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -611,9 +660,29 @@
           "primaryKey": false,
           "notNull": true
         },
+        "country": {
+          "name": "country",
+          "type": "country",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "personal_website": {
+          "name": "personal_website",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "about": {
+          "name": "about",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "nationality": {
           "name": "nationality",
-          "type": "text",
+          "type": "nationality",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": true
         },
@@ -639,13 +708,7 @@
         },
         "social_link": {
           "name": "social_link",
-          "type": "varchar(30)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "about": {
-          "name": "about",
-          "type": "text",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": false
         },
@@ -670,8 +733,12 @@
           "name": "talent_profile_user_id_users_id_fk",
           "tableFrom": "talent_profile",
           "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -681,7 +748,9 @@
         "talent_profile_user_id_unique": {
           "name": "talent_profile_user_id_unique",
           "nullsNotDistinct": false,
-          "columns": ["user_id"]
+          "columns": [
+            "user_id"
+          ]
         }
       },
       "policies": {},
@@ -699,17 +768,17 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "first_name": {
-          "name": "first_name",
+        "full_name": {
+          "name": "full_name",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
-        "last_name": {
-          "name": "last_name",
-          "type": "text",
+        "user_name": {
+          "name": "user_name",
+          "type": "varchar(50)",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "email": {
           "name": "email",
@@ -717,9 +786,10 @@
           "primaryKey": false,
           "notNull": true
         },
-        "phone_number": {
-          "name": "phone_number",
-          "type": "varchar(15)",
+        "country": {
+          "name": "country",
+          "type": "country",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": true
         },
@@ -728,6 +798,37 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "company_name": {
+          "name": "company_name",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "address": {
+          "name": "address",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "phone_number": {
+          "name": "phone_number",
+          "type": "varchar(15)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "verified_license": {
+          "name": "verified_license",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "agree_terms_service": {
+          "name": "agree_terms_service",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
         },
         "role": {
           "name": "role",
@@ -755,10 +856,19 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
+        "users_user_name_unique": {
+          "name": "users_user_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "user_name"
+          ]
+        },
         "users_email_unique": {
           "name": "users_email_unique",
           "nullsNotDistinct": false,
-          "columns": ["email"]
+          "columns": [
+            "email"
+          ]
         }
       },
       "policies": {},
@@ -832,8 +942,12 @@
           "name": "work_experience_cv_id_cv_id_fk",
           "tableFrom": "work_experience",
           "tableTo": "cv",
-          "columnsFrom": ["cv_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "cv_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -963,8 +1077,12 @@
           "name": "job_posting_user_id_users_id_fk",
           "tableFrom": "job_posting",
           "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -974,7 +1092,9 @@
         "job_posting_user_id_unique": {
           "name": "job_posting_user_id_unique",
           "nullsNotDistinct": false,
-          "columns": ["user_id"]
+          "columns": [
+            "user_id"
+          ]
         }
       },
       "policies": {},
@@ -1039,8 +1159,12 @@
           "name": "applied_jobs_user_id_users_id_fk",
           "tableFrom": "applied_jobs",
           "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -1048,8 +1172,12 @@
           "name": "applied_jobs_job_profile_id_job_posting_id_fk",
           "tableFrom": "applied_jobs",
           "tableTo": "job_posting",
-          "columnsFrom": ["job_profile_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "job_profile_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1117,8 +1245,12 @@
           "name": "token_user_id_users_id_fk",
           "tableFrom": "token",
           "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1146,15 +1278,81 @@
         "mobile"
       ]
     },
+    "public.country": {
+      "name": "country",
+      "schema": "public",
+      "values": [
+        "Algeria",
+        "Angola",
+        "Benin",
+        "Botswana",
+        "Burkina Faso",
+        "Burundi",
+        "Cape Verde",
+        "Cameroon",
+        "Central African Republic",
+        "Chad",
+        "Comoros",
+        "Democratic Republic of the Congo",
+        "Djibouti",
+        "Egypt",
+        "Equatorial Guinea",
+        "Eritrea",
+        "Eswatini",
+        "Ethiopia",
+        "Gabon",
+        "Gambia",
+        "Ghana",
+        "Guinea",
+        "Guinea-Bissau",
+        "Ivory Coast",
+        "Kenya",
+        "Lesotho",
+        "Liberia",
+        "Libya",
+        "Madagascar",
+        "Malawi",
+        "Mali",
+        "Mauritania",
+        "Mauritius",
+        "Morocco",
+        "Mozambique",
+        "Namibia",
+        "Niger",
+        "Nigeria",
+        "Rwanda",
+        "São Tomé and Príncipe",
+        "Senegal",
+        "Seychelles",
+        "Sierra Leone",
+        "Somalia",
+        "South Africa",
+        "South Sudan",
+        "Sudan",
+        "Tanzania",
+        "Togo",
+        "Tunisia",
+        "Uganda",
+        "Zambia",
+        "Zimbabwe"
+      ]
+    },
     "public.experience": {
       "name": "experience",
       "schema": "public",
-      "values": ["Entry Level", "Mid Level", "Senior Level"]
+      "values": [
+        "Entry Level",
+        "Mid Level",
+        "Senior Level"
+      ]
     },
     "public.gender": {
       "name": "gender",
       "schema": "public",
-      "values": ["male", "female"]
+      "values": [
+        "male",
+        "female"
+      ]
     },
     "public.industry_type": {
       "name": "industry_type",
@@ -1178,25 +1376,107 @@
         "other"
       ]
     },
+    "public.nationality": {
+      "name": "nationality",
+      "schema": "public",
+      "values": [
+        "Algerian",
+        "Angolan",
+        "Beninese",
+        "Motswana",
+        "Burkinabe",
+        "Burundian",
+        "Cameroonian",
+        "Cape Verdean",
+        "Central African",
+        "Chadian",
+        "Comorian",
+        "Congolese (Congo)",
+        "Congolese (DRC)",
+        "Djiboutian",
+        "Egyptian",
+        "Equatorial Guinean",
+        "Eritrean",
+        "Swazi",
+        "Ethiopian",
+        "Gabonese",
+        "Gambian",
+        "Ghanaian",
+        "Guinean",
+        "Bissau-Guinean",
+        "Ivorian",
+        "Kenyan",
+        "Mosotho",
+        "Liberian",
+        "Libyan",
+        "Malagasy",
+        "Malawian",
+        "Malian",
+        "Mauritanian",
+        "Mauritian",
+        "Moroccan",
+        "Mozambican",
+        "Namibian",
+        "Nigerien",
+        "Nigerian",
+        "Rwandan",
+        "Santomean",
+        "Senegalese",
+        "Seychellois",
+        "Sierra Leonean",
+        "Somali",
+        "South African",
+        "South Sudanese",
+        "Sudanese",
+        "Tanzanian",
+        "Togolese",
+        "Tunisian",
+        "Ugandan",
+        "Zambian",
+        "Zimbabwean"
+      ]
+    },
     "public.organization_type": {
       "name": "organization_type",
       "schema": "public",
-      "values": ["Private", "Government", "Nonprofit", "Cooperative", "International", "other"]
+      "values": [
+        "Private",
+        "Government",
+        "Nonprofit",
+        "Cooperative",
+        "International",
+        "other"
+      ]
     },
     "public.role": {
       "name": "role",
       "schema": "public",
-      "values": ["admin", "talent", "recruiter"]
+      "values": [
+        "admin",
+        "talent",
+        "recruiter"
+      ]
     },
     "public.team_size": {
       "name": "team_size",
       "schema": "public",
-      "values": ["0-10", "10-50", "50+"]
+      "values": [
+        "0-10",
+        "10-50",
+        "50+"
+      ]
     },
     "public.job_level": {
       "name": "job_level",
       "schema": "public",
-      "values": ["Entry Level", "Mid Level", "Senior Level", "Lead", "Director", "Executive"]
+      "values": [
+        "Entry Level",
+        "Mid Level",
+        "Senior Level",
+        "Lead",
+        "Director",
+        "Executive"
+      ]
     },
     "public.job_role": {
       "name": "job_role",
@@ -1216,32 +1496,59 @@
     "public.job_type": {
       "name": "job_type",
       "schema": "public",
-      "values": ["Full-Time", "Part-Time", "Contract", "Internship", "Freelance"]
+      "values": [
+        "Full-Time",
+        "Part-Time",
+        "Contract",
+        "Internship",
+        "Freelance"
+      ]
     },
     "public.salary_type": {
       "name": "salary_type",
       "schema": "public",
-      "values": ["Hourly", "fixed"]
+      "values": [
+        "Hourly",
+        "fixed"
+      ]
     },
     "public.status": {
       "name": "status",
       "schema": "public",
-      "values": ["active", "expired"]
+      "values": [
+        "active",
+        "expired"
+      ]
     },
     "public.vacancies": {
       "name": "vacancies",
       "schema": "public",
-      "values": ["1", "2", "3", "4", "5+"]
+      "values": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5+"
+      ]
     },
     "public.application_status": {
       "name": "application_status",
       "schema": "public",
-      "values": ["pending", "hired", "interviewing", "rejected", "withdrawn"]
+      "values": [
+        "pending",
+        "hired",
+        "interviewing",
+        "rejected",
+        "withdrawn"
+      ]
     },
     "public.token_type": {
       "name": "token_type",
       "schema": "public",
-      "values": ["access", "refresh"]
+      "values": [
+        "access",
+        "refresh"
+      ]
     }
   },
   "schemas": {},

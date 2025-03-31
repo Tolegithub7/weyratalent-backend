@@ -55,7 +55,13 @@ class TalentProfileController {
   });
 
   public getTalentProfiles = catchAsync(async (req: Request, res: Response) => {
-    const serviceResponse = await talentProfileService.getTalentProfiles();
+    const { page = 1, limit = 10 } = req.query;
+    const serviceResponse = await talentProfileService.getTalentProfiles(
+      {
+        page: Number(page),
+        limit: Number(limit),
+      }
+    );
     return handleServiceResponse(serviceResponse, res);
   });
 

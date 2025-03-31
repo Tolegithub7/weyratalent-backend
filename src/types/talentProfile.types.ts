@@ -9,3 +9,12 @@ export type TalentProfileType = z.infer<typeof TalentProfileSchema>;
 export type CreateTalentProfileType = z.infer<typeof CreateTalentProfileSchema.shape.body>;
 
 export type UpdateTalentProfileType = z.infer<typeof UpdateTalentProfileSchema>;
+export interface PaginatedTalentProfileResponse {
+  data: TalentProfileType[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}

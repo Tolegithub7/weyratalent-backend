@@ -3,21 +3,66 @@ import { db } from "@/db/database.config";
 import { jobProfile } from "@/entities";
 import { logger } from "@/server";
 import type { CreateJobPostingType, JobPostingType, UpdateJobPostingType } from "@/validator/jobPosting.validator";
-import { eq } from "drizzle-orm";
+import { eq, and, sql } from "drizzle-orm";
 import { StatusCodes } from "http-status-codes";
 import { v4 as uuidv4 } from "uuid";
+import type { PaginationMeta } from "@/types/jobPosting.types";
 
 class JobPostingService {
-  async getJobPostings(): Promise<ServiceResponse<JobPostingType[] | null>> {
+  async getJobPostings(
+    filters?: {
+      jobRole?: string;
+      jobType?: string;
+      jobLevel?: string;
+    },
+    pagination?: {
+      page?: number;
+      limit?: number;
+    }
+  ): Promise<ServiceResponse<{ data: JobPostingType[]; pagination: PaginationMeta } | null>> {
     try {
-      const jobPostings = await db.select().from(jobProfile);
-      return ServiceResponse.success<JobPostingType[]>(
+      // const page = pagination?.page || 1;
+      // const limit = pagination?.limit || 10;
+      // const offset = (page - 1) * limit;
+
+      const page = Math.max(1, Number(pagination?.page) || 1);
+      const limit = Math.min(100, Math.max(1, Number(pagination?.limit) || 10));
+      const offset = (page - 1) * limit;
+      
+      const whereConditions = [];
+      if (filters?.jobRole) whereConditions.push(eq(jobProfile.jobRole, filters.jobRole));
+      if (filters?.jobType) whereConditions.push(eq(jobProfile.jobType, filters.jobType));
+      if (filters?.jobLevel) whereConditions.push(eq(jobProfile.jobLevel, filters.jobLevel));
+
+      const jobPostings = await db
+        .select()
+        .from(jobProfile)
+        .where(whereConditions.length > 0 ? and(...whereConditions) : undefined)
+        .limit(limit)
+        .offset(offset);
+
+      const totalResult = await db
+        .select({ count: sql<number>`count(*)` })
+        .from(jobProfile)
+        .where(whereConditions.length > 0 ? and(...whereConditions) : undefined);
+      const total = Number(totalResult[0]?.count) || 0;
+
+      return ServiceResponse.success(
         "Job Postings Retrieved Successfully",
-        jobPostings as unknown as JobPostingType[],
-        StatusCodes.OK,
+        {
+          data: jobPostings as unknown as JobPostingType[],
+          pagination: {
+            total,
+            page,
+            limit,
+            totalPages: Math.ceil(total / limit),
+          },
+        },
+        StatusCodes.OK
       );
     } catch (error) {
-      return ServiceResponse.failure<null>("Failed to retrieve job postings", null, StatusCodes.INTERNAL_SERVER_ERROR);
+      logger.error(error);
+      return ServiceResponse.failure("Failed to retrieve job postings", null, StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
   async createJobPosting(

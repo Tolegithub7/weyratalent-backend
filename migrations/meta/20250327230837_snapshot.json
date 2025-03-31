@@ -1,6 +1,6 @@
 {
-  "id": "d54ad475-eb31-4cbc-9645-80eea0271054",
-  "prevId": "61fd3ccf-4797-44ba-97f6-12dcd2b8eb1c",
+  "id": "92ae3643-93ed-444c-895c-092731614304",
+  "prevId": "8ec9a016-9efb-4007-acfa-8b59f20f55b3",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -47,6 +47,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "certificate_url": {
+          "name": "certificate_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -85,6 +91,13 @@
           "nullsNotDistinct": false,
           "columns": [
             "user_id"
+          ]
+        },
+        "cv_certificate_url_unique": {
+          "name": "cv_certificate_url_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "certificate_url"
           ]
         }
       },
@@ -647,9 +660,29 @@
           "primaryKey": false,
           "notNull": true
         },
+        "country": {
+          "name": "country",
+          "type": "country",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "personal_website": {
+          "name": "personal_website",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "about": {
+          "name": "about",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "nationality": {
           "name": "nationality",
-          "type": "text",
+          "type": "nationality",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": true
         },
@@ -675,13 +708,7 @@
         },
         "social_link": {
           "name": "social_link",
-          "type": "varchar(30)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "about": {
-          "name": "about",
-          "type": "text",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": false
         },
@@ -761,7 +788,8 @@
         },
         "country": {
           "name": "country",
-          "type": "varchar(50)",
+          "type": "country",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": true
         },
@@ -1060,15 +1088,7 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "job_posting_user_id_unique": {
-          "name": "job_posting_user_id_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "user_id"
-          ]
-        }
-      },
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -1087,6 +1107,12 @@
         "user_id": {
           "name": "user_id",
           "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "cover_letter": {
+          "name": "cover_letter",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
@@ -1244,6 +1270,65 @@
         "mobile"
       ]
     },
+    "public.country": {
+      "name": "country",
+      "schema": "public",
+      "values": [
+        "Algeria",
+        "Angola",
+        "Benin",
+        "Botswana",
+        "Burkina Faso",
+        "Burundi",
+        "Cape Verde",
+        "Cameroon",
+        "Central African Republic",
+        "Chad",
+        "Comoros",
+        "Democratic Republic of the Congo",
+        "Djibouti",
+        "Egypt",
+        "Equatorial Guinea",
+        "Eritrea",
+        "Eswatini",
+        "Ethiopia",
+        "Gabon",
+        "Gambia",
+        "Ghana",
+        "Guinea",
+        "Guinea-Bissau",
+        "Ivory Coast",
+        "Kenya",
+        "Lesotho",
+        "Liberia",
+        "Libya",
+        "Madagascar",
+        "Malawi",
+        "Mali",
+        "Mauritania",
+        "Mauritius",
+        "Morocco",
+        "Mozambique",
+        "Namibia",
+        "Niger",
+        "Nigeria",
+        "Rwanda",
+        "São Tomé and Príncipe",
+        "Senegal",
+        "Seychelles",
+        "Sierra Leone",
+        "Somalia",
+        "South Africa",
+        "South Sudan",
+        "Sudan",
+        "Tanzania",
+        "Togo",
+        "Tunisia",
+        "Uganda",
+        "Zambia",
+        "Zimbabwe"
+      ]
+    },
     "public.experience": {
       "name": "experience",
       "schema": "public",
@@ -1281,6 +1366,66 @@
         "Hospitality",
         "Government",
         "other"
+      ]
+    },
+    "public.nationality": {
+      "name": "nationality",
+      "schema": "public",
+      "values": [
+        "Algerian",
+        "Angolan",
+        "Beninese",
+        "Motswana",
+        "Burkinabe",
+        "Burundian",
+        "Cameroonian",
+        "Cape Verdean",
+        "Central African",
+        "Chadian",
+        "Comorian",
+        "Congolese (Congo)",
+        "Congolese (DRC)",
+        "Djiboutian",
+        "Egyptian",
+        "Equatorial Guinean",
+        "Eritrean",
+        "Swazi",
+        "Ethiopian",
+        "Gabonese",
+        "Gambian",
+        "Ghanaian",
+        "Guinean",
+        "Bissau-Guinean",
+        "Ivorian",
+        "Kenyan",
+        "Mosotho",
+        "Liberian",
+        "Libyan",
+        "Malagasy",
+        "Malawian",
+        "Malian",
+        "Mauritanian",
+        "Mauritian",
+        "Moroccan",
+        "Mozambican",
+        "Namibian",
+        "Nigerien",
+        "Nigerian",
+        "Rwandan",
+        "Santomean",
+        "Senegalese",
+        "Seychellois",
+        "Sierra Leonean",
+        "Somali",
+        "South African",
+        "South Sudanese",
+        "Sudanese",
+        "Tanzanian",
+        "Togolese",
+        "Tunisian",
+        "Ugandan",
+        "Zambian",
+        "Zimbabwean"
       ]
     },
     "public.organization_type": {

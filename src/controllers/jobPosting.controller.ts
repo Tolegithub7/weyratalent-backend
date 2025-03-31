@@ -22,9 +22,26 @@ class JobPostingController {
   });
 
   public getJobPostings = catchAsync(async (req: Request, res: Response) => {
-    const serviceResponse = await jobPostingService.getJobPostings();
+    const { jobRole, jobType, jobLevel, page = 1, limit = 10 } = req.query;
+
+    const serviceResponse = await jobPostingService.getJobPostings(
+      {
+        jobRole: jobRole as string,
+        jobType: jobType as string,
+        jobLevel: jobLevel as string,
+      },
+      {
+        page: Number(page),
+        limit: Number(limit),
+      }
+    );
+
     return handleServiceResponse(serviceResponse, res);
   });
+  // public getJobPostings = catchAsync(async (req: Request, res: Response) => {
+  //   const serviceResponse = await jobPostingService.getJobPostings();
+  //   return handleServiceResponse(serviceResponse, res);
+  // });
 
   public deleteJobPosting = catchAsync(async (req: Request, res: Response) => {
     const { id } = req.params;

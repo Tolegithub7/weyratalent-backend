@@ -48,6 +48,17 @@ talentProfileRouter.delete(
   talentProfileController.deleteTalentProfile,
 );
 
+const PaginatedTalentProfileResponse = z.object({
+  success: z.boolean(),
+  data: z.array(TalentProfileSchema),
+  pagination: z.object({
+    total: z.number(),
+    page: z.number(),
+    limit: z.number(),
+    totalPages: z.number(),
+  }),
+});
+
 talentProfileRegistry.register("talent_profile", TalentProfileSchema);
 
 // GET all talent profiles
@@ -55,10 +66,42 @@ talentProfileRegistry.registerPath({
   method: "get",
   path: `${BASE_API_PATH}/talent_profile`,
   tags: ["Talent Profile"],
+  request: {
+    query: z.object({
+      page: z.number().int().positive().optional().default(1).describe("Page number (default: 1)"),
+      limit: z.number().int().positive().optional().default(10).describe("Items per page (default: 10)"),
+      // filter i
+    }),
+  },
   responses: {
     200: {
       description: "Success",
-      content: { "application/json": { schema: z.array(TalentProfileSchema) } },
+      content: {
+        "application/json": {
+          schema: PaginatedTalentProfileResponse,
+          examples: {
+            default: {
+              value: {
+                success: true,
+                data: [
+                  {
+                    id: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                    fullName: "John Doe",
+                    skills: ["JavaScript", "React"],
+                    // ... other fields
+                  }
+                ],
+                pagination: {
+                  total: 50,
+                  page: 1,
+                  limit: 10,
+                  totalPages: 5,
+                },
+              },
+            },
+          },
+        },
+      },
     },
   },
 });

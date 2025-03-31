@@ -1,3 +1,5 @@
+
+import { uploadCertificate } from "@/common/middleware/certificateUploadMiddleware";
 import { env } from "@/common/utils/envConfig";
 import { validateRequest } from "@/common/utils/httpHandlers";
 import { cvController } from "@/controllers/cv.controller";
@@ -10,11 +12,13 @@ export const cvRouter: Router = Router();
 export const cvRegistry = new OpenAPIRegistry();
 const BASE_API_PATH = env.BASE_API;
 
-cvRouter.post("/", validateRequest(CreateCVSchema), cvController.create);
+// Apply the uploadCertificate middleware before validation//+
+cvRouter.post("/", uploadCertificate, validateRequest(CreateCVSchema), cvController.create);
 cvRouter.get("/", cvController.getAllCvs);
 cvRouter.get("/:id", validateRequest(GetCVReqSchema), cvController.getCv);
-cvRouter.put("/:id", validateRequest(UpdateCVSchema), cvController.updateCv);
-cvRouter.delete("/:id", validateRequest(GetCVReqSchema), cvController.deleteCv);
+cvRouter.put("/:id", uploadCertificate, validateRequest(UpdateCVSchema), cvController.updateCv);
+// cvRouter.delete("/:id", validateRequest(GetCVReqSchema), cvController.deleteCv);//-
+cvRouter.delete("/:id", validateRequest(GetCVReqSchema), cvController.deleteCv);//+
 
 cvRegistry.register("cv", CVSchema);
 
@@ -27,8 +31,34 @@ cvRegistry.registerPath({
     body: {
       required: true,
       content: {
-        "application/json": {
+        "multipart/form-data": {
           schema: CreateCVSchema.shape.body,
+          encoding: {
+            certificate: {
+              contentType: "application/octet-stream", // For file upload
+            },
+            fullName: {
+              contentType: "text/plain", // For text fields
+            },
+            skillTitle: {
+              contentType: "text/plain",
+            },
+            hourlyRate: {
+              contentType: "text/plain",
+            },
+            categories: {
+              contentType: "text/plain",
+            },
+            workExperience: {
+              contentType: "application/json", // For nested JSON
+            },
+            education: {
+              contentType: "application/json",
+            },
+            project: {
+              contentType: "application/json",
+            },
+          },
         },
       },
     },
@@ -87,8 +117,34 @@ cvRegistry.registerPath({
     body: {
       required: true,
       content: {
-        "application/json": {
+        "multipart/form-data": {
           schema: UpdateCVSchema,
+          encoding: {
+            certificate: {
+              contentType: "application/octet-stream", // For file upload
+            },
+            fullName: {
+              contentType: "text/plain", // For text fields
+            },
+            skillTitle: {
+              contentType: "text/plain",
+            },
+            hourlyRate: {
+              contentType: "text/plain",
+            },
+            categories: {
+              contentType: "text/plain",
+            },
+            workExperience: {
+              contentType: "application/json", // For nested JSON
+            },
+            education: {
+              contentType: "application/json",
+            },
+            project: {
+              contentType: "application/json",
+            },
+          },
         },
       },
     },

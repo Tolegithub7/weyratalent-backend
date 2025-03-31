@@ -21,6 +21,7 @@ export const cv = pgTable(
     skillTitle: text("skill_title").notNull(),
     hourlyRate: integer("hourly_rate").notNull().default(0).$type<number>(),
     categories: categoriesEnum("categories").notNull(),
+    certificateUrl: text("certificate_url").unique(),
     ...timestamps,
   },
   (table) => [check("hourly_rate_check", sql`${table.hourlyRate} >= 0 AND ${table.hourlyRate} <= 100`)],
