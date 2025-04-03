@@ -2,11 +2,11 @@ import { ServiceResponse } from "@/common/models/serviceResponse";
 import { db } from "@/db/database.config";
 import { jobProfile } from "@/entities";
 import { logger } from "@/server";
+import type { PaginationMeta } from "@/types/jobPosting.types";
 import type { CreateJobPostingType, JobPostingType, UpdateJobPostingType } from "@/validator/jobPosting.validator";
-import { eq, and, sql } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { StatusCodes } from "http-status-codes";
 import { v4 as uuidv4 } from "uuid";
-import type { PaginationMeta } from "@/types/jobPosting.types";
 
 class JobPostingService {
   async getJobPostings(
@@ -18,7 +18,7 @@ class JobPostingService {
     pagination?: {
       page?: number;
       limit?: number;
-    }
+    },
   ): Promise<ServiceResponse<{ data: JobPostingType[]; pagination: PaginationMeta } | null>> {
     try {
       // const page = pagination?.page || 1;
@@ -28,7 +28,7 @@ class JobPostingService {
       const page = Math.max(1, Number(pagination?.page) || 1);
       const limit = Math.min(100, Math.max(1, Number(pagination?.limit) || 10));
       const offset = (page - 1) * limit;
-      
+
       const whereConditions = [];
       if (filters?.jobRole) whereConditions.push(eq(jobProfile.jobRole, filters.jobRole));
       if (filters?.jobType) whereConditions.push(eq(jobProfile.jobType, filters.jobType));
@@ -58,7 +58,7 @@ class JobPostingService {
             totalPages: Math.ceil(total / limit),
           },
         },
-        StatusCodes.OK
+        StatusCodes.OK,
       );
     } catch (error) {
       logger.error(error);
@@ -101,6 +101,23 @@ class JobPostingService {
     } catch (error) {
       logger.error(error);
       return ServiceResponse.failure<null>("Failed to retrieve job posting", null, StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  async getRegisteredJob(userId: string): Promise<ServiceResponse<JobPostingType[] | null>> {
+    try {
+      const jobsData = await db.select().from(jobProfile).where(eq(jobProfile.userId, userId));
+      return ServiceResponse.success<JobPostingType[]>(
+        "Registered Jobs Retrieved Successfully",
+        jobsData as unknown as JobPostingType[],
+        StatusCodes.OK,
+      );
+    } catch (error) {
+      return ServiceResponse.failure<null>(
+        "Failed to retrieve registered jobs for the employer",
+        null,
+        StatusCodes.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 

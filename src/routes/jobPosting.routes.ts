@@ -11,13 +11,13 @@ export const jobPostingRouter: Router = express.Router();
 const BASE_API_PATH = env.BASE_API;
 
 jobPostingRouter.get("/", jobPostingController.getJobPostings);
+jobPostingRouter.get("/me", jobPostingController.getRegisteredJob);
 jobPostingRouter.get("/:id", validateRequest(GetJobPostingSchema), jobPostingController.getJobPosting);
 jobPostingRouter.post("/", validateRequest(CreateJobPostingSchema), jobPostingController.createJobPosting);
 jobPostingRouter.put("/:id", validateRequest(CreateJobPostingSchema.partial()), jobPostingController.updateJobPosting);
 jobPostingRouter.delete("/:id", validateRequest(GetJobPostingSchema), jobPostingController.deleteJobPosting);
 
 jobPostingRegistry.register("job_posting", JobPostingSchema);
-
 
 const PaginatedJobPostingResponse = z.object({
   success: z.boolean(),
@@ -150,6 +150,19 @@ jobPostingRegistry.registerPath({
   method: "get",
   path: `${BASE_API_PATH}/job_posting/{id}`,
   request: { params: GetJobPostingSchema.shape.params },
+  tags: ["Job Posting"],
+  responses: {
+    200: {
+      description: "Success",
+      content: { "application/json": { schema: JobPostingSchema } },
+    },
+  },
+});
+
+// GET job posting for registered employer
+jobPostingRegistry.registerPath({
+  method: "get",
+  path: `${BASE_API_PATH}/job_posting/me`,
   tags: ["Job Posting"],
   responses: {
     200: {

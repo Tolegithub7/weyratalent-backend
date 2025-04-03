@@ -33,7 +33,7 @@ class JobPostingController {
       {
         page: Number(page),
         limit: Number(limit),
-      }
+      },
     );
 
     return handleServiceResponse(serviceResponse, res);
@@ -42,6 +42,16 @@ class JobPostingController {
   //   const serviceResponse = await jobPostingService.getJobPostings();
   //   return handleServiceResponse(serviceResponse, res);
   // });
+
+  public getRegisteredJob = catchAsync(async (req: Request, res: Response) => {
+    if (!req.user) {
+      throw new ApiError(StatusCodes.NOT_FOUND, "User not found");
+    }
+
+    const userId = req.user.id;
+    const serviceResponse = await jobPostingService.getRegisteredJob(userId);
+    return handleServiceResponse(serviceResponse, res);
+  });
 
   public deleteJobPosting = catchAsync(async (req: Request, res: Response) => {
     const { id } = req.params;
