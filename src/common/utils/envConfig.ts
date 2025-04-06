@@ -18,7 +18,7 @@ export const env = cleanEnv(process.env, {
   }),
   HOST: host({ devDefault: testOnly("localhost") }),
   PORT: port({ devDefault: testOnly(3000) }),
-  BASE_API: str({ devDefault: testOnly("api/v1") }),
+  BASE_API: str({ devDefault: testOnly("/api/v1") }),
   //Database
   DB_PORT: port({ devDefault: testOnly(8599) }),
   DB_HOST: str({ devDefault: testOnly("localhost") }),

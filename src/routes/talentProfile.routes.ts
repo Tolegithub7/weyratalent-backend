@@ -65,6 +65,7 @@ talentProfileRegistry.register("talent_profile", TalentProfileSchema);
 talentProfileRegistry.registerPath({
   method: "get",
   path: `${BASE_API_PATH}/talent_profile`,
+  security: [],
   tags: ["Talent Profile"],
   request: {
     query: z.object({
@@ -89,7 +90,7 @@ talentProfileRegistry.registerPath({
                     fullName: "John Doe",
                     skills: ["JavaScript", "React"],
                     // ... other fields
-                  }
+                  },
                 ],
                 pagination: {
                   total: 50,

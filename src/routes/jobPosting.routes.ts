@@ -32,6 +32,7 @@ const PaginatedJobPostingResponse = z.object({
 jobPostingRegistry.registerPath({
   method: "get",
   path: `${BASE_API_PATH}/job_posting`,
+  security: [],
   tags: ["Job Posting"],
   summary: "Get job postings with filters and pagination",
   request: {

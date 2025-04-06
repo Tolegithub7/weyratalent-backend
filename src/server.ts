@@ -1,5 +1,5 @@
 import cors from "cors";
-import express, { type Express } from "express";
+import express, { type Request, type Express } from "express";
 import { unless } from "express-unless";
 import { StatusCodes } from "http-status-codes";
 import { pino } from "pino";
@@ -44,7 +44,21 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(auth.unless({ path: skipAuthPath }));
+app.use(
+  auth.unless((req: Request) => {
+    if (skipAuthPath.includes(req.path)) {
+      return true;
+    }
+    if (req.path === `${env.BASE_API}/job_posting` && req.method === "GET") {
+      return true;
+    }
+
+    if (req.path === `${env.BASE_API}/talent_profile` && req.method === "GET") {
+      return true;
+    }
+    return false;
+  }),
+);
 // Routes
 app.use(`${env.BASE_API}/employer_profile`, employerProfileRouter);
 app.use(`${env.BASE_API}/talent_profile`, talentProfileRouter);
