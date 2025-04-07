@@ -1,9 +1,14 @@
 import { ServiceResponse } from "@/common/models/serviceResponse";
 import { db } from "@/db/database.config";
-import { jobProfile } from "@/entities";
+import { employerProfile, jobProfile } from "@/entities";
 import { logger } from "@/server";
 import type { PaginationMeta } from "@/types/jobPosting.types";
-import type { CreateJobPostingType, JobPostingType, UpdateJobPostingType } from "@/validator/jobPosting.validator";
+import type {
+  CreateJobPostingType,
+  GetAllJobsType,
+  JobPostingType,
+  UpdateJobPostingType,
+} from "@/validator/jobPosting.validator";
 import { and, eq, sql } from "drizzle-orm";
 import { StatusCodes } from "http-status-codes";
 import { v4 as uuidv4 } from "uuid";
@@ -41,6 +46,20 @@ class JobPostingService {
         .limit(limit)
         .offset(offset);
 
+      const allJobs: GetAllJobsType[] = [];
+      if (jobPostings.length > 0) {
+        const userId = jobPostings[0].userId;
+        const employerProfileData = await db.select().from(employerProfile).where(eq(employerProfile.userId, userId));
+        jobPostings.map((job) => {
+          const jobwithProfile = {
+            ...job,
+            employerProfile: employerProfileData,
+          };
+
+          allJobs.push(jobwithProfile as unknown as GetAllJobsType);
+        });
+      }
+
       const totalResult = await db
         .select({ count: sql<number>`count(*)` })
         .from(jobProfile)
@@ -50,7 +69,7 @@ class JobPostingService {
       return ServiceResponse.success(
         "Job Postings Retrieved Successfully",
         {
-          data: jobPostings as unknown as JobPostingType[],
+          data: allJobs as unknown as GetAllJobsType[],
           pagination: {
             total,
             page,

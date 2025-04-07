@@ -1,6 +1,7 @@
 import { Education, Experience, JobLevel, JobRole, JobType, SalaryType, StatusType, Vacancies } from "@/types";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { z } from "zod";
+import { EmployerProfileSchema, UpdateEmployerProfileSchema } from "./employerProfile.validator";
 
 extendZodWithOpenApi(z);
 export const JobPostingSchema = z.object({
@@ -71,6 +72,13 @@ export const GetJobPostingSchema = z.object({
   }),
 });
 
+export const GetAllJobsSchema = JobPostingSchema.extend({
+  employerProfile: EmployerProfileSchema.omit({
+    banner: true,
+    logo: true,
+  }).partial(),
+});
+
 export const CreateJobPostingSchema = z.object({
   body: JobPostingSchema.omit({ id: true, userId: true, status: true }),
 });
@@ -80,3 +88,4 @@ export const UpdateJobPostingSchema = JobPostingSchema.partial();
 export type JobPostingType = z.infer<typeof JobPostingSchema>;
 export type CreateJobPostingType = z.infer<typeof CreateJobPostingSchema.shape.body>;
 export type UpdateJobPostingType = z.infer<typeof UpdateJobPostingSchema>;
+export type GetAllJobsType = z.infer<typeof GetAllJobsSchema>;
