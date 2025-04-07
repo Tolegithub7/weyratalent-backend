@@ -108,13 +108,25 @@ class JobPostingService {
     }
   }
 
-  async getJobPosting(id: string): Promise<ServiceResponse<JobPostingType | null>> {
+  async getJobPosting(id: string): Promise<ServiceResponse<GetAllJobsType | null>> {
     try {
       const jobData = await db.select().from(jobProfile).where(eq(jobProfile.id, id));
       const foundJob = jobData ? jobData[0] : null;
-      return ServiceResponse.success<JobPostingType>(
+
+      let jobwithProfile = null;
+      if (foundJob) {
+        const employerProfileData = await db
+          .select()
+          .from(employerProfile)
+          .where(eq(employerProfile.userId, foundJob.userId));
+        jobwithProfile = {
+          ...foundJob,
+          employerProfile: employerProfileData,
+        };
+      }
+      return ServiceResponse.success<GetAllJobsType>(
         "Job Posting Retrieved Successfully",
-        foundJob as unknown as JobPostingType,
+        jobwithProfile as unknown as GetAllJobsType,
         StatusCodes.OK,
       );
     } catch (error) {
