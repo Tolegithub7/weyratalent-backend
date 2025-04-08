@@ -12,6 +12,7 @@ const BASE_API_PATH = env.BASE_API;
 
 cvRouter.post("/", validateRequest(CreateCVSchema), cvController.create);
 cvRouter.get("/", cvController.getAllCvs);
+cvRouter.get("/me", cvController.getCvByUserId);
 cvRouter.get("/:id", validateRequest(GetCVReqSchema), cvController.getCv);
 cvRouter.put("/:id", validateRequest(UpdateCVSchema), cvController.updateCv);
 cvRouter.delete("/:id", validateRequest(GetCVReqSchema), cvController.deleteCv);
@@ -49,6 +50,23 @@ cvRegistry.registerPath({
   request: {
     params: GetCVReqSchema.shape.params,
   },
+  responses: {
+    200: {
+      description: "success",
+      content: {
+        "application/json": {
+          schema: CVSchema,
+        },
+      },
+    },
+  },
+});
+
+cvRegistry.registerPath({
+  method: "get",
+  path: `${BASE_API_PATH}/cv/me`,
+  tags: ["CV"],
+  summary: "get cv with a user Id",
   responses: {
     200: {
       description: "success",

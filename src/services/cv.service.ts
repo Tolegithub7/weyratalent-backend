@@ -192,6 +192,51 @@ class CVService {
     }
   }
 
+  async getCvByUserId(userId: string): Promise<ServiceResponse<CVResponseType | null>> {
+    try {
+      const cvData = await db.select().from(cv).where(eq(cv.userId, userId));
+      const foundCv = cvData ? cvData[0] : null;
+      if (foundCv) {
+        const cvId = foundCv.id;
+        const workData = (await db.select().from(workExperience).where(eq(workExperience.cvId, cvId))).map((work) => ({
+          ...work,
+          end_date: work.end_date ?? undefined, // Convert null to undefined
+        }));
+        const projectData = (await db.select().from(project).where(eq(project.cvId, cvId))).map((proj) => ({
+          ...proj,
+          projectLink: proj.projectLink ?? undefined, // Convert null to undefined
+        }));
+        const educationData = (await db.select().from(education).where(eq(education.cvId, cvId))).map((edu) => ({
+          ...edu,
+          end_date: edu.end_date ?? undefined, // Convert null to undefined
+          gpa: edu.gpa ?? undefined,
+        }));
+
+        const serviceResponse = {
+          ...foundCv,
+          primarySkills: cvData[0].primarySkills,
+          workExperience: workData,
+          project: projectData,
+          education: educationData,
+        };
+        return ServiceResponse.success<CVResponseType>(
+          "CV fetched Succesfully",
+          serviceResponse as unknown as CVResponseType,
+          StatusCodes.OK,
+        );
+      }
+
+      return ServiceResponse.success<CVResponseType>(
+        "CV fetched Succesfully",
+        {} as unknown as CVResponseType,
+        StatusCodes.OK,
+      );
+    } catch (error) {
+      console.error(error);
+      return ServiceResponse.failure<null>("failed to get all cv", null, StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+  }
+
   async deleteCv(id: string): Promise<ServiceResponse<null>> {
     try {
       const cvData = await db.select().from(cv).where(eq(cv.id, id));

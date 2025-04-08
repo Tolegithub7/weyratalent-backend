@@ -23,6 +23,15 @@ class CVController {
     return handleServiceResponse(serviceResponse, res);
   });
 
+  public getCvByUserId = catchAsync(async (req: Request, res: Response) => {
+    if (!req.user) {
+      throw new ApiError(StatusCodes.NOT_FOUND, "User not found");
+    }
+    const userId = req.user.id;
+    const serviceResponse = await cvService.getCvByUserId(userId);
+    return handleServiceResponse(serviceResponse, res);
+  });
+
   public getAllCvs = catchAsync(async (req: Request, res: Response) => {
     const serviceResponse = await cvService.getAllCvs();
     return handleServiceResponse(serviceResponse, res);
