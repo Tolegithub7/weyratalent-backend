@@ -10,13 +10,13 @@ import { v4 as uuidv4 } from "uuid";
 class CVService {
   async create(cvData: CVInputType, userId: string): Promise<ServiceResponse<CVResponseType | null>> {
     try {
-      const { fullName, skillTitle, hourlyRate, categories } = cvData;
+      const { fullName, skillTitle, hourlyRate, primarySkills } = cvData;
       const cvTableData = {
         userId,
         fullName,
         skillTitle,
         hourlyRate,
-        categories,
+        primarySkills,
       };
       const createdCv = await db.insert(cv).values(cvTableData).returning();
       const cvId = createdCv[0].id;
@@ -78,7 +78,7 @@ class CVService {
 
       const serviceResponse: CVResponseType = {
         ...createdCv[0],
-        categories: createdCv[0].categories as Categories,
+        primarySkills: createdCv[0].primarySkills,
         education: createdEducation,
         project: createdProjects,
         workExperience: createdWorkExperience,
@@ -122,7 +122,7 @@ class CVService {
 
           allCvs.push({
             ...cv,
-            categories: cv.categories as Categories,
+            primarySkills: cv.primarySkills,
             workExperience: workData,
             project: projectData,
             education: educationData,
@@ -163,7 +163,7 @@ class CVService {
 
         const serviceResponse = {
           ...foundCv,
-          categories: foundCv.categories as Categories,
+          primarySkills: cvData[0].primarySkills,
           workExperience: workData,
           project: projectData,
           education: educationData,
