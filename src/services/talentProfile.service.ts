@@ -8,7 +8,7 @@ import type {
   TalentProfileType,
   UpdateTalentProfileType,
 } from "@/types/talentProfile.types";
-import { type SQLWrapper, and, eq, sql } from "drizzle-orm";
+import { type SQLWrapper, and, eq, gte, lte, sql } from "drizzle-orm";
 import { StatusCodes } from "http-status-codes";
 
 interface PaginatedResponse<T> {
@@ -21,48 +21,56 @@ interface PaginatedResponse<T> {
   };
 }
 class TalentProfileService {
-  async getTalentProfiles(pagination?: {
-    page?: number;
-    limit?: number;
-  }): Promise<ServiceResponse<PaginatedResponse<TalentProfileResponseType> | null>> {
+  async getTalentProfiles(
+    filters?: {
+      country?: string;
+      experience?: string;
+      minHourlyRate?: number; // Add hourlyRate as an optional filter
+      maxHourlyRate?: number;
+    },
+    pagination?: {
+      page?: number;
+      limit?: number;
+    },
+  ): Promise<ServiceResponse<PaginatedResponse<TalentProfileResponseType> | null>> {
     try {
       const page = Math.max(1, Number(pagination?.page) || 1);
       const limit = Math.min(100, Math.max(1, Number(pagination?.limit) || 10));
       const offset = (page - 1) * limit;
 
       const whereConditions: Array<SQLWrapper | undefined> = [];
+      if (filters?.country) whereConditions.push(eq(talentProfile.country, filters.country));
+      if (filters?.experience) whereConditions.push(eq(talentProfile.experience, filters.experience));
+      if (filters?.minHourlyRate) whereConditions.push(gte(cv.hourlyRate, filters.minHourlyRate));
+      if (filters?.maxHourlyRate) whereConditions.push(lte(cv.hourlyRate, filters.maxHourlyRate));
+
+      // Join talentProfile with cv table
       const query = db
-        .select()
+        .select({
+          talentProfile: talentProfile, // Select all fields from talentProfile
+          cv: cv, // Select all fields from cv
+        })
         .from(talentProfile)
+        .leftJoin(cv, eq(talentProfile.userId, cv.userId)) // Join with cv table using userId
         .where(whereConditions.length ? and(...whereConditions) : undefined)
         .limit(limit)
         .offset(offset);
 
+      // Count query with the same join and filters
       const countQuery = db
         .select({ count: sql<number>`count(*)` })
         .from(talentProfile)
+        .leftJoin(cv, eq(talentProfile.userId, cv.userId)) // Join with cv table
         .where(whereConditions.length ? and(...whereConditions) : undefined);
 
       const [profiles, totalResult] = await Promise.all([query, countQuery]);
       const total = Number(totalResult[0]?.count) || 0;
 
-      // const talentProfiles = await db.select().from(talentProfile);
-      const talentProfilesWithCv: TalentProfileResponseType[] = [];
-      if (profiles.length > 0) {
-        await Promise.all(
-          profiles.map(async (profile) => {
-            const userId = profile.userId;
-            const [talentCv] = await db.select().from(cv).where(eq(cv.userId, userId));
+      const talentProfilesWithCv: TalentProfileResponseType[] = profiles.map((profile) => ({
+        ...profile.talentProfile,
+        talentCv: profile.cv || null,
+      })) as unknown as TalentProfileResponseType[];
 
-            const talentData = {
-              ...profile,
-              talentCv: talentCv,
-            };
-
-            talentProfilesWithCv.push(talentData as TalentProfileResponseType);
-          }),
-        );
-      }
       return ServiceResponse.success(
         "Talent Profiles Retrieved Successfully",
         {

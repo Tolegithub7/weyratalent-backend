@@ -69,6 +69,10 @@ talentProfileRegistry.registerPath({
   tags: ["Talent Profile"],
   request: {
     query: z.object({
+      country: z.string().optional().describe("Filter talent profile by country (e.g., 'Algeria')"),
+      experience: z.string().optional().describe("Filter talent profile by experience (e.g., 'Entry Level')"),
+      minHourlyRate: z.number().optional().describe("Min talent profile filter hourly rate (e.g., 50)"),
+      maxHourlyRate: z.number().optional().describe("Max talent profile by hourly rate (e.g., 50)"),
       page: z.number().int().positive().optional().default(1).describe("Page number (default: 1)"),
       limit: z.number().int().positive().optional().default(10).describe("Items per page (default: 10)"),
       // filter i
@@ -76,7 +80,7 @@ talentProfileRegistry.registerPath({
   },
   responses: {
     200: {
-      description: "Success",
+      description: "Paginated list of talent lists",
       content: {
         "application/json": {
           schema: PaginatedTalentProfileResponse,
