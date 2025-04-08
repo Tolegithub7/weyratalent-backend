@@ -1,6 +1,7 @@
 import { Country, Experience, Gender, Nationality } from "@/types";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { z } from "zod";
+import { CVResponseSchema } from "./cv.validator";
 
 extendZodWithOpenApi(z);
 export const TalentProfileSchema = z.object({
@@ -64,3 +65,7 @@ export const UpdateTalentProfileSchema = TalentProfileSchema.omit({
   userId: true,
   profileUrl: true,
 }).partial();
+
+export const TalentProfileResponseSchmema = TalentProfileSchema.extend({
+  talentCv: CVResponseSchema,
+});

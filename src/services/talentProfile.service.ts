@@ -1,9 +1,14 @@
 import { ServiceResponse } from "@/common/models/serviceResponse";
 import { db } from "@/db/database.config";
-import { talentProfile } from "@/entities";
+import { cv, talentProfile } from "@/entities";
 import { logger } from "@/server";
-import type { CreateTalentProfileType, TalentProfileType, UpdateTalentProfileType } from "@/types/talentProfile.types";
-import { eq, and, SQLWrapper, sql } from "drizzle-orm";
+import type {
+  CreateTalentProfileType,
+  TalentProfileResponseType,
+  TalentProfileType,
+  UpdateTalentProfileType,
+} from "@/types/talentProfile.types";
+import { type SQLWrapper, and, eq, sql } from "drizzle-orm";
 import { StatusCodes } from "http-status-codes";
 
 interface PaginatedResponse<T> {
@@ -16,18 +21,15 @@ interface PaginatedResponse<T> {
   };
 }
 class TalentProfileService {
-
-  async getTalentProfiles(
-    pagination?: {
-      page?: number;
-      limit?: number;
-    }
-  ): Promise<ServiceResponse<PaginatedResponse<TalentProfileType> | null>> {
+  async getTalentProfiles(pagination?: {
+    page?: number;
+    limit?: number;
+  }): Promise<ServiceResponse<PaginatedResponse<TalentProfileResponseType> | null>> {
     try {
       const page = Math.max(1, Number(pagination?.page) || 1);
       const limit = Math.min(100, Math.max(1, Number(pagination?.limit) || 10));
       const offset = (page - 1) * limit;
-      
+
       const whereConditions: Array<SQLWrapper | undefined> = [];
       const query = db
         .select()
@@ -40,15 +42,31 @@ class TalentProfileService {
         .select({ count: sql<number>`count(*)` })
         .from(talentProfile)
         .where(whereConditions.length ? and(...whereConditions) : undefined);
-  
+
       const [profiles, totalResult] = await Promise.all([query, countQuery]);
       const total = Number(totalResult[0]?.count) || 0;
 
-      const talentProfiles = await db.select().from(talentProfile);
+      // const talentProfiles = await db.select().from(talentProfile);
+      const talentProfilesWithCv: TalentProfileResponseType[] = [];
+      if (profiles.length > 0) {
+        await Promise.all(
+          profiles.map(async (profile) => {
+            const userId = profile.userId;
+            const [talentCv] = await db.select().from(cv).where(eq(cv.userId, userId));
+
+            const talentData = {
+              ...profile,
+              talentCv: talentCv,
+            };
+
+            talentProfilesWithCv.push(talentData as TalentProfileResponseType);
+          }),
+        );
+      }
       return ServiceResponse.success(
         "Talent Profiles Retrieved Successfully",
         {
-          data: profiles as unknown as TalentProfileType[],
+          data: talentProfilesWithCv as unknown as TalentProfileResponseType[],
           pagination: {
             total,
             page,
@@ -56,16 +74,12 @@ class TalentProfileService {
             totalPages: Math.ceil(total / limit),
           },
         },
-        StatusCodes.OK
+        StatusCodes.OK,
       );
     } catch (error) {
       logger.error(`Error fetching talent profiles: ${error}`);
-      return ServiceResponse.failure(
-        "Failed to retrieve talent profiles",
-        null,
-        StatusCodes.INTERNAL_SERVER_ERROR
-      );
-    }  
+      return ServiceResponse.failure("Failed to retrieve talent profiles", null, StatusCodes.INTERNAL_SERVER_ERROR);
+    }
   }
 
   async createOrUpdateTalentProfile(
@@ -106,7 +120,7 @@ class TalentProfileService {
     }
   }
 
-  async getTalentProfile(id: string): Promise<ServiceResponse<TalentProfileType | null>> {
+  async getTalentProfile(id: string): Promise<ServiceResponse<TalentProfileResponseType | null>> {
     try {
       const [talentData] = await db.select().from(talentProfile).where(eq(talentProfile.id, id));
 
@@ -114,9 +128,15 @@ class TalentProfileService {
         return ServiceResponse.failure<null>("Talent profile not found", null, StatusCodes.NOT_FOUND);
       }
 
-      return ServiceResponse.success<TalentProfileType>(
+      const [talentCv] = await db.select().from(cv).where(eq(cv.userId, talentData.userId));
+      const talentProfileData = {
+        ...talentData,
+        talentCv: talentCv,
+      };
+
+      return ServiceResponse.success<TalentProfileResponseType>(
         "Talent Profile Retrieved Successfully",
-        talentData as TalentProfileType,
+        talentProfileData as unknown as TalentProfileResponseType,
         StatusCodes.OK,
       );
     } catch (error) {
@@ -129,15 +149,25 @@ class TalentProfileService {
     }
   }
 
-  async getRegisteredTalentProfile(userId: string): Promise<ServiceResponse<TalentProfileType | null>> {
+  async getRegisteredTalentProfile(userId: string): Promise<ServiceResponse<TalentProfileResponseType | null>> {
     try {
       const talentData = await db.select().from(talentProfile).where(eq(talentProfile.userId, userId));
       const foundTalent = talentData ? talentData[0] : null;
-      return ServiceResponse.success<TalentProfileType>(
-        "Talent Profile Retrieved Succesfully",
-        foundTalent as unknown as TalentProfileType,
-        StatusCodes.OK,
-      );
+      if (foundTalent) {
+        const [talentCv] = await db.select().from(cv).where(eq(cv.userId, foundTalent.userId));
+        const talentProfileData = {
+          ...foundTalent,
+          talentCv: talentCv,
+        };
+
+        return ServiceResponse.success<TalentProfileResponseType>(
+          "Talent Profile Retrieved Successfully",
+          talentProfileData as unknown as TalentProfileResponseType,
+          StatusCodes.OK,
+        );
+      }
+
+      return ServiceResponse.success<null>("Talent Profile Retrieved Succesfully", null, StatusCodes.OK);
     } catch (error) {
       logger.info(error);
       return ServiceResponse.failure<null>(
