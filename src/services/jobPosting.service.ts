@@ -11,9 +11,12 @@ import type { PaginationMeta } from "@/types/jobPosting.types";
 class JobPostingService {
   async getJobPostings(
     filters?: {
+      jobTitle?: string; 
       jobRole?: string;
       jobType?: string;
       jobLevel?: string;
+      durationValue?: string;
+      durationUnit?: string;
     },
     pagination?: {
       page?: number;
@@ -33,6 +36,8 @@ class JobPostingService {
       if (filters?.jobRole) whereConditions.push(eq(jobProfile.jobRole, filters.jobRole));
       if (filters?.jobType) whereConditions.push(eq(jobProfile.jobType, filters.jobType));
       if (filters?.jobLevel) whereConditions.push(eq(jobProfile.jobLevel, filters.jobLevel));
+      if (filters?.durationValue) whereConditions.push(eq(jobProfile.durationValue, filters.durationValue));
+      if (filters?.durationUnit) whereConditions.push(eq(jobProfile.durationUnit, filters.durationUnit));
 
       const jobPostings = await db
         .select()

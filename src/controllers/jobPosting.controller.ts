@@ -22,13 +22,15 @@ class JobPostingController {
   });
 
   public getJobPostings = catchAsync(async (req: Request, res: Response) => {
-    const { jobRole, jobType, jobLevel, page = 1, limit = 10 } = req.query;
+    const { jobRole, jobType, jobLevel, durationValue, durationUnit, jobTitle, page = 1, limit = 10 } = req.query;
 
     const serviceResponse = await jobPostingService.getJobPostings(
       {
         jobRole: jobRole as string,
         jobType: jobType as string,
         jobLevel: jobLevel as string,
+        durationUnit: durationUnit as string,
+        durationValue: durationValue as string,
       },
       {
         page: Number(page),
