@@ -9,7 +9,7 @@ import type {
   JobPostingType,
   UpdateJobPostingType,
 } from "@/validator/jobPosting.validator";
-import { and, eq, sql } from "drizzle-orm";
+import { type SQLWrapper, and, eq, sql } from "drizzle-orm";
 import { StatusCodes } from "http-status-codes";
 import { v4 as uuidv4 } from "uuid";
 
@@ -19,6 +19,8 @@ class JobPostingService {
       jobRole?: string;
       jobType?: string;
       jobLevel?: string;
+      salaryType?: string;
+      location?: string;
     },
     pagination?: {
       page?: number;
@@ -26,50 +28,51 @@ class JobPostingService {
     },
   ): Promise<ServiceResponse<{ data: JobPostingType[]; pagination: PaginationMeta } | null>> {
     try {
-      // const page = pagination?.page || 1;
-      // const limit = pagination?.limit || 10;
-      // const offset = (page - 1) * limit;
-
       const page = Math.max(1, Number(pagination?.page) || 1);
       const limit = Math.min(100, Math.max(1, Number(pagination?.limit) || 10));
       const offset = (page - 1) * limit;
 
-      const whereConditions = [];
+      const whereConditions: Array<SQLWrapper | undefined> = [];
       if (filters?.jobRole) whereConditions.push(eq(jobProfile.jobRole, filters.jobRole));
       if (filters?.jobType) whereConditions.push(eq(jobProfile.jobType, filters.jobType));
       if (filters?.jobLevel) whereConditions.push(eq(jobProfile.jobLevel, filters.jobLevel));
+      if (filters?.salaryType) whereConditions.push(eq(jobProfile.salaryType, filters.salaryType));
+      if (filters?.location) {
+        whereConditions.push(sql`LOWER(${employerProfile.location}) LIKE LOWER(${`%${filters.location}%`})`);
+      }
 
-      const jobPostings = await db
-        .select()
+      // Join jobProfile with employerProfile
+      const query = db
+        .select({
+          jobProfile: jobProfile, // Select all fields from jobProfile
+          employerProfile: employerProfile, // Select all fields from employerProfile
+        })
         .from(jobProfile)
+        .leftJoin(employerProfile, eq(jobProfile.userId, employerProfile.userId)) // Join on userId
         .where(whereConditions.length > 0 ? and(...whereConditions) : undefined)
         .limit(limit)
         .offset(offset);
 
-      const allJobs: GetAllJobsType[] = [];
-      if (jobPostings.length > 0) {
-        const userId = jobPostings[0].userId;
-        const employerProfileData = await db.select().from(employerProfile).where(eq(employerProfile.userId, userId));
-        jobPostings.map((job) => {
-          const jobwithProfile = {
-            ...job,
-            employerProfile: employerProfileData,
-          };
-
-          allJobs.push(jobwithProfile as unknown as GetAllJobsType);
-        });
-      }
-
-      const totalResult = await db
+      // Count query with the same join and filters
+      const countQuery = db
         .select({ count: sql<number>`count(*)` })
         .from(jobProfile)
+        .leftJoin(employerProfile, eq(jobProfile.userId, employerProfile.userId))
         .where(whereConditions.length > 0 ? and(...whereConditions) : undefined);
+
+      const [jobPostings, totalResult] = await Promise.all([query, countQuery]);
       const total = Number(totalResult[0]?.count) || 0;
+
+      // Map the results to combine jobProfile and employerProfile data
+      const allJobs: GetAllJobsType[] = jobPostings.map((job) => ({
+        ...job.jobProfile,
+        employerProfile: job.employerProfile ? [job.employerProfile] : [],
+      })) as unknown as GetAllJobsType[];
 
       return ServiceResponse.success(
         "Job Postings Retrieved Successfully",
         {
-          data: allJobs as unknown as GetAllJobsType[],
+          data: allJobs,
           pagination: {
             total,
             page,
@@ -84,6 +87,7 @@ class JobPostingService {
       return ServiceResponse.failure("Failed to retrieve job postings", null, StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
+
   async createJobPosting(
     jobData: CreateJobPostingType,
     userId: string,

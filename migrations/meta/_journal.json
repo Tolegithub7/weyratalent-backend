@@ -78,6 +78,13 @@
       "when": 1744094894645,
       "tag": "20250408064814_make-primary-skills-array",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1744182541352,
+      "tag": "20250409070901_correct-salary-type-enum",
+      "breakpoints": true
     }
   ]
 }

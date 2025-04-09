@@ -12,7 +12,7 @@ export enum JobRole {
 
 export enum SalaryType {
   HOURLY = "Hourly",
-  FIXED = "fixed",
+  FIXED = "Fixed",
 }
 
 export enum JobType {

@@ -25,7 +25,7 @@ class TalentProfileService {
     filters?: {
       country?: string;
       experience?: string;
-      minHourlyRate?: number; // Add hourlyRate as an optional filter
+      minHourlyRate?: number;
       maxHourlyRate?: number;
     },
     pagination?: {
