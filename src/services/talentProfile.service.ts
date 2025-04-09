@@ -27,6 +27,7 @@ class TalentProfileService {
       experience?: string;
       minHourlyRate?: number;
       maxHourlyRate?: number;
+      primarySkill?: string;
     },
     pagination?: {
       page?: number;
@@ -43,6 +44,15 @@ class TalentProfileService {
       if (filters?.experience) whereConditions.push(eq(talentProfile.experience, filters.experience));
       if (filters?.minHourlyRate) whereConditions.push(gte(cv.hourlyRate, filters.minHourlyRate));
       if (filters?.maxHourlyRate) whereConditions.push(lte(cv.hourlyRate, filters.maxHourlyRate));
+      if (filters?.primarySkill) {
+        whereConditions.push(
+          sql`EXISTS (
+            SELECT 1
+            FROM unnest(${cv.primarySkills}) AS skill
+            WHERE LOWER(skill) LIKE LOWER(${`%${filters.primarySkill}%`})
+          )`,
+        );
+      }
 
       // Join talentProfile with cv table
       const query = db

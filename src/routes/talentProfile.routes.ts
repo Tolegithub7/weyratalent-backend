@@ -73,6 +73,7 @@ talentProfileRegistry.registerPath({
       experience: z.string().optional().describe("Filter talent profile by experience (e.g., 'Entry Level')"),
       minHourlyRate: z.number().optional().describe("Min talent profile filter hourly rate (e.g., 50)"),
       maxHourlyRate: z.number().optional().describe("Max talent profile by hourly rate (e.g., 50)"),
+      primarySkill: z.string().optional().describe("Search for talent by promary skill (e.g., nodejs)"),
       page: z.number().int().positive().optional().default(1).describe("Page number (default: 1)"),
       limit: z.number().int().positive().optional().default(10).describe("Items per page (default: 10)"),
       // filter i
