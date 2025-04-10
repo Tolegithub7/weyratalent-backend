@@ -55,12 +55,19 @@ class TalentProfileController {
   });
 
   public getTalentProfiles = catchAsync(async (req: Request, res: Response) => {
-    const { page = 1, limit = 10 } = req.query;
+    const { country, experience, minHourlyRate, maxHourlyRate, primarySkill, page = 1, limit = 10 } = req.query;
     const serviceResponse = await talentProfileService.getTalentProfiles(
+      {
+        minHourlyRate: minHourlyRate ? Number(minHourlyRate) : undefined,
+        maxHourlyRate: maxHourlyRate ? Number(maxHourlyRate) : undefined,
+        country: country as string,
+        experience: experience as string,
+        primarySkill: primarySkill as string,
+      },
       {
         page: Number(page),
         limit: Number(limit),
-      }
+      },
     );
     return handleServiceResponse(serviceResponse, res);
   });

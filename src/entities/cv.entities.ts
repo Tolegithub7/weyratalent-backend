@@ -20,7 +20,7 @@ export const cv = pgTable(
       .references(() => users.id),
     skillTitle: text("skill_title").notNull(),
     hourlyRate: integer("hourly_rate").notNull().default(0).$type<number>(),
-    categories: categoriesEnum("categories").notNull(),
+    primarySkills: text("primary_skills").array().notNull(),
     certificateUrl: text("certificate_url").unique(),
     ...timestamps,
   },

@@ -3,6 +3,7 @@ import { validateRequest } from "@/common/utils/httpHandlers";
 import { appliedJobsController } from "@/controllers/appliedJobs.controller";
 import {
   AppliedJobsSchema,
+  GetApplicationsByJobId,
   GetJobApplicationReqSchema,
   NewJobApplicationSchema,
 } from "@/validator/appliedJobs.validator";
@@ -18,6 +19,7 @@ const BASE_API_PATH = env.BASE_API;
 appliedJobsRouter.post("/", validateRequest(NewJobApplicationSchema), appliedJobsController.newApplication);
 appliedJobsRouter.get("/", appliedJobsController.getJobApplications);
 appliedJobsRouter.get("/me", appliedJobsController.getApplicationForRegisteredTalent);
+appliedJobsRouter.get("/jobs/:id", appliedJobsController.getApplicationsByJobId);
 appliedJobsRouter.get("/:id", validateRequest(GetJobApplicationReqSchema), appliedJobsController.getApplication);
 
 appliedJobsRegistry.register("Applied Jobs", AppliedJobsSchema);
@@ -60,6 +62,20 @@ appliedJobsRegistry.registerPath({
       content: {
         "application/json": { schema: AppliedJobsSchema },
       },
+    },
+  },
+});
+
+//get application by job Id
+appliedJobsRegistry.registerPath({
+  method: "get",
+  path: `${BASE_API_PATH}/applied_jobs/jobs/{id}`,
+  request: { params: GetJobApplicationReqSchema.shape.params },
+  tags: ["Applied Jobs"],
+  responses: {
+    200: {
+      description: "Success",
+      content: { "applications/json": { schema: z.array(GetApplicationsByJobId) } },
     },
   },
 });

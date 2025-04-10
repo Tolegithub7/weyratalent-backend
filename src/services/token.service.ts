@@ -3,7 +3,7 @@ import { env } from "@/common/utils/envConfig";
 import { db } from "@/db/database.config";
 import { token } from "@/entities/token.schema";
 import type { UserType } from "@/types";
-import type { AccessAndRefreshTokens } from "@/types/token.types.";
+import type { AccessAndRefreshTokens, TokenQueryType } from "@/types/token.types.";
 import {
   type NewPayloadType,
   type NewTokenType,
@@ -29,6 +29,7 @@ export class TokenService {
 
     const savedToken = createdToken[0];
     const returnedToken: TokenType = {
+      id: savedToken.id,
       token: savedToken.token,
       userId: savedToken.userId,
       type: savedToken.type as TokenTypeEnum,
@@ -98,6 +99,34 @@ export class TokenService {
     const tokens = await db
       .delete(token)
       .where(and(eq(token.token, tokenData), eq(token.type, type), eq(token.userId, userId)));
+  }
+
+  /* find token  */
+  async getToken(filter: TokenQueryType): Promise<TokenType> {
+    const tokenDoc = await tokenDataService.queryToken(
+      filter.token as unknown as string,
+      filter.type as unknown as TokenTypeEnum,
+    );
+    if (!tokenDoc.length) {
+      throw new Error("Token not found");
+    }
+    return tokenDoc[0];
+  }
+
+  /* delete token  */
+  async deleteToken(filter: TokenQueryType): Promise<boolean> {
+    const token = await tokenDataService.queryToken(filter.token as string, filter.type as TokenTypeEnum);
+    if (!token.length) {
+      throw new Error("Token not found");
+    }
+    if (token.length > 1) {
+      const tokenToDelete = token.filter((t) => t.token === filter.token);
+      if (tokenToDelete.length > 1) {
+        throw new Error("Multiple tokens found");
+      }
+      return await tokenDataService.deleteToken(tokenToDelete[0].id);
+    }
+    return await tokenDataService.deleteToken(token[0].id);
   }
 
   async verifyToken(token: string, type: TokenTypeEnum, req?: Request): Promise<TokenType | Error> {

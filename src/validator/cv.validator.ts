@@ -104,39 +104,29 @@ export const WorkExperienceResponseSchema = WorkExperienceSchema.extend({
 
 // CV Schema
 export const CVSchema = z.object({
-  id: z.string().uuid().openapi({
-    description: "Unique identifier for the CV",
-  }),
-  userId: z.string().uuid().openapi({
-    description: "User ID associated with the CV",
-  }),
-  fullName: z.string().min(1, "Name is required").openapi({
-    description: "Full name of the candidate",
-    example: "John Doe",
-  }),
-  skillTitle: z.string().openapi({
-    description: "Skill title or profession",
-    example: "Full-Stack Developer",
-  }),
-  hourlyRate: z.number().int().openapi({
-    description: "Hourly rate for the candidate",
-    example: 50,
-  }),
-  categories: z.nativeEnum(Categories).openapi({
-    description: "Category of the CV",
-  }),
-  workExperience: z.array(WorkExperienceSchema).optional().openapi({
-    description: "List of work experiences",
-  }),
-  education: z.array(EducationSchema).optional().openapi({
-    description: "List of educational qualifications",
-  }),
-  project: z.array(ProjectSchema).optional().openapi({
-    description: "List of projects",
-  }),
-  certificate: CertificateSchema.optional().openapi({
-    description: "Certificate details",
-  }),
+  id: z.string().uuid(),
+  userId: z.string().uuid(),
+  fullName: z.string().min(1, "Name is required"),
+  skillTitle: z.string(),
+  hourlyRate: z.number().int(),
+  primarySkills: z.string().array(),
+  workExperience: z.array(WorkExperienceSchema).optional(),
+  education: z.array(EducationSchema).optional(),
+  project: z.array(ProjectSchema).optional(),
+});
+
+export const CVResponseSchema = z.object({
+  id: z.string().uuid(),
+  userId: z.string().uuid(),
+  fullName: z.string(),
+  skillTitle: z.string(),
+  hourlyRate: z.number().int(),
+  primarySkills: z.string().array(),
+  workExperience: z.array(WorkExperienceResponseSchema).optional(),
+  education: z.array(EducationResponseSchema).optional(),
+  project: z.array(ProjectResponseSchema).optional(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
 });
 
 // Create CV Schema

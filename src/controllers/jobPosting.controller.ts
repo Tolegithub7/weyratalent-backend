@@ -22,20 +22,36 @@ class JobPostingController {
   });
 
   public getJobPostings = catchAsync(async (req: Request, res: Response) => {
-    const { jobRole, jobType, jobLevel, page = 1, limit = 10 } = req.query;
+    const { jobRole, jobType, jobLevel, salaryType, location, page = 1, limit = 10 } = req.query;
 
     const serviceResponse = await jobPostingService.getJobPostings(
       {
         jobRole: jobRole as string,
         jobType: jobType as string,
         jobLevel: jobLevel as string,
+        salaryType: salaryType as string,
+        location: location as string,
       },
       {
         page: Number(page),
         limit: Number(limit),
-      }
+      },
     );
 
+    return handleServiceResponse(serviceResponse, res);
+  });
+  // public getJobPostings = catchAsync(async (req: Request, res: Response) => {
+  //   const serviceResponse = await jobPostingService.getJobPostings();
+  //   return handleServiceResponse(serviceResponse, res);
+  // });
+
+  public getRegisteredJob = catchAsync(async (req: Request, res: Response) => {
+    if (!req.user) {
+      throw new ApiError(StatusCodes.NOT_FOUND, "User not found");
+    }
+
+    const userId = req.user.id;
+    const serviceResponse = await jobPostingService.getRegisteredJob(userId);
     return handleServiceResponse(serviceResponse, res);
   });
   // public getJobPostings = catchAsync(async (req: Request, res: Response) => {

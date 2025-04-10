@@ -1,5 +1,6 @@
 import type {
   CreateTalentProfileSchema,
+  TalentProfileResponseSchmema,
   TalentProfileSchema,
   UpdateTalentProfileSchema,
 } from "@/validator/talentProfile.validator.";
@@ -18,3 +19,4 @@ export interface PaginatedTalentProfileResponse {
     totalPages: number;
   };
 }
+export type TalentProfileResponseType = z.infer<typeof TalentProfileResponseSchmema>;

@@ -21,6 +21,12 @@ class AppliedJobsController {
     return handleServiceResponse(serviceResponse, res);
   });
 
+  public getApplicationsByJobId = catchAsync(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const serviceResponse = await appliedJobsService.getJobApplicationsByJobId(id);
+    return handleServiceResponse(serviceResponse, res);
+  });
+
   public getApplication = catchAsync(async (req: Request, res: Response) => {
     const { id } = req.params;
     const serviceResponse = await appliedJobsService.getApplication(id);

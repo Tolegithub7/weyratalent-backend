@@ -1,0 +1,1 @@
+ALTER TABLE "cv" RENAME COLUMN "categories" TO "primary_skills";

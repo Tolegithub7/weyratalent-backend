@@ -65,9 +65,15 @@ talentProfileRegistry.register("talent_profile", TalentProfileSchema);
 talentProfileRegistry.registerPath({
   method: "get",
   path: `${BASE_API_PATH}/talent_profile`,
+  security: [],
   tags: ["Talent Profile"],
   request: {
     query: z.object({
+      country: z.string().optional().describe("Filter talent profile by country (e.g., 'Algeria')"),
+      experience: z.string().optional().describe("Filter talent profile by experience (e.g., 'Entry Level')"),
+      minHourlyRate: z.number().optional().describe("Min talent profile filter hourly rate (e.g., 50)"),
+      maxHourlyRate: z.number().optional().describe("Max talent profile by hourly rate (e.g., 50)"),
+      primarySkill: z.string().optional().describe("Search for talent by promary skill (e.g., nodejs)"),
       page: z.number().int().positive().optional().default(1).describe("Page number (default: 1)"),
       limit: z.number().int().positive().optional().default(10).describe("Items per page (default: 10)"),
       // filter i
@@ -75,7 +81,7 @@ talentProfileRegistry.registerPath({
   },
   responses: {
     200: {
-      description: "Success",
+      description: "Paginated list of talent lists",
       content: {
         "application/json": {
           schema: PaginatedTalentProfileResponse,
@@ -89,7 +95,7 @@ talentProfileRegistry.registerPath({
                     fullName: "John Doe",
                     skills: ["JavaScript", "React"],
                     // ... other fields
-                  }
+                  },
                 ],
                 pagination: {
                   total: 50,

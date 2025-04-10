@@ -1,11 +1,6 @@
 {
-<<<<<<<< HEAD:migrations/meta/20250327230837_snapshot.json
-  "id": "92ae3643-93ed-444c-895c-092731614304",
-  "prevId": "8ec9a016-9efb-4007-acfa-8b59f20f55b3",
-========
-  "id": "6a1a37df-9106-429c-a967-ab8067a23035",
-  "prevId": "92ae3643-93ed-444c-895c-092731614304",
->>>>>>>> upstream/main:migrations/meta/20250408064814_snapshot.json
+  "id": "08fda5ce-78b5-4162-b2c3-80c43a0fd6c6",
+  "prevId": "6a1a37df-9106-429c-a967-ab8067a23035",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -78,12 +73,8 @@
           "name": "cv_user_id_users_id_fk",
           "tableFrom": "cv",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -93,24 +84,12 @@
         "cv_user_id_unique": {
           "name": "cv_user_id_unique",
           "nullsNotDistinct": false,
-<<<<<<<< HEAD:migrations/meta/20250327230837_snapshot.json
-          "columns": [
-            "user_id"
-          ]
-========
           "columns": ["user_id"]
->>>>>>>> upstream/main:migrations/meta/20250408064814_snapshot.json
         },
         "cv_certificate_url_unique": {
           "name": "cv_certificate_url_unique",
           "nullsNotDistinct": false,
-<<<<<<<< HEAD:migrations/meta/20250327230837_snapshot.json
-          "columns": [
-            "certificate_url"
-          ]
-========
           "columns": ["certificate_url"]
->>>>>>>> upstream/main:migrations/meta/20250408064814_snapshot.json
         }
       },
       "policies": {},
@@ -190,12 +169,8 @@
           "name": "education_cv_id_cv_id_fk",
           "tableFrom": "education",
           "tableTo": "cv",
-          "columnsFrom": [
-            "cv_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["cv_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -354,12 +329,8 @@
           "name": "employer_profile_user_id_users_id_fk",
           "tableFrom": "employer_profile",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -369,16 +340,12 @@
         "employer_profile_user_id_unique": {
           "name": "employer_profile_user_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "user_id"
-          ]
+          "columns": ["user_id"]
         },
         "employer_profile_email_unique": {
           "name": "employer_profile_email_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         }
       },
       "policies": {},
@@ -429,12 +396,8 @@
           "name": "favorite_jobs_user_id_users_id_fk",
           "tableFrom": "favorite_jobs",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -442,12 +405,8 @@
           "name": "favorite_jobs_job_profile_id_job_posting_id_fk",
           "tableFrom": "favorite_jobs",
           "tableTo": "job_posting",
-          "columnsFrom": [
-            "job_profile_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["job_profile_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -547,12 +506,8 @@
           "name": "organization_info_user_id_users_id_fk",
           "tableFrom": "organization_info",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -562,9 +517,7 @@
         "organization_info_user_id_unique": {
           "name": "organization_info_user_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "user_id"
-          ]
+          "columns": ["user_id"]
         }
       },
       "policies": {},
@@ -627,12 +580,8 @@
           "name": "project_cv_id_cv_id_fk",
           "tableFrom": "project",
           "tableTo": "cv",
-          "columnsFrom": [
-            "cv_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["cv_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -745,12 +694,8 @@
           "name": "talent_profile_user_id_users_id_fk",
           "tableFrom": "talent_profile",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -760,9 +705,7 @@
         "talent_profile_user_id_unique": {
           "name": "talent_profile_user_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "user_id"
-          ]
+          "columns": ["user_id"]
         }
       },
       "policies": {},
@@ -871,20 +814,12 @@
         "users_user_name_unique": {
           "name": "users_user_name_unique",
           "nullsNotDistinct": false,
-<<<<<<<< HEAD:migrations/meta/20250327230837_snapshot.json
-          "columns": [
-            "user_name"
-          ]
-========
           "columns": ["user_name"]
->>>>>>>> upstream/main:migrations/meta/20250408064814_snapshot.json
         },
         "users_email_unique": {
           "name": "users_email_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         }
       },
       "policies": {},
@@ -958,12 +893,8 @@
           "name": "work_experience_cv_id_cv_id_fk",
           "tableFrom": "work_experience",
           "tableTo": "cv",
-          "columnsFrom": [
-            "cv_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["cv_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1093,12 +1024,8 @@
           "name": "job_posting_user_id_users_id_fk",
           "tableFrom": "job_posting",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1167,12 +1094,8 @@
           "name": "applied_jobs_user_id_users_id_fk",
           "tableFrom": "applied_jobs",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -1180,12 +1103,8 @@
           "name": "applied_jobs_job_profile_id_job_posting_id_fk",
           "tableFrom": "applied_jobs",
           "tableTo": "job_posting",
-          "columnsFrom": [
-            "job_profile_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["job_profile_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1253,12 +1172,8 @@
           "name": "token_user_id_users_id_fk",
           "tableFrom": "token",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1348,19 +1263,12 @@
     "public.experience": {
       "name": "experience",
       "schema": "public",
-      "values": [
-        "Entry Level",
-        "Mid Level",
-        "Senior Level"
-      ]
+      "values": ["Entry Level", "Mid Level", "Senior Level"]
     },
     "public.gender": {
       "name": "gender",
       "schema": "public",
-      "values": [
-        "male",
-        "female"
-      ]
+      "values": ["male", "female"]
     },
     "public.industry_type": {
       "name": "industry_type",
@@ -1447,44 +1355,22 @@
     "public.organization_type": {
       "name": "organization_type",
       "schema": "public",
-      "values": [
-        "Private",
-        "Government",
-        "Nonprofit",
-        "Cooperative",
-        "International",
-        "other"
-      ]
+      "values": ["Private", "Government", "Nonprofit", "Cooperative", "International", "other"]
     },
     "public.role": {
       "name": "role",
       "schema": "public",
-      "values": [
-        "admin",
-        "talent",
-        "recruiter"
-      ]
+      "values": ["admin", "talent", "recruiter"]
     },
     "public.team_size": {
       "name": "team_size",
       "schema": "public",
-      "values": [
-        "0-10",
-        "10-50",
-        "50+"
-      ]
+      "values": ["0-10", "10-50", "50+"]
     },
     "public.job_level": {
       "name": "job_level",
       "schema": "public",
-      "values": [
-        "Entry Level",
-        "Mid Level",
-        "Senior Level",
-        "Lead",
-        "Director",
-        "Executive"
-      ]
+      "values": ["Entry Level", "Mid Level", "Senior Level", "Lead", "Director", "Executive"]
     },
     "public.job_role": {
       "name": "job_role",
@@ -1504,59 +1390,32 @@
     "public.job_type": {
       "name": "job_type",
       "schema": "public",
-      "values": [
-        "Full-Time",
-        "Part-Time",
-        "Contract",
-        "Internship",
-        "Freelance"
-      ]
+      "values": ["Full-Time", "Part-Time", "Contract", "Internship", "Freelance"]
     },
     "public.salary_type": {
       "name": "salary_type",
       "schema": "public",
-      "values": [
-        "Hourly",
-        "fixed"
-      ]
+      "values": ["Hourly", "Fixed"]
     },
     "public.status": {
       "name": "status",
       "schema": "public",
-      "values": [
-        "active",
-        "expired"
-      ]
+      "values": ["active", "expired"]
     },
     "public.vacancies": {
       "name": "vacancies",
       "schema": "public",
-      "values": [
-        "1",
-        "2",
-        "3",
-        "4",
-        "5+"
-      ]
+      "values": ["1", "2", "3", "4", "5+"]
     },
     "public.application_status": {
       "name": "application_status",
       "schema": "public",
-      "values": [
-        "pending",
-        "hired",
-        "interviewing",
-        "rejected",
-        "withdrawn"
-      ]
+      "values": ["pending", "hired", "interviewing", "rejected", "withdrawn"]
     },
     "public.token_type": {
       "name": "token_type",
       "schema": "public",
-      "values": [
-        "access",
-        "refresh"
-      ]
+      "values": ["access", "refresh"]
     }
   },
   "schemas": {},

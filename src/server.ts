@@ -1,5 +1,5 @@
 import cors from "cors";
-import express, { type Express } from "express";
+import express, { type Request, type Express } from "express";
 import { unless } from "express-unless";
 import { StatusCodes } from "http-status-codes";
 import { pino } from "pino";
@@ -16,6 +16,7 @@ import {
   employerProfileRouter,
   favoriteJobsRouter,
   jobPostingRouter,
+  logoutRouter,
   userRouter,
 } from "./routes";
 import { talentProfileRouter } from "./routes/talentProfile.routes";
@@ -35,15 +36,29 @@ const skipAuthPath = [
   "/",
   `${env.BASE_API}/auth/login`,
   `${env.BASE_API}/auth/refresh-token`,
+  `${env.BASE_API}/user`,
 ];
-
-app.use(auth.unless({ path: skipAuthPath }));
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use(
+  auth.unless((req: Request) => {
+    if (skipAuthPath.includes(req.path)) {
+      return true;
+    }
+    if (req.path === `${env.BASE_API}/job_posting` && req.method === "GET") {
+      return true;
+    }
+
+    if (req.path === `${env.BASE_API}/talent_profile` && req.method === "GET") {
+      return true;
+    }
+    return false;
+  }),
+);
 // Routes
 app.use(`${env.BASE_API}/employer_profile`, employerProfileRouter);
 app.use(`${env.BASE_API}/talent_profile`, talentProfileRouter);
@@ -53,6 +68,7 @@ app.use(`${env.BASE_API}/auth`, authRouter);
 app.use(`${env.BASE_API}/job_posting`, jobPostingRouter);
 app.use(`${env.BASE_API}/applied_jobs`, appliedJobsRouter);
 app.use(`${env.BASE_API}/favorite_jobs`, favoriteJobsRouter);
+app.use(`${env.BASE_API}/logout`, logoutRouter);
 app.use(openAPIRouter);
 
 app.use((req, res, next) => {

@@ -5,6 +5,7 @@ import {
   employerProfileRegistry,
   favoriteJobsRegistery,
   jobPostingRegistry,
+  logoutRegistry,
   talentProfileRegistry,
   userRegistry,
 } from "@/routes";
@@ -19,6 +20,7 @@ export function generateOpenAPIDocument() {
     authRegistry,
     appliedJobsRegistry,
     favoriteJobsRegistery,
+    logoutRegistry,
   ]);
 
   registry.registerComponent("securitySchemes", "bearerAuth", {

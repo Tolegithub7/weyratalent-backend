@@ -71,6 +71,23 @@
       "when": 1743116917333,
       "tag": "20250327230837_remove_user_id_unique_constraint",
       "breakpoints": true
+<<<<<<< HEAD
+=======
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1744094894645,
+      "tag": "20250408064814_make-primary-skills-array",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1744182541352,
+      "tag": "20250409070901_correct-salary-type-enum",
+      "breakpoints": true
+>>>>>>> upstream/main
     }
   ]
 }

@@ -11,13 +11,13 @@ export const jobPostingRouter: Router = express.Router();
 const BASE_API_PATH = env.BASE_API;
 
 jobPostingRouter.get("/", jobPostingController.getJobPostings);
+jobPostingRouter.get("/me", jobPostingController.getRegisteredJob);
 jobPostingRouter.get("/:id", validateRequest(GetJobPostingSchema), jobPostingController.getJobPosting);
 jobPostingRouter.post("/", validateRequest(CreateJobPostingSchema), jobPostingController.createJobPosting);
 jobPostingRouter.put("/:id", validateRequest(CreateJobPostingSchema.partial()), jobPostingController.updateJobPosting);
 jobPostingRouter.delete("/:id", validateRequest(GetJobPostingSchema), jobPostingController.deleteJobPosting);
 
 jobPostingRegistry.register("job_posting", JobPostingSchema);
-
 
 const PaginatedJobPostingResponse = z.object({
   success: z.boolean(),
@@ -32,6 +32,7 @@ const PaginatedJobPostingResponse = z.object({
 jobPostingRegistry.registerPath({
   method: "get",
   path: `${BASE_API_PATH}/job_posting`,
+  security: [],
   tags: ["Job Posting"],
   summary: "Get job postings with filters and pagination",
   request: {
@@ -39,6 +40,8 @@ jobPostingRegistry.registerPath({
       jobRole: z.string().optional().describe("Filter by job role (e.g., 'Software Engineer')"),
       jobType: z.string().optional().describe("Filter by job type (e.g., 'Full-Time')"),
       jobLevel: z.string().optional().describe("Filter by job level (e.g., 'Entry Level')"),
+      salaryType: z.string().optional().describe("Filter by salary type (e.g., 'Hourly')"),
+      location: z.string().optional().describe("Filter jobs by location"),
       page: z.number().int().positive().optional().default(1).describe("Page number (default: 1)"),
       limit: z.number().int().positive().optional().default(10).describe("Items per page (default: 10)"),
     }),
@@ -150,6 +153,19 @@ jobPostingRegistry.registerPath({
   method: "get",
   path: `${BASE_API_PATH}/job_posting/{id}`,
   request: { params: GetJobPostingSchema.shape.params },
+  tags: ["Job Posting"],
+  responses: {
+    200: {
+      description: "Success",
+      content: { "application/json": { schema: JobPostingSchema } },
+    },
+  },
+});
+
+// GET job posting for registered employer
+jobPostingRegistry.registerPath({
+  method: "get",
+  path: `${BASE_API_PATH}/job_posting/me`,
   tags: ["Job Posting"],
   responses: {
     200: {
