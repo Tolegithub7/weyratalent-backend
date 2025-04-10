@@ -2,6 +2,8 @@
 import { ApplicationStatus } from "@/types";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { z } from "zod";
+import { CVSchema } from "./cv.validator";
+import { TalentProfileSchema } from "./talentProfile.validator.";
 
 extendZodWithOpenApi(z);
 
@@ -33,4 +35,10 @@ export const GetJobApplicationReqSchema = z.object({
   params: z.object({
     id: z.string().uuid(),
   }),
+});
+
+export const GetApplicationsByJobId = z.object({
+  jobApplication: AppliedJobsSchema,
+  talentCv: CVSchema,
+  talentProfile: TalentProfileSchema,
 });

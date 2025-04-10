@@ -1,8 +1,8 @@
 import { ServiceResponse } from "@/common/models/serviceResponse";
 import { db } from "@/db/database.config";
-import { appliedJobs } from "@/entities";
-import type { AppliedJobsType } from "@/types";
-import { eq } from "drizzle-orm";
+import { appliedJobs, cv, education, project, talentProfile, workExperience } from "@/entities";
+import type { AppliedJobsType, GetApplicationsByJobIdType } from "@/types";
+import { eq, sql } from "drizzle-orm";
 import { StatusCodes } from "http-status-codes";
 
 class AppliedJobsService {
@@ -81,6 +81,59 @@ class AppliedJobsService {
       );
     }
   }
-}
 
+  async getJobApplicationsByJobId(jobProfileId: string): Promise<ServiceResponse<GetApplicationsByJobIdType | null>> {
+    try {
+      const applicationData = await db
+        .select({
+          appliedJob: appliedJobs,
+          talentCv: {
+            ...cv, // Select all fields from cv
+            education: sql`(
+              SELECT COALESCE(JSON_AGG(
+                ${education}.*
+              ), '[]')
+              FROM ${education}
+              WHERE ${education.cvId} = ${cv.id}
+            )`.as("education"),
+            workExperience: sql`(
+              SELECT COALESCE(JSON_AGG(
+                ${workExperience}.*
+              ), '[]')
+              FROM ${workExperience}
+              WHERE ${workExperience.cvId} = ${cv.id}
+            )`.as("workExperience"),
+            project: sql`(
+              SELECT COALESCE(JSON_AGG(
+                ${project}.*
+              ), '[]')
+              FROM ${project}
+              WHERE ${project.cvId} = ${cv.id}
+            )`.as("project"),
+          },
+          talentProfile: talentProfile,
+        })
+        .from(appliedJobs)
+        .where(eq(appliedJobs.jobProfileId, jobProfileId))
+        .leftJoin(cv, eq(appliedJobs.userId, cv.userId))
+        .leftJoin(talentProfile, eq(appliedJobs.userId, talentProfile.userId));
+
+      if (!applicationData || applicationData.length === 0) {
+        return ServiceResponse.success<null>("No job applications found", null, StatusCodes.OK);
+      }
+
+      return ServiceResponse.success<GetApplicationsByJobIdType[]>(
+        "Job Applications retrieved successfully",
+        applicationData as unknown as GetApplicationsByJobIdType[],
+        StatusCodes.OK,
+      );
+    } catch (error) {
+      return ServiceResponse.failure<null>(
+        "Failed to retrieve job applications",
+        null,
+        StatusCodes.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+}
 export const appliedJobsService = new AppliedJobsService();
