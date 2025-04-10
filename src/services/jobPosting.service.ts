@@ -16,9 +16,12 @@ import { v4 as uuidv4 } from "uuid";
 class JobPostingService {
   async getJobPostings(
     filters?: {
+      jobTitle?: string; 
       jobRole?: string;
       jobType?: string;
       jobLevel?: string;
+      durationValue?: string;
+      durationUnit?: string;
       salaryType?: string;
       location?: string;
     },
@@ -36,6 +39,8 @@ class JobPostingService {
       if (filters?.jobRole) whereConditions.push(eq(jobProfile.jobRole, filters.jobRole));
       if (filters?.jobType) whereConditions.push(eq(jobProfile.jobType, filters.jobType));
       if (filters?.jobLevel) whereConditions.push(eq(jobProfile.jobLevel, filters.jobLevel));
+      if (filters?.durationValue) whereConditions.push(eq(jobProfile.durationValue, filters.durationValue));
+      if (filters?.durationUnit) whereConditions.push(eq(jobProfile.durationUnit, filters.durationUnit));
       if (filters?.salaryType) whereConditions.push(eq(jobProfile.salaryType, filters.salaryType));
       if (filters?.location) {
         whereConditions.push(sql`LOWER(${employerProfile.location}) LIKE LOWER(${`%${filters.location}%`})`);

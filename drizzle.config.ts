@@ -32,13 +32,13 @@ export default defineConfig({
     schema: "public",
   },
 
-  entities: {
-    roles: {
-      provider: "",
-      exclude: [],
-      include: [],
-    },
-  },
+  // entities: {
+  //   roles: {
+  //     provider: "",
+  //     exclude: [],
+  //     include: [],
+  //   },
+  // },
 
   breakpoints: true,
   strict: true,

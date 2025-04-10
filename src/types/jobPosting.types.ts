@@ -60,6 +60,21 @@ export enum StatusType {
   EXPIRED = "expired",
 }
 
+export enum DurationUnit {
+  WEEK = "week",
+  MONTH = "month",
+  YEAR = "year",
+}
+
+export enum DurationValue {
+  ONE = "1",
+  TWO = "2",
+  THREE = "3",
+  FOUR = "4",
+  FIVE = "5",
+  SIX_PLUS = "6+",
+}
+
 export interface CreateJobPostingDTO {
   id: string;
   userId: string;
@@ -78,6 +93,8 @@ export interface CreateJobPostingDTO {
   responsibilities?: string;
   createdAt: Date;
   updatedAt: Date;
+  durationValu?: DurationValue;
+  durationUnit?: DurationUnit;
 }
 
 export interface PaginationMeta {
