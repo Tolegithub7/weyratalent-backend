@@ -42,3 +42,9 @@ export const GetApplicationsByJobId = z.object({
   talentCv: CVSchema,
   talentProfile: TalentProfileSchema,
 });
+
+export const GetApplicationsByUserIdSchema = z.object({
+  params: z.object({
+    userId: z.string().uuid()
+  })
+});

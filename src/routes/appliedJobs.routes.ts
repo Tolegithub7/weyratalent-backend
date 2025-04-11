@@ -6,6 +6,7 @@ import {
   GetApplicationsByJobId,
   GetJobApplicationReqSchema,
   NewJobApplicationSchema,
+  GetApplicationsByUserIdSchema
 } from "@/validator/appliedJobs.validator";
 import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
 import express, { type Router } from "express";
@@ -21,6 +22,7 @@ appliedJobsRouter.get("/", appliedJobsController.getJobApplications);
 appliedJobsRouter.get("/me", appliedJobsController.getApplicationForRegisteredTalent);
 appliedJobsRouter.get("/jobs/:id", appliedJobsController.getApplicationsByJobId);
 appliedJobsRouter.get("/:id", validateRequest(GetJobApplicationReqSchema), appliedJobsController.getApplication);
+appliedJobsRouter.get("/users/:userId", validateRequest(GetApplicationsByUserIdSchema), appliedJobsController.getApplicationsByUserId);
 
 appliedJobsRegistry.register("Applied Jobs", AppliedJobsSchema);
 
@@ -104,3 +106,22 @@ appliedJobsRegistry.registerPath({
     },
   },
 });
+
+appliedJobsRegistry.registerPath({
+  method: "get",
+  path: `${BASE_API_PATH}/applied_jobs/users/{userId}`,
+  request: { params: GetApplicationsByUserIdSchema.shape.params },
+  tags: ["Applied Jobs"],
+  responses: {
+    200: {
+      description: "Success",
+      content: {
+        "application/json": { 
+          schema: z.array(AppliedJobsSchema) 
+        }
+      }
+    }
+  }
+});
+
+

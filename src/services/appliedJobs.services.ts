@@ -135,5 +135,25 @@ class AppliedJobsService {
       );
     }
   }
+
+  async getApplicationsByUserId(userId: string): Promise<ServiceResponse<AppliedJobsType[] | null>> {
+    try {
+      const applicationsData = await db.select()
+        .from(appliedJobs)
+        .where(eq(appliedJobs.userId, userId));
+  
+      return ServiceResponse.success<AppliedJobsType[]>(
+        "Job applications retrieved successfully",
+        applicationsData as unknown as AppliedJobsType[],
+        StatusCodes.OK
+      );
+    } catch (error) {
+      return ServiceResponse.failure<null>(
+        "Failed to retrieve applications for user",
+        null,
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
 }
 export const appliedJobsService = new AppliedJobsService();

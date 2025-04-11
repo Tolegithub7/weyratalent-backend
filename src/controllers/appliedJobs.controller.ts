@@ -42,6 +42,12 @@ class AppliedJobsController {
     const serviceResponse = await appliedJobsService.getApplicationForRegisteredTalent(userId);
     return handleServiceResponse(serviceResponse, res);
   });
+  
+  public getApplicationsByUserId = catchAsync(async (req: Request, res: Response) => {
+    const { userId } = req.params;
+    const serviceResponse = await appliedJobsService.getApplicationsByUserId(userId);
+    return handleServiceResponse(serviceResponse, res);
+  });
 }
 
 export const appliedJobsController = new AppliedJobsController();
