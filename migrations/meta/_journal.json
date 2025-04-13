@@ -71,8 +71,6 @@
       "when": 1743116917333,
       "tag": "20250327230837_remove_user_id_unique_constraint",
       "breakpoints": true
-<<<<<<< HEAD
-=======
     },
     {
       "idx": 12,
@@ -87,7 +85,6 @@
       "when": 1744182541352,
       "tag": "20250409070901_correct-salary-type-enum",
       "breakpoints": true
->>>>>>> upstream/main
     }
   ]
 }

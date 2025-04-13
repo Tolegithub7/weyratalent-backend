@@ -1,11 +1,6 @@
 {
-<<<<<<<< HEAD:migrations/meta/20250327230837_snapshot.json
-  "id": "92ae3643-93ed-444c-895c-092731614304",
-  "prevId": "8ec9a016-9efb-4007-acfa-8b59f20f55b3",
-========
   "id": "6a1a37df-9106-429c-a967-ab8067a23035",
   "prevId": "92ae3643-93ed-444c-895c-092731614304",
->>>>>>>> upstream/main:migrations/meta/20250408064814_snapshot.json
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -93,24 +88,12 @@
         "cv_user_id_unique": {
           "name": "cv_user_id_unique",
           "nullsNotDistinct": false,
-<<<<<<<< HEAD:migrations/meta/20250327230837_snapshot.json
-          "columns": [
-            "user_id"
-          ]
-========
           "columns": ["user_id"]
->>>>>>>> upstream/main:migrations/meta/20250408064814_snapshot.json
         },
         "cv_certificate_url_unique": {
           "name": "cv_certificate_url_unique",
           "nullsNotDistinct": false,
-<<<<<<<< HEAD:migrations/meta/20250327230837_snapshot.json
-          "columns": [
-            "certificate_url"
-          ]
-========
           "columns": ["certificate_url"]
->>>>>>>> upstream/main:migrations/meta/20250408064814_snapshot.json
         }
       },
       "policies": {},
@@ -871,13 +854,7 @@
         "users_user_name_unique": {
           "name": "users_user_name_unique",
           "nullsNotDistinct": false,
-<<<<<<<< HEAD:migrations/meta/20250327230837_snapshot.json
-          "columns": [
-            "user_name"
-          ]
-========
           "columns": ["user_name"]
->>>>>>>> upstream/main:migrations/meta/20250408064814_snapshot.json
         },
         "users_email_unique": {
           "name": "users_email_unique",
