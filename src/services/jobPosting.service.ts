@@ -2,7 +2,7 @@ import { ServiceResponse } from "@/common/models/serviceResponse";
 import { db } from "@/db/database.config";
 import { employerProfile, jobProfile } from "@/entities";
 import { logger } from "@/server";
-import type { PaginationMeta } from "@/types/jobPosting.types";
+import { type PaginationMeta, StatusType } from "@/types/jobPosting.types";
 import type {
   CreateJobPostingType,
   GetAllJobsType,
@@ -49,6 +49,7 @@ class JobPostingService {
         whereConditions.push(sql`LOWER(${jobProfile.jobTitle}) LIKE LOWER(${`%${filters.jobTitle}%`})`);
       }
 
+      whereConditions.push(eq(jobProfile.status, StatusType.ACTIVE));
       // Join jobProfile with employerProfile
       const query = db
         .select({
