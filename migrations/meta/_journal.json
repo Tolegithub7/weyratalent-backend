@@ -85,6 +85,13 @@
       "when": 1744182541352,
       "tag": "20250409070901_correct-salary-type-enum",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1744789285432,
+      "tag": "20250416074125_add-duration-to-jobs-table",
+      "breakpoints": true
     }
   ]
 }
