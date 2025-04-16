@@ -1,9 +1,17 @@
 import { env } from "./common/utils/envConfig";
+import { startCronJobs } from "./common/utils/jobExpiryCheck.util";
 import { minioClient } from "./common/utils/minio.config";
 import { db, pool } from "./db/database.config";
 import { app, logger } from "./server";
 async function startServer() {
   const { NODE_ENV, HOST, PORT } = env;
+  const backgroundJobs = async () => {
+    try {
+      startCronJobs();
+    } catch (error) {
+      console.error("Error occured while starting one of the jobs: ", (error as Error).message);
+    }
+  };
   const testDBConnection = async () => {
     try {
       await pool.connect();
@@ -29,6 +37,7 @@ async function startServer() {
 
     testDBConnection();
     testMinioConnection();
+    backgroundJobs();
     const onCloseSignal = () => {
       logger.info("sigint received, shutting down");
       server.close(() => {
