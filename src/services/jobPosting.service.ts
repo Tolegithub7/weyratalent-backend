@@ -45,6 +45,9 @@ class JobPostingService {
       if (filters?.location) {
         whereConditions.push(sql`LOWER(${employerProfile.location}) LIKE LOWER(${`%${filters.location}%`})`);
       }
+      if (filters?.jobTitle) {
+        whereConditions.push(sql`LOWER(${jobProfile.jobTitle}) LIKE LOWER(${`%${filters.jobTitle}%`})`);
+      }
 
       // Join jobProfile with employerProfile
       const query = db

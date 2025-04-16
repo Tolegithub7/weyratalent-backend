@@ -38,6 +38,7 @@ jobPostingRegistry.registerPath({
   request: {
     query: z.object({
       jobRole: z.string().optional().describe("Filter by job role (e.g., 'Software Engineer')"),
+      jobTitle: z.string().optional().describe("Search by job title (e.g., 'NestJs Dev')"),
       jobType: z.string().optional().describe("Filter by job type (e.g., 'Full-Time')"),
       jobLevel: z.string().optional().describe("Filter by job level (e.g., 'Entry Level')"),
       salaryType: z.string().optional().describe("Filter by salary type (e.g., 'Hourly')"),

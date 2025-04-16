@@ -37,6 +37,7 @@ class JobPostingController {
     const serviceResponse = await jobPostingService.getJobPostings(
       {
         jobRole: jobRole as string,
+        jobTitle: jobTitle as string,
         jobType: jobType as string,
         jobLevel: jobLevel as string,
         salaryType: salaryType as string,
