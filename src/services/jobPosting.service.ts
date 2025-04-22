@@ -50,19 +50,18 @@ class JobPostingService {
       }
 
       whereConditions.push(eq(jobProfile.status, StatusType.ACTIVE));
-      // Join jobProfile with employerProfile
+
       const query = db
         .select({
-          jobProfile: jobProfile, // Select all fields from jobProfile
-          employerProfile: employerProfile, // Select all fields from employerProfile
+          jobProfile: jobProfile,
+          employerProfile: employerProfile,
         })
         .from(jobProfile)
-        .leftJoin(employerProfile, eq(jobProfile.userId, employerProfile.userId)) // Join on userId
+        .leftJoin(employerProfile, eq(jobProfile.userId, employerProfile.userId))
         .where(whereConditions.length > 0 ? and(...whereConditions) : undefined)
         .limit(limit)
         .offset(offset);
 
-      // Count query with the same join and filters
       const countQuery = db
         .select({ count: sql<number>`count(*)` })
         .from(jobProfile)
@@ -72,7 +71,6 @@ class JobPostingService {
       const [jobPostings, totalResult] = await Promise.all([query, countQuery]);
       const total = Number(totalResult[0]?.count) || 0;
 
-      // Map the results to combine jobProfile and employerProfile data
       const allJobs: GetAllJobsType[] = jobPostings.map((job) => ({
         ...job.jobProfile,
         employerProfile: job.employerProfile ? [job.employerProfile] : [],

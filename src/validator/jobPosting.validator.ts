@@ -48,11 +48,8 @@ export const JobPostingSchema = z.object({
   responsibilities: z.string().min(1, "Responsibilities are required").openapi({
     description: "Responsibilities and To Dos",
   }),
-  minSalary: z.number().min(0, "Minimum salary must be a positive number").openapi({
+  salary: z.number().min(0, "Minimum salary must be a positive number").openapi({
     description: "Minimum Salary",
-  }),
-  maxSalary: z.number().min(0, "Maximum salary must be a positive number").openapi({
-    description: "Maximum Salary",
   }),
   expiryDate: z.string().datetime({ offset: true }).openapi({
     description: "Job application closing date",

@@ -80,8 +80,7 @@ export interface CreateJobPostingDTO {
   userId: string;
   jobTitle: string;
   jobRole?: string;
-  minSalary?: number;
-  maxSalary?: number;
+  salary?: number;
   salaryType?: SalaryType;
   education?: Education;
   jobType?: JobType;
