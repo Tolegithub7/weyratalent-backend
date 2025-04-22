@@ -22,7 +22,7 @@ export async function updateExpiredJobs() {
   }
 }
 export function startCronJobs() {
-  logger.info("Cron job started successfully");
+  logger.info("Job Expiry checker cron started successfully");
   cron.schedule("*/15 * * * *", async () => {
     logger.info("Checking for expired job postings...");
     await updateExpiredJobs();

@@ -1,13 +1,16 @@
 import { env } from "./common/utils/envConfig";
 import { startCronJobs } from "./common/utils/jobExpiryCheck.util";
 import { minioClient } from "./common/utils/minio.config";
+import { startOtpCleanupCron } from "./common/utils/otpExpiryCheck";
 import { db, pool } from "./db/database.config";
 import { app, logger } from "./server";
+import { emailService } from "./services/email.service";
 async function startServer() {
   const { NODE_ENV, HOST, PORT } = env;
   const backgroundJobs = async () => {
     try {
       startCronJobs();
+      startOtpCleanupCron();
     } catch (error) {
       console.error("Error occured while starting one of the jobs: ", (error as Error).message);
     }
@@ -37,9 +40,12 @@ async function startServer() {
 
     testDBConnection();
     testMinioConnection();
+
     backgroundJobs();
     const onCloseSignal = () => {
       logger.info("sigint received, shutting down");
+      emailService.close();
+      logger.info("email service closed");
       server.close(() => {
         logger.info("server closed");
         process.exit();

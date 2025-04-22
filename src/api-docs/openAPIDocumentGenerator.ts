@@ -6,6 +6,7 @@ import {
   favoriteJobsRegistery,
   jobPostingRegistry,
   logoutRegistry,
+  otpRegistry,
   talentProfileRegistry,
   userRegistry,
 } from "@/routes";
@@ -20,6 +21,7 @@ export function generateOpenAPIDocument() {
     authRegistry,
     appliedJobsRegistry,
     favoriteJobsRegistery,
+    otpRegistry,
     logoutRegistry,
   ]);
 

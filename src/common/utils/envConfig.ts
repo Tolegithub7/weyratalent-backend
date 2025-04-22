@@ -37,4 +37,14 @@ export const env = cleanEnv(process.env, {
   MINIO_PORT: port({ devDefault: testOnly(9000) }),
   MINIO_ACCESS_KEY: str(),
   MINIO_SECRET_KEY: str(),
+
+  //SMPT
+  SMTP_HOST: str(),
+  SMTP_PORT: port(),
+  SMTP_USER: str(),
+  SMTP_PASS: str(),
+  SMPT_SERVICE: str({
+    default: "smtp",
+  }),
+  EMAIL_FROM: str(),
 });

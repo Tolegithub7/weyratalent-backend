@@ -7,3 +7,4 @@ export * from "./appliedJobs.routes";
 export * from "./jobPosting.routes";
 export * from "./favoriteJobs.routes";
 export * from "./logout.routes";
+export * from "./otp.routes";

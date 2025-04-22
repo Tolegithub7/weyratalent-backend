@@ -100,5 +100,12 @@
       "tag": "20250418205051_replace-max-and-min-salary-with-salaty",
       "breakpoints": true
     }
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1745139861102,
+      "tag": "20250420090421_create-otp-table",
+      "breakpoints": true
+    }
   ]
 }
