@@ -62,6 +62,8 @@ blogRegistry.registerPath({
   request: {
     query: z.object({
       blogHeader: z.string().optional().describe("Search for blogs by title (e.g., the platform)"),
+      page: z.number().int().positive().optional().default(1).describe("Page number (default: 1)"),
+      limit: z.number().int().positive().optional().default(10).describe("Items per page (default: 10)"),
     }),
   },
   responses: {
