@@ -13,7 +13,7 @@ const BASE_API_PATH = env.BASE_API;
 cvRouter.post("/", validateRequest(CreateCVSchema), cvController.create);
 cvRouter.get("/", cvController.getAllCvs);
 cvRouter.get("/me", cvController.getCvByUserId);
-cvRouter.get("/:id", validateRequest(GetCVReqSchema), cvController.getCv);
+cvRouter.get("/:id", validateRequest(GetCVReqSchema), cvController.getCvById);
 cvRouter.put("/:id", validateRequest(UpdateCVSchema), cvController.updateCv);
 cvRouter.delete("/:id", validateRequest(GetCVReqSchema), cvController.deleteCv);
 
