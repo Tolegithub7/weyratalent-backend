@@ -99,12 +99,19 @@
       "when": 1745009451202,
       "tag": "20250418205051_replace-max-and-min-salary-with-salaty",
       "breakpoints": true
-    }
+    },
     {
       "idx": 16,
       "version": "7",
       "when": 1745139861102,
       "tag": "20250420090421_create-otp-table",
+      "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1745055412314,
+      "tag": "20250419093652_add-blog-table-and-relation",
       "breakpoints": true
     }
   ]

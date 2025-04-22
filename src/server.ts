@@ -12,6 +12,7 @@ import { BACKEND_URL } from "./common/utils/generalUtils";
 import {
   appliedJobsRouter,
   authRouter,
+  blogRouter,
   cvRouter,
   employerProfileRouter,
   favoriteJobsRouter,
@@ -55,6 +56,10 @@ app.use(
       return true;
     }
 
+    if (req.path === `${env.BASE_API}/blog` && req.method === "GET") {
+      return true;
+    }
+
     if (req.path === `${env.BASE_API}/talent_profile` && req.method === "GET") {
       return true;
     }
@@ -71,6 +76,7 @@ app.use(`${env.BASE_API}/job_posting`, jobPostingRouter);
 app.use(`${env.BASE_API}/applied_jobs`, appliedJobsRouter);
 app.use(`${env.BASE_API}/favorite_jobs`, favoriteJobsRouter);
 app.use(`${env.BASE_API}/logout`, logoutRouter);
+app.use(`${env.BASE_API}/blog`, blogRouter);
 app.use(`${env.BASE_API}/generate-otp`, otpRouter);
 app.use(openAPIRouter);
 

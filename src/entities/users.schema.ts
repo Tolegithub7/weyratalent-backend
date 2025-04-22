@@ -1,6 +1,7 @@
 import { Country, UserRole } from "@/types";
-import { sql } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import { boolean, check, pgEnum, pgTable, text, uuid, varchar } from "drizzle-orm/pg-core";
+import { blog } from "./blogs.schema";
 import { timestamps } from "./timeStamp.schema";
 
 console.log(Object.values(UserRole) as [string, ...string[]]);
@@ -32,3 +33,7 @@ export const users = pgTable(
     ),
   ],
 );
+
+export const userRelations = relations(users, ({ many }) => ({
+  blogs: many(blog),
+}));

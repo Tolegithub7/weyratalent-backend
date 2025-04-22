@@ -1,6 +1,7 @@
 import {
   appliedJobsRegistry,
   authRegistry,
+  blogRegistry,
   cvRegistry,
   employerProfileRegistry,
   favoriteJobsRegistery,
@@ -13,14 +14,15 @@ import {
 import { OpenAPIRegistry, OpenApiGeneratorV3 } from "@asteasolutions/zod-to-openapi";
 export function generateOpenAPIDocument() {
   const registry = new OpenAPIRegistry([
+    authRegistry,
     talentProfileRegistry,
     employerProfileRegistry,
     jobPostingRegistry,
     cvRegistry,
     userRegistry,
-    authRegistry,
     appliedJobsRegistry,
     favoriteJobsRegistery,
+    blogRegistry,
     otpRegistry,
     logoutRegistry,
   ]);

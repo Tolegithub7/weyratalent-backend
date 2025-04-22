@@ -11,5 +11,6 @@ export { employerProfile } from "./employerProfile.schema";
 export * from "./appliedJobs.schema";
 export { favoriteJobs } from "./favorite.schema";
 export * from "./token.schema";
+export * from "./blogs.schema";
 export * from "./otp.schema";
 // export * from  relationship

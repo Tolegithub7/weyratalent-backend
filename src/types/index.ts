@@ -21,3 +21,4 @@ export * from "./projects.types";
 export * from "./user.types";
 export * from "./talentProfile.types";
 export * from "./appliedJobs.types";
+export * from "./blog.types";

@@ -1,4 +1,3 @@
-import { profile } from "node:console";
 import { ServiceResponse } from "@/common/models/serviceResponse";
 import { db } from "@/db/database.config";
 import { cv, education, project, talentProfile, workExperience } from "@/entities";
