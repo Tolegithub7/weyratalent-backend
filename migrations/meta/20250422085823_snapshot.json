@@ -1,6 +1,6 @@
 {
-  "id": "51ebcc5e-ebff-4184-8206-e0b0ff8c9f36",
-  "prevId": "257a0e55-a970-4be6-b0fa-02574a463fc7",
+  "id": "7774572f-5fe2-49a9-9966-1b44a2cd6f57",
+  "prevId": "51ebcc5e-ebff-4184-8206-e0b0ff8c9f36",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -975,15 +975,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "min_salary": {
-          "name": "min_salary",
-          "type": "double precision",
-          "primaryKey": false,
-          "notNull": false,
-          "default": 0
-        },
-        "max_salary": {
-          "name": "max_salary",
+        "salary": {
+          "name": "salary",
           "type": "double precision",
           "primaryKey": false,
           "notNull": true,
@@ -1198,6 +1191,74 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.blog": {
+      "name": "blog",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "blog_pic_url": {
+          "name": "blog_pic_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "blog_header": {
+          "name": "blog_header",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "blog_body": {
+          "name": "blog_body",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "blog_user_id_users_id_fk": {
+          "name": "blog_user_id_users_id_fk",
+          "tableFrom": "blog",
+          "tableTo": "users",
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.otp": {
       "name": "otp",
       "schema": "",
@@ -1206,19 +1267,19 @@
           "name": "email",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "otp": {
           "name": "otp",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "expires_at": {
           "name": "expires_at",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "created_at": {
           "name": "created_at",

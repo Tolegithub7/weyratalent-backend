@@ -113,6 +113,13 @@
       "when": 1745055412314,
       "tag": "20250419093652_add-blog-table-and-relation",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1745312303575,
+      "tag": "20250422085823_otp-table-nullable-issue",
+      "breakpoints": true
     }
   ]
 }
