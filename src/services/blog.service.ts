@@ -33,15 +33,8 @@ class BlogService {
 
       const whereConditions: Array<SQLWrapper | undefined> = [];
       if (filters?.blogHeader) {
-        whereConditions.push(
-          sql`EXISTS (
-                    SELECT 1
-                    FROM unnest(${blog.blogHeader}) AS skill
-                    WHERE LOWER(skill) LIKE LOWER(${`%${filters.blogHeader}%`})
-                    )`,
-        );
+        whereConditions.push(sql`LOWER(${blog.blogHeader}) LIKE LOWER(${`%${filters.blogHeader}%`})`);
       }
-
       const query = db
         .select()
         .from(blog)
