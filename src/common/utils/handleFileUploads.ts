@@ -1,9 +1,14 @@
 import fs from "node:fs";
 import path from "node:path";
+import { Environment } from "@/types";
 import type { BucketNameEnum } from "@/types/minio.types";
 import { v4 as uuidv4 } from "uuid";
 import { env } from "./envConfig";
 import { minioClient } from "./minio.config";
+
+const { NODE_ENV } = env;
+const ssl = NODE_ENV === Environment.PRODUCTION;
+const protocol = ssl ? "https" : "http";
 
 export const handleImageUpload = async (
   fileName: string,
@@ -63,7 +68,7 @@ export const handleImageUpload = async (
   try {
     await minioClient.fPutObject(bucket, destinationObject, filePath, metaData);
     console.log("Image uploaded successfully.");
-    const publicUrl = `http://${env.MINIO_ENDPOINT}:${env.MINIO_PORT}/${bucket}/${destinationObject}`;
+    const publicUrl = `${protocol}://${env.MINIO_ENDPOINT}:${env.MINIO_PORT}/${bucket}/${destinationObject}`;
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
     }
@@ -139,7 +144,7 @@ export const handleCertificateUpload = async (
     console.log("Certificate uploaded successfully.");
 
     // Generate public URL for the uploaded file
-    const publicUrl = `http://${env.MINIO_ENDPOINT}:${env.MINIO_PORT}/${bucket}/${destinationObject}`;
+    const publicUrl = `${protocol}://${env.MINIO_ENDPOINT}:${env.MINIO_PORT}/${bucket}/${destinationObject}`;
 
     // Delete the local file after upload
     if (fs.existsSync(filePath)) {
