@@ -1,10 +1,10 @@
 import { ApiError, ServiceResponse } from "@/common/models/serviceResponse";
 import { db } from "@/db/database.config";
-import { users } from "@/entities";
+import { otp, users } from "@/entities";
 import { logger } from "@/server";
 import type { Country, UpdateUserType, UserInputType, UserRole, UserType } from "@/types";
 import bcrypt from "bcrypt";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { StatusCodes } from "http-status-codes";
 
 export class UserService {
@@ -35,6 +35,20 @@ export class UserService {
 
   async createUser(userData: UserInputType): Promise<ServiceResponse<UserType | null>> {
     try {
+      const { email } = userData;
+      const foundOtp = await db.select().from(otp).where(eq(otp.email, email)).orderBy(desc(otp.createdAt)).limit(1);
+
+      const currentTime = new Date();
+      const fiveMinutesInMs = 5 * 60 * 1000;
+      if (
+        foundOtp.length === 0 ||
+        (foundOtp.length > 0 &&
+          (foundOtp[0].otp !== userData.otp ||
+            currentTime.getTime() - foundOtp[0].createdAt.getTime() > fiveMinutesInMs))
+      ) {
+        return ServiceResponse.success<null>("Invalid or expired OTP", null, StatusCodes.NOT_FOUND);
+      }
+
       const hashedPassword = await this.hashPassword(userData.password);
       const createdUser = await db
         .insert(users)
@@ -50,11 +64,7 @@ export class UserService {
     } catch (error) {
       const errorMessage = `Error creating user: ${(error as Error).message}`;
       logger.error(errorMessage);
-      return ServiceResponse.failure<null>(
-        "An error occurred while creating the user.",
-        null,
-        StatusCodes.INTERNAL_SERVER_ERROR,
-      );
+      return ServiceResponse.failure<null>("Duplicate username or email", null, StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
 

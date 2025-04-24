@@ -5,6 +5,7 @@ import { catchAsync } from "@/common/utils/catchAsync.util";
 import { handleImageUpload } from "@/common/utils/handleFileUploads";
 import { handleServiceResponse } from "@/common/utils/httpHandlers";
 import { employerProfileService } from "@/services/employerProfile.service";
+import { UserRole } from "@/types";
 import { BucketNameEnum } from "@/types/minio.types";
 import type { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
@@ -13,6 +14,10 @@ class EmployerProfileController {
   public createOrUpdateEmployerProfile = catchAsync(async (req: Request, res: Response) => {
     if (!req.user) {
       throw new ApiError(StatusCodes.NOT_FOUND, "User not found");
+    }
+
+    if (!req.role || req.role !== UserRole.RECRUITER) {
+      throw new ApiError(StatusCodes.UNAUTHORIZED, "Unauthorized access");
     }
 
     let bannerUrl = "";
@@ -67,17 +72,30 @@ class EmployerProfileController {
   });
 
   public getEmployerProfile = catchAsync(async (req: Request, res: Response) => {
+    if (!req.user) {
+      throw new ApiError(StatusCodes.NOT_FOUND, "User not found");
+    }
     const { id } = req.params;
     const serviceResponse = await employerProfileService.getEmployerProfile(id);
     return handleServiceResponse(serviceResponse, res);
   });
 
   public getEmployerProfiles = catchAsync(async (req: Request, res: Response) => {
+    if (!req.user) {
+      throw new ApiError(StatusCodes.NOT_FOUND, "User not found");
+    }
     const serviceResponse = await employerProfileService.getEmployerProfiles();
     return handleServiceResponse(serviceResponse, res);
   });
 
   public deleteEmployerProfile = catchAsync(async (req: Request, res: Response) => {
+    if (!req.user) {
+      throw new ApiError(StatusCodes.NOT_FOUND, "User not found");
+    }
+    if (!req.role || req.role === UserRole.TALENT) {
+      throw new ApiError(StatusCodes.UNAUTHORIZED, "Unauthorized access");
+    }
+
     const { id } = req.params;
     const serviceResponse = await employerProfileService.deleteEmployerProfile(id);
     return handleServiceResponse(serviceResponse, res);
@@ -86,6 +104,9 @@ class EmployerProfileController {
   public getRegisteredEmployerProfile = catchAsync(async (req: Request, res: Response) => {
     if (!req.user) {
       throw new ApiError(StatusCodes.NOT_FOUND, "User not found");
+    }
+    if (!req.role || req.role !== UserRole.RECRUITER) {
+      throw new ApiError(StatusCodes.UNAUTHORIZED, "Unauthorized access");
     }
 
     const userId = req.user.id;

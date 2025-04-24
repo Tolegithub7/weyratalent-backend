@@ -38,10 +38,13 @@ jobPostingRegistry.registerPath({
   request: {
     query: z.object({
       jobRole: z.string().optional().describe("Filter by job role (e.g., 'Software Engineer')"),
+      jobTitle: z.string().optional().describe("Search by job title (e.g., 'NestJs Dev')"),
       jobType: z.string().optional().describe("Filter by job type (e.g., 'Full-Time')"),
       jobLevel: z.string().optional().describe("Filter by job level (e.g., 'Entry Level')"),
       salaryType: z.string().optional().describe("Filter by salary type (e.g., 'Hourly')"),
       location: z.string().optional().describe("Filter jobs by location"),
+      durationValue: z.string().optional().describe("Filter by duration value (e.g., '6+')"),
+      durationUnit: z.string().optional().describe("Filter by duration unit (e.g., 'month')"),
       page: z.number().int().positive().optional().default(1).describe("Page number (default: 1)"),
       limit: z.number().int().positive().optional().default(10).describe("Items per page (default: 10)"),
     }),

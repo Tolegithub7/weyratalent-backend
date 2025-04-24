@@ -9,6 +9,7 @@ export const UserSchema = z.object({
   fullName: z.string().trim().min(1, "Full name is required").max(255).nullable(), // Allow null
   userName: z.string().trim().min(1, "Username is required").max(50).nullable(), // Allow null
   email: z.string().email("Invalid email format"),
+  otp: z.string(),
   country: z.nativeEnum(Country, {
     required_error: "Country is required",
     invalid_type_error: "Invalid country",
@@ -42,6 +43,7 @@ export const UpdateUserSchema = UserSchema.partial();
 
 export const UserResponseSchema = UserSchema.omit({
   password: true,
+  otp: true,
 });
 
 export const ReqUserSchema = UserSchema.pick({

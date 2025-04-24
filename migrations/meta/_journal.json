@@ -87,6 +87,44 @@
       "when": 1744182541352,
       "tag": "20250409070901_correct-salary-type-enum",
       "breakpoints": true
+<<<<<<< HEAD
+>>>>>>> upstream/main
+=======
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1744789285432,
+      "tag": "20250416074125_add-duration-to-jobs-table",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "7",
+      "when": 1745009451202,
+      "tag": "20250418205051_replace-max-and-min-salary-with-salaty",
+      "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1745139861102,
+      "tag": "20250420090421_create-otp-table",
+      "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1745055412314,
+      "tag": "20250419093652_add-blog-table-and-relation",
+      "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1745312303575,
+      "tag": "20250422085823_otp-table-nullable-issue",
+      "breakpoints": true
 >>>>>>> upstream/main
     }
   ]

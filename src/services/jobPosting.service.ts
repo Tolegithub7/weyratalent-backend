@@ -2,7 +2,7 @@ import { ServiceResponse } from "@/common/models/serviceResponse";
 import { db } from "@/db/database.config";
 import { employerProfile, jobProfile } from "@/entities";
 import { logger } from "@/server";
-import type { PaginationMeta } from "@/types/jobPosting.types";
+import { type PaginationMeta, StatusType } from "@/types/jobPosting.types";
 import type {
   CreateJobPostingType,
   GetAllJobsType,
@@ -16,9 +16,12 @@ import { v4 as uuidv4 } from "uuid";
 class JobPostingService {
   async getJobPostings(
     filters?: {
+      jobTitle?: string;
       jobRole?: string;
       jobType?: string;
       jobLevel?: string;
+      durationValue?: string;
+      durationUnit?: string;
       salaryType?: string;
       location?: string;
     },
@@ -36,24 +39,29 @@ class JobPostingService {
       if (filters?.jobRole) whereConditions.push(eq(jobProfile.jobRole, filters.jobRole));
       if (filters?.jobType) whereConditions.push(eq(jobProfile.jobType, filters.jobType));
       if (filters?.jobLevel) whereConditions.push(eq(jobProfile.jobLevel, filters.jobLevel));
+      if (filters?.durationValue) whereConditions.push(eq(jobProfile.durationValue, filters.durationValue));
+      if (filters?.durationUnit) whereConditions.push(eq(jobProfile.durationUnit, filters.durationUnit));
       if (filters?.salaryType) whereConditions.push(eq(jobProfile.salaryType, filters.salaryType));
       if (filters?.location) {
         whereConditions.push(sql`LOWER(${employerProfile.location}) LIKE LOWER(${`%${filters.location}%`})`);
       }
+      if (filters?.jobTitle) {
+        whereConditions.push(sql`LOWER(${jobProfile.jobTitle}) LIKE LOWER(${`%${filters.jobTitle}%`})`);
+      }
 
-      // Join jobProfile with employerProfile
+      whereConditions.push(eq(jobProfile.status, StatusType.ACTIVE));
+
       const query = db
         .select({
-          jobProfile: jobProfile, // Select all fields from jobProfile
-          employerProfile: employerProfile, // Select all fields from employerProfile
+          jobProfile: jobProfile,
+          employerProfile: employerProfile,
         })
         .from(jobProfile)
-        .leftJoin(employerProfile, eq(jobProfile.userId, employerProfile.userId)) // Join on userId
+        .leftJoin(employerProfile, eq(jobProfile.userId, employerProfile.userId))
         .where(whereConditions.length > 0 ? and(...whereConditions) : undefined)
         .limit(limit)
         .offset(offset);
 
-      // Count query with the same join and filters
       const countQuery = db
         .select({ count: sql<number>`count(*)` })
         .from(jobProfile)
@@ -63,7 +71,6 @@ class JobPostingService {
       const [jobPostings, totalResult] = await Promise.all([query, countQuery]);
       const total = Number(totalResult[0]?.count) || 0;
 
-      // Map the results to combine jobProfile and employerProfile data
       const allJobs: GetAllJobsType[] = jobPostings.map((job) => ({
         ...job.jobProfile,
         employerProfile: job.employerProfile ? [job.employerProfile] : [],

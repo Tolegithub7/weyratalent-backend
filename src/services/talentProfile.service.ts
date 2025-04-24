@@ -1,7 +1,8 @@
 import { ServiceResponse } from "@/common/models/serviceResponse";
 import { db } from "@/db/database.config";
-import { cv, talentProfile } from "@/entities";
+import { cv, education, project, talentProfile, workExperience } from "@/entities";
 import { logger } from "@/server";
+import type { EducationType, ProjectType, WorkExperienceType } from "@/types";
 import type {
   CreateTalentProfileType,
   TalentProfileResponseType,
@@ -59,18 +60,43 @@ class TalentProfileService {
         .select({
           talentProfile: talentProfile, // Select all fields from talentProfile
           cv: cv, // Select all fields from cv
+          workExperience: sql`json_agg(DISTINCT ${workExperience}.*)`.as("workExperience"),
+          education: sql`json_agg(DISTINCT ${education}.*)`.as("education"),
+          projects: sql`json_agg(DISTINCT ${project}.*)`.as("projects"),
         })
         .from(talentProfile)
-        .leftJoin(cv, eq(talentProfile.userId, cv.userId)) // Join with cv table using userId
+        .leftJoin(cv, eq(talentProfile.userId, cv.userId)) // Join with cv table
+        .leftJoin(workExperience, eq(cv.id, workExperience.cvId)) // Join with work_experience
+        .leftJoin(education, eq(cv.id, education.cvId)) // Join with education
+        .leftJoin(project, eq(cv.id, project.cvId)) // Join with project
         .where(whereConditions.length ? and(...whereConditions) : undefined)
+        .groupBy(
+          talentProfile.id,
+          talentProfile.userId,
+          talentProfile.fullName,
+          talentProfile.country,
+          talentProfile.experience,
+          talentProfile.profileUrl,
+          talentProfile.gender,
+          talentProfile.personalWebsite,
+          talentProfile.about,
+          talentProfile.dateOfBirth,
+          talentProfile.socialLink,
+          // Add any other columns you're selecting from talentProfile
+          cv.id,
+        )
+
         .limit(limit)
         .offset(offset);
 
       // Count query with the same join and filters
       const countQuery = db
-        .select({ count: sql<number>`count(*)` })
+        .select({ count: sql<number>`count(DISTINCT ${talentProfile.userId})` })
         .from(talentProfile)
-        .leftJoin(cv, eq(talentProfile.userId, cv.userId)) // Join with cv table
+        .leftJoin(cv, eq(talentProfile.userId, cv.userId))
+        .leftJoin(workExperience, eq(cv.id, workExperience.cvId))
+        .leftJoin(education, eq(cv.id, education.cvId))
+        .leftJoin(project, eq(cv.id, project.cvId))
         .where(whereConditions.length ? and(...whereConditions) : undefined);
 
       const [profiles, totalResult] = await Promise.all([query, countQuery]);
@@ -78,7 +104,14 @@ class TalentProfileService {
 
       const talentProfilesWithCv: TalentProfileResponseType[] = profiles.map((profile) => ({
         ...profile.talentProfile,
-        talentCv: profile.cv || null,
+        talentCv: profile.cv
+          ? {
+              ...profile.cv,
+              workExperience: profile.workExperience ? (profile.workExperience as WorkExperienceType[]) : null, // Remove null entries
+              education: profile.education ? (profile.education as EducationType[]) : null, // Remove null entries
+              projects: profile.projects ? (profile.projects as ProjectType[]) : null, // Remove null entries
+            }
+          : null,
       })) as unknown as TalentProfileResponseType[];
 
       return ServiceResponse.success(

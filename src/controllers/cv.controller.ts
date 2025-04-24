@@ -6,6 +6,12 @@ import { handleServiceResponse } from "@/common/utils/httpHandlers";
 import { minioClient } from "@/common/utils/minio.config";
 import { pick } from "@/common/utils/pick.utils";
 import { cvService } from "@/services/cv.service";
+<<<<<<< HEAD
+=======
+import { StatusCodes } from "http-status-codes";
+
+import { UserRole } from "@/types";
+>>>>>>> upstream/main
 import type { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { v4 as uuidv4 } from "uuid";
@@ -16,6 +22,9 @@ class CVController {
   public create = catchAsync(async (req: Request, res: Response) => {
     if (!req.user) {
       throw new ApiError(StatusCodes.NOT_FOUND, "User not found");
+    }
+    if (!req.role || req.role !== UserRole.TALENT) {
+      throw new ApiError(StatusCodes.UNAUTHORIZED, "Unauthorized access");
     }
     const userId = req.user.id;
     // const certificate = (req.file as Express.Multer.File) || {};
@@ -42,7 +51,10 @@ class CVController {
     return handleServiceResponse(serviceResponse, res);
   });
 
-  public getCv = catchAsync(async (req: Request, res: Response) => {
+  public getCvById = catchAsync(async (req: Request, res: Response) => {
+    if (!req.user) {
+      throw new ApiError(StatusCodes.NOT_FOUND, "User not found");
+    }
     const { id } = req.params;
     const serviceResponse = await cvService.getCv(id);
     return handleServiceResponse(serviceResponse, res);
@@ -58,6 +70,9 @@ class CVController {
   });
 
   public getAllCvs = catchAsync(async (req: Request, res: Response) => {
+    if (!req.user) {
+      throw new ApiError(StatusCodes.NOT_FOUND, "User not found");
+    }
     const serviceResponse = await cvService.getAllCvs();
     if (serviceResponse.responseObject) {
       const updatedResponseObject = serviceResponse.responseObject.map((cv) => {
@@ -85,12 +100,26 @@ class CVController {
   });
 
   public deleteCv = catchAsync(async (req: Request, res: Response) => {
+    if (!req.user) {
+      throw new ApiError(StatusCodes.NOT_FOUND, "User not found");
+    }
+    if (!req.role || req.role !== UserRole.TALENT) {
+      throw new ApiError(StatusCodes.UNAUTHORIZED, "Unauthorized access");
+    }
+
     const { id } = req.params;
     const serviceResponse = await cvService.deleteCv(id);
     return handleServiceResponse(serviceResponse, res);
   });
 
   public updateCv = catchAsync(async (req: Request, res: Response) => {
+    if (!req.user) {
+      throw new ApiError(StatusCodes.NOT_FOUND, "User not found");
+    }
+    if (!req.role || req.role !== UserRole.TALENT) {
+      throw new ApiError(StatusCodes.UNAUTHORIZED, "Unauthorized access");
+    }
+
     const { id } = req.params;
     const serviceResponse = await cvService.updateCv(id, req.body);
     return handleServiceResponse(serviceResponse, res);

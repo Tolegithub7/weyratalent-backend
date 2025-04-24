@@ -1,4 +1,15 @@
-import { Education, Experience, JobLevel, JobRole, JobType, SalaryType, StatusType, Vacancies } from "@/types";
+import {
+  DurationUnit,
+  DurationValue,
+  Education,
+  Experience,
+  JobLevel,
+  JobRole,
+  JobType,
+  SalaryType,
+  StatusType,
+  Vacancies,
+} from "@/types";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { z } from "zod";
 import { EmployerProfileSchema, UpdateEmployerProfileSchema } from "./employerProfile.validator";
@@ -37,11 +48,8 @@ export const JobPostingSchema = z.object({
   responsibilities: z.string().min(1, "Responsibilities are required").openapi({
     description: "Responsibilities and To Dos",
   }),
-  minSalary: z.number().min(0, "Minimum salary must be a positive number").openapi({
+  salary: z.number().min(0, "Minimum salary must be a positive number").openapi({
     description: "Minimum Salary",
-  }),
-  maxSalary: z.number().min(0, "Maximum salary must be a positive number").openapi({
-    description: "Maximum Salary",
   }),
   expiryDate: z.string().datetime({ offset: true }).openapi({
     description: "Job application closing date",
@@ -61,6 +69,14 @@ export const JobPostingSchema = z.object({
   status: z.nativeEnum(StatusType).optional().openapi({
     description: "Currrent Status of the Opening",
     default: StatusType.ACTIVE,
+  }),
+  durationValue: z.nativeEnum(DurationValue).openapi({
+    description: "Project duration value (e.g., '6+')",
+    default: DurationValue.SIX_PLUS,
+  }),
+  durationUnit: z.nativeEnum(DurationUnit).openapi({
+    description: "Project duration unit (e.g., 'month')",
+    default: DurationUnit.MONTH,
   }),
   // createdAt: z.date().optional(),
   // updatedAt: z.date().optional(),

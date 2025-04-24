@@ -16,10 +16,16 @@ const BASE_API_PATH = env.BASE_API;
 cvRouter.post("/", uploadCertificate, validateRequest(CreateCVSchema), cvController.create);
 cvRouter.get("/", cvController.getAllCvs);
 cvRouter.get("/me", cvController.getCvByUserId);
+<<<<<<< HEAD
 cvRouter.get("/:id", validateRequest(GetCVReqSchema), cvController.getCv);
 cvRouter.put("/:id", uploadCertificate, validateRequest(UpdateCVSchema), cvController.updateCv);
 // cvRouter.delete("/:id", validateRequest(GetCVReqSchema), cvController.deleteCv);//-
 cvRouter.delete("/:id", validateRequest(GetCVReqSchema), cvController.deleteCv);//+
+=======
+cvRouter.get("/:id", validateRequest(GetCVReqSchema), cvController.getCvById);
+cvRouter.put("/:id", validateRequest(UpdateCVSchema), cvController.updateCv);
+cvRouter.delete("/:id", validateRequest(GetCVReqSchema), cvController.deleteCv);
+>>>>>>> upstream/main
 
 cvRegistry.register("cv", CVSchema);
 

@@ -25,6 +25,7 @@ export const CertificateSchema = z.custom<Express.Multer.File>().openapi({
 
 // Work Experience Schema
 export const WorkExperienceSchema = z.object({
+<<<<<<< HEAD
   jobTitle: z.string().openapi({
     description: "Job title of the work experience",
     example: "Software Engineer",
@@ -41,10 +42,17 @@ export const WorkExperienceSchema = z.object({
     description: "End date of the job (if applicable)",
     example: "2023-12-31",
   }),
+=======
+  jobTitle: z.string(),
+  company: z.string(),
+  start_date: z.string().date(),
+  end_date: z.string().date().optional(),
+>>>>>>> upstream/main
 });
 
 // Education Schema
 export const EducationSchema = z.object({
+<<<<<<< HEAD
   degree: z.string().openapi({
     description: "Degree obtained",
     example: "Bachelor of Science",
@@ -65,10 +73,18 @@ export const EducationSchema = z.object({
     description: "GPA achieved (if applicable)",
     example: 3.8,
   }),
+=======
+  degree: z.string(),
+  institution: z.string(),
+  start_date: z.string().date(),
+  end_date: z.string().date().optional(),
+  gpa: z.number().optional(),
+>>>>>>> upstream/main
 });
 
 // Project Schema
 export const ProjectSchema = z.object({
+<<<<<<< HEAD
   title: z.string().trim().min(1, "Title is required").openapi({
     description: "Title of the project",
     example: "E-commerce Platform",
@@ -81,6 +97,11 @@ export const ProjectSchema = z.object({
     description: "Link to the project (if available)",
     example: "https://github.com/user/ecommerce-platform",
   }),
+=======
+  title: z.string().trim().min(1, "title is required"),
+  description: z.string().trim().min(5, "description is required"),
+  projectLink: z.string().url().optional(),
+>>>>>>> upstream/main
 });
 
 // Response Schemas

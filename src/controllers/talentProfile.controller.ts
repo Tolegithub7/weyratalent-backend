@@ -6,14 +6,17 @@ import { handleImageUpload } from "@/common/utils/handleFileUploads";
 import { handleServiceResponse } from "@/common/utils/httpHandlers";
 import { pick } from "@/common/utils/pick.utils";
 import { talentProfileService } from "@/services/talentProfile.service";
+import { UserRole } from "@/types";
 import { BucketNameEnum } from "@/types/minio.types";
 import type { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-
 class TalentProfileController {
   public createOrUpdateTalentProfile = catchAsync(async (req: Request, res: Response) => {
     if (!req.user) {
       throw new ApiError(StatusCodes.NOT_FOUND, "User not found");
+    }
+    if (!req.role || req.role !== UserRole.TALENT) {
+      throw new ApiError(StatusCodes.UNAUTHORIZED, "Unauthorized access");
     }
 
     const userId = req.user.id;
@@ -49,6 +52,9 @@ class TalentProfileController {
   });
 
   public getTalentProfile = catchAsync(async (req: Request, res: Response) => {
+    if (!req.user) {
+      throw new ApiError(StatusCodes.NOT_FOUND, "User not found");
+    }
     const { id } = req.params;
     const serviceResponse = await talentProfileService.getTalentProfile(id);
     return handleServiceResponse(serviceResponse, res);
@@ -73,6 +79,13 @@ class TalentProfileController {
   });
 
   public deleteTalentProfile = catchAsync(async (req: Request, res: Response) => {
+    if (!req.user) {
+      throw new ApiError(StatusCodes.NOT_FOUND, "User not found");
+    }
+    if (!req.role || req.role === UserRole.RECRUITER) {
+      throw new ApiError(StatusCodes.UNAUTHORIZED, "Unauthorized access");
+    }
+
     const { id } = req.params;
     const serviceResponse = await talentProfileService.deleteTalentProfile(id);
     return handleServiceResponse(serviceResponse, res);
@@ -81,6 +94,9 @@ class TalentProfileController {
   public getRegisteredTalentProfile = catchAsync(async (req: Request, res: Response) => {
     if (!req.user) {
       throw new ApiError(StatusCodes.NOT_FOUND, "User not found");
+    }
+    if (!req.role || req.role !== UserRole.TALENT) {
+      throw new ApiError(StatusCodes.UNAUTHORIZED, "Unauthorized access");
     }
 
     const userId = req.user.id;

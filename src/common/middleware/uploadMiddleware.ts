@@ -11,8 +11,9 @@ const storage = multer.diskStorage({
     const banner_dir = "./uploads/banner";
     const logo_dir = "./uploads/logo";
     const profile_dir = "./uploads/profile";
+    const blog_dir = "./uploads/blog";
 
-    [banner_dir, logo_dir, profile_dir].forEach((dir) => {
+    [banner_dir, logo_dir, profile_dir, blog_dir].forEach((dir) => {
       if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, { recursive: true });
       }
@@ -26,6 +27,8 @@ const storage = multer.diskStorage({
       cb(null, banner_dir);
     } else if (_file.fieldname === "profile") {
       cb(null, profile_dir);
+    } else if (_file.fieldname === "blog") {
+      cb(null, blog_dir);
     } else if (_file.fieldname === "logo") {
       cb(null, logo_dir);
     }
