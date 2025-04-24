@@ -79,10 +79,10 @@ export const GetEmployerProfileSchema = z.object({
 
 export const CreateEmployerProfileSchema = z.object({
   body: EmployerProfileSchema.omit({
-    id: true, 
-    userId: true, 
-    logoUrl: true, 
-    bannerUrl: true
+    id: true,
+    userId: true,
+    logoUrl: true,
+    bannerUrl: true,
   }),
 });
 

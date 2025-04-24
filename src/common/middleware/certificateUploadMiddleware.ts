@@ -1,4 +1,3 @@
-
 import fs from "node:fs";
 import path from "node:path";
 import type { Request } from "express";
@@ -49,8 +48,8 @@ const fileFilter = (req: Request, file: Express.Multer.File, cb: FileFilterCallb
     cb(
       new ApiError(
         StatusCodes.UNSUPPORTED_MEDIA_TYPE,
-        "Only PDF, DOC, DOCX, and ODT files are allowed for certificates!"
-      )
+        "Only PDF, DOC, DOCX, and ODT files are allowed for certificates!",
+      ),
     );
   }
 };
@@ -60,18 +59,18 @@ export const uploadCertificate = multer({
   storage: storage, // Use disk storage
   limits: limits, // Apply file size limits
   fileFilter: fileFilter, // Apply file type filtering
-}).fields([//+
-  { name: 'certificate', maxCount: 1 },//+
+}).fields([
+  //+
+  { name: "certificate", maxCount: 1 }, //+
   // Define all other fields that might be in the form to prevent "Unexpected field" error//+
-  { name: 'fullName', maxCount: 1 },//+
-  { name: 'skillTitle', maxCount: 1 },//+
-  { name: 'hourlyRate', maxCount: 1 },//+
-  { name: 'categories', maxCount: 1 },//+
-  { name: 'workExperience', maxCount: 1 },//+
-  { name: 'education', maxCount: 1 },//+
-  { name: 'project', maxCount: 1 }//+
-]);//+
-
+  { name: "fullName", maxCount: 1 }, //+
+  { name: "skillTitle", maxCount: 1 }, //+
+  { name: "hourlyRate", maxCount: 1 }, //+
+  { name: "categories", maxCount: 1 }, //+
+  { name: "workExperience", maxCount: 1 }, //+
+  { name: "education", maxCount: 1 }, //+
+  { name: "project", maxCount: 1 }, //+
+]); //+
 
 // import path from "path";
 // import type { Request } from "express";
