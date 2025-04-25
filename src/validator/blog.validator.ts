@@ -1,5 +1,6 @@
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { z } from "zod";
+import { UserSchema } from "./user.validator"; 
 
 extendZodWithOpenApi(z);
 export const BlogSchema = z.object({
@@ -12,7 +13,7 @@ export const BlogSchema = z.object({
       format: "binary",
     })
     .optional(),
-  blogPicUrl: z.string().url(),
+  blogPicUrl: z.string().url().optional(),
   blogHeader: z.string().openapi({
     description: "Header/Title of your blog",
     default: "something about the platform or any related thoughts",
@@ -21,6 +22,9 @@ export const BlogSchema = z.object({
     description: "The main body of your blog",
     default: "explaining your thoughts",
   }),
+  user: UserSchema.optional().openapi({ description: "The user who created the blog" }),
+  createdAt: z.string().datetime(),
+  updatedAt: z.string().datetime(),
 });
 
 export const GetBlogSchema = z.object({

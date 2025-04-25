@@ -1,6 +1,6 @@
 import { ServiceResponse } from "@/common/models/serviceResponse";
 import { db } from "@/db/database.config";
-import { blog } from "@/entities";
+import { blog, users } from "@/entities";
 import { logger } from "@/server";
 import type { BlogResponseType, BlogType, CreateBlogType, UpdateBlogType } from "@/types";
 import { type SQLWrapper, and, eq, sql } from "drizzle-orm";
@@ -35,9 +35,30 @@ class BlogService {
       if (filters?.blogHeader) {
         whereConditions.push(sql`LOWER(${blog.blogHeader}) LIKE LOWER(${`%${filters.blogHeader}%`})`);
       }
+      
       const query = db
-        .select()
+        .select({
+          id: blog.id,
+          blogPicUrl: blog.blogPicUrl ?? '',
+          blogHeader: blog.blogHeader ?? '',
+          blogBody: blog.blogBody ?? '',
+          createdAt: blog.createdAt,
+          updatedAt: blog.updatedAt,
+          user: {
+            id: users.id,
+            fullName: users.fullName,
+            userName: users.userName,
+            email: users.email,
+            country: users.country,
+            phoneNumber: users.phoneNumber,
+            companyName: users.companyName,
+            role: users.role,
+            createdAt: users.createdAt,
+            updatedAt: users.updatedAt,
+          }
+        })
         .from(blog)
+        .leftJoin(users, eq(blog.userId, users.id))
         .where(whereConditions.length ? and(...whereConditions) : undefined)
         .limit(limit)
         .offset(offset);
@@ -47,10 +68,22 @@ class BlogService {
         .from(blog)
         .where(whereConditions.length ? and(...whereConditions) : undefined);
 
-      const [blogs, totalResult] = await Promise.all([query, countQuery]);
+      const [blogsWithUsers, totalResult] = await Promise.all([query, countQuery]);
       const total = Number(totalResult[0]?.count) || 0;
 
-      const Fetchedblogs: BlogResponseType[] = blogs as unknown as BlogResponseType[];
+      const Fetchedblogs: BlogResponseType[] = blogsWithUsers.map((blog) => ({
+        ...blog,
+        blogPicUrl: blog.blogPicUrl ?? '',
+        user: blog.user ? {
+          ...blog.user,
+          password: '',
+          otp: '',
+          agreeTermsService: false,
+          address: undefined,
+          verifiedLicense: undefined
+        } : undefined
+      }));
+
       return ServiceResponse.success(
         "Blogs retrieved successfully",
         {
@@ -82,18 +115,25 @@ class BlogService {
 
       if (existingBlog) {
         const blogDataWithId = { ...blogData, blogUrl: blogUrl };
-        const updatedBlog = await this.updateBlog(id, blogUrl ? blogUrl : "", blogDataWithId);
+        const updatedBlog = await this.updateBlog(id, blogUrl ?? '', blogDataWithId);
         return ServiceResponse.success<BlogResponseType>(
           "Blog Updated Successfully",
-          updatedBlog as unknown as BlogResponseType,
+          updatedBlog as BlogResponseType,
           StatusCodes.OK,
         );
       } else {
-        const blogDataWithId = { ...blogData, userId: id, blogUrl: blogUrl };
+        const blogDataWithId = { 
+          userId: id, 
+          blogUrl: blogUrl,
+          blogHeader: blogData.blogHeader,
+          blogBody: blogData.blogBody,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        };
         const createdBlog = await db.insert(blog).values(blogDataWithId).returning();
         return ServiceResponse.success<BlogResponseType>(
-          "Blofg Created Successfully",
-          createdBlog[0] as unknown as BlogResponseType,
+          "Blog Created Successfully",
+          createdBlog[0] as BlogResponseType,
           StatusCodes.OK,
         );
       }
@@ -104,15 +144,52 @@ class BlogService {
 
   async getBlog(id: string): Promise<ServiceResponse<BlogResponseType | null>> {
     try {
-      const [blogData] = await db.select().from(blog).where(eq(blog.id, id));
+      const [blogData] = await db
+        .select({
+          id: blog.id,
+          userId: blog.userId,
+          blogPicUrl: blog.blogPicUrl,
+          blogHeader: blog.blogHeader,
+          blogBody: blog.blogBody,
+          createdAt: blog.createdAt,
+          updatedAt: blog.updatedAt,
+          user: {
+            id: users.id,
+            fullName: users.fullName,
+            userName: users.userName,
+            email: users.email,
+            country: users.country,
+            phoneNumber: users.phoneNumber,
+            companyName: users.companyName,
+            role: users.role,
+            createdAt: users.createdAt,
+            updatedAt: users.updatedAt,
+          }
+        })
+        .from(blog)
+        .leftJoin(users, eq(blog.userId, users.id))
+        .where(eq(blog.id, id));
 
       if (!blogData) {
         return ServiceResponse.failure<null>("Blog not found", null, StatusCodes.NOT_FOUND);
       }
 
+      const blogResponse: BlogResponseType = {
+        ...blogData,
+        blogPicUrl: blogData.blogPicUrl ?? '',
+        user: blogData.user ? {
+          ...blogData.user,
+          password: '',
+          otp: '',
+          agreeTermsService: false,
+          address: undefined,
+          verifiedLicense: undefined
+        } : undefined
+      };
+
       return ServiceResponse.success<BlogResponseType>(
         "Blog Retrieved Successfully",
-        blogData as unknown as BlogResponseType,
+        blogResponse,
         StatusCodes.OK,
       );
     } catch (error) {
@@ -123,11 +200,56 @@ class BlogService {
 
   async getBlogForRegisteredUser(userId: string): Promise<ServiceResponse<BlogResponseType | null>> {
     try {
-      const blogData = await db.select().from(blog).where(eq(blog.userId, userId));
-      const foundBlog = blogData ? blogData[0] : null;
+      const [blogData] = await db
+        .select({
+          id: blog.id,
+          userId: blog.userId,
+          blogPicUrl: blog.blogPicUrl,
+          blogHeader: blog.blogHeader,
+          blogBody: blog.blogBody,
+          createdAt: blog.createdAt,
+          updatedAt: blog.updatedAt,
+          user: {
+            id: users.id,
+            fullName: users.fullName,
+            userName: users.userName,
+            email: users.email,
+            country: users.country,
+            phoneNumber: users.phoneNumber,
+            companyName: users.companyName,
+            role: users.role,
+            createdAt: users.createdAt,
+            updatedAt: users.updatedAt,
+          }
+        })
+        .from(blog)
+        .leftJoin(users, eq(blog.userId, users.id))
+        .where(eq(blog.userId, userId));
+
+      if (!blogData) {
+        return ServiceResponse.success<null>(
+          "No blog found for this user",
+          null,
+          StatusCodes.OK
+        );
+      }
+
+      const blogResponse: BlogResponseType = {
+        ...blogData,
+        blogPicUrl: blogData.blogPicUrl ?? '',
+        user: blogData.user ? {
+          ...blogData.user,
+          password: '',
+          otp: '',
+          agreeTermsService: false,
+          address: undefined,
+          verifiedLicense: undefined
+        } : undefined
+      };
+
       return ServiceResponse.success<BlogResponseType>(
-        "Blogs Retrieved Successfully",
-        foundBlog as unknown as BlogResponseType,
+        "Blog Retrieved Successfully",
+        blogResponse,
         StatusCodes.OK,
       );
     } catch (error) {
@@ -141,8 +263,8 @@ class BlogService {
       const blogData = await db.delete(blog).where(eq(blog.id, id)).returning();
       const deletedBlog = blogData ? blogData[0] : null;
       return ServiceResponse.success<BlogType>(
-        "Blog deleted Succesfully",
-        deletedBlog as unknown as BlogType,
+        "Blog deleted Successfully",
+        deletedBlog as BlogType,
         StatusCodes.OK,
       );
     } catch (error) {
@@ -155,14 +277,18 @@ class BlogService {
     try {
       const blogData = await db
         .update(blog)
-        .set({ ...data, blogPicUrl: blogPicUrl, updatedAt: new Date() })
+        .set({ 
+          ...data, 
+          blogPicUrl: blogPicUrl, 
+          updatedAt: new Date() 
+        })
         .where(eq(blog.id, blogId))
         .returning();
       const updatedBlog = blogData ? blogData[0] : null;
       if (!updatedBlog) {
         return null;
       }
-      return updatedBlog as unknown as BlogType;
+      return updatedBlog as BlogType;
     } catch (error) {
       logger.error(`Error updating blog: ${error}`);
       return null;
