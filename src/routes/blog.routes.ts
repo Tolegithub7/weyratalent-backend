@@ -6,10 +6,17 @@ import { BlogSchema, CreateBlogSchema, GetBlogSchema, UpdateBlogSchema } from "@
 import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
 import express, { type Router } from "express";
 import { z } from "zod";
+import { UserSchema } from "@/validator/user.validator";
 
 export const blogRegistry = new OpenAPIRegistry();
 export const blogRouter: Router = express.Router();
 const BASE_API_PATH = env.BASE_API;
+const BlogWithUserResponse = BlogSchema.merge(
+  z.object({
+    user: UserSchema,
+  })
+);
+
 
 blogRouter.get("/", blogController.getBlogs);
 blogRouter.get("/me", blogController.getBlogForRegisteredUser);
@@ -42,7 +49,7 @@ blogRouter.delete("/:id", validateRequest(GetBlogSchema), blogController.deleteB
 
 const PaginatedBlogResponse = z.object({
   success: z.boolean(),
-  data: z.array(BlogSchema),
+  data: z.array(BlogWithUserResponse),
   pagination: z.object({
     total: z.number(),
     page: z.number(),
@@ -50,6 +57,7 @@ const PaginatedBlogResponse = z.object({
     totalPages: z.number(),
   }),
 });
+
 
 blogRegistry.register("blog", BlogSchema);
 
